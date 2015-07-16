@@ -5,10 +5,11 @@
 #exit routines
 
 from os import system
+import os.path
 import cfg
 import wx
 import mMainWin
-import os.path
+
 import codecs
 import json
 
@@ -31,14 +32,18 @@ def from_json_dict(json_object):
 			for key in json_object.keys():
 				aux[int(key)] = json_object[key]
 			return aux
-		
+
 def load_data():
 	#loading cfg.bks data:
-	if os.path.exists(cfg.dataDir + "bks.dt"):
+	bookspath=cfg.dataDir+"bks.dt"
+	if os.path.exists(bookspath):
+		print "Loading File: ["+bookspath+"]"
 		inf_bk = codecs.open(cfg.dataDir + "bks.dt", "r", 'utf-8')
 		cfg.bks = json.load(inf_bk, object_hook = from_json_dict)
 		inf_bk.close()
 		cfg.topidb = max(cfg.bks.keys())
+	else:
+		print "Debug: File not Found ["+bookspath+"]"
 	if len(cfg.bks) == 0: 
 		cfg.bks[0] = cfg.ept_bk()
 		cfg.topidb = 1
@@ -55,10 +60,13 @@ def load_data():
 #Ends load_data
 
 def end_save():
-	ouf_bk = codecs.open(cfg.dataDir+"bks.dt","w", 'utf-8')
+	bookspath=cfg.dataDir+"bks.dt"
+	print "Tratando de guardar ["+bookspath+"]"
+	ouf_bk = codecs.open(bookspath,"w", 'utf-8')
 	json.dump(cfg.bks, ouf_bk, ensure_ascii = False, cls = MyEncoder, encoding='utf-8')
 	ouf_bk.close()
-	ouf_us = codecs.open(cfg.dataDir+"uss.dt","w", 'utf-8')
+	userspath=cfg.dataDir+"uss.dt"
+	ouf_us = codecs.open(userspath,"w", 'utf-8')
 	json.dump(cfg.uss, ouf_us, ensure_ascii = False, cls = MyEncoder, encoding='utf-8')
 	ouf_us.close()
 	cfg.topidu = max(cfg.uss.keys())

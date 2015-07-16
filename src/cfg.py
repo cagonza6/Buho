@@ -9,12 +9,15 @@
 #	?IsNotBor
 #	
 
+import sys # detect SO
+from os import system
+import os.path
+
 #import Main
 import time
 #import calendar
 import wx
 import codecs
-os="unix" #"linux"
 #list of global vars. Can't alter here.
 topidb = 0
 topidu = 2			#User Bilbioteca
@@ -24,14 +27,10 @@ ext = 0
 bks = {}
 uss = {}
 
-
-if (os == "win"):
-	homeDir = "\Users\Maite\stff\Prg\Biblio\\"
-	DataDir = "Data\\"
-
-if (os == "unix"):
-	homeDir = "/home/maite/Documents/Prg/Apache/"
-	DataDir = "Data/"
+# da igual donde se ejecute, the main folder will always be automatically detected
+# and dinamically asigned, I hope It works on wintendo...
+homeDir = os.getcwd()
+DataDir = '/Data/'
 
 dataDir = homeDir + DataDir
 topidfn = "topid.dat"
