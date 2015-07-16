@@ -1,0 +1,1 @@
+{"0": {"idn": 0, "status": 0, "books": [], "name": "SinNombre"}, "1": {"idn": 1, "status": 1, "books": [], "name": "Biblioteca"}, "2": {"idn": 2, "status": 1, "books": [], "name": "Nombre"}}
