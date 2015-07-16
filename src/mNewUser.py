@@ -53,12 +53,12 @@ class NewUser(wx.Panel):
 		self.Hide()
 
 	def Clean(self):
-		self.tcNm.SetValue("1")
-		self.tcAp.SetValue("2")
-		self.tcRu.SetValue("3")
-		self.tcDi.SetValue("4")
-		self.tcTe.SetValue("5")
-		self.tcCm.SetValue("6")
+		self.tcNm.SetValue("")
+		self.tcAp.SetValue("")
+		self.tcRu.SetValue("")
+		self.tcDi.SetValue("")
+		self.tcTe.SetValue("")
+		self.tcCm.SetValue("")
 
 	def isValid(self):
 		#fix from here on
