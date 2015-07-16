@@ -3,8 +3,12 @@
 
 #This is the panel to introduce a book
 
-import wx
 import cfg
+import wx
+import Tools.interface as Iface
+from classes import *
+from Tools.regexe import *
+from Tools.sqlite import saveuser
 
 class NewBook(wx.Panel):
 	def __init__(self, parent, size):
@@ -52,19 +56,20 @@ class NewBook(wx.Panel):
 			isbn = self.tcIs.GetValue()
 			if isbn == "":
 				error = 1
-				cfg.chk("Debe poner un ISBN", 2)
+				Iface.showmessage("ISBN no valido", "Error!!")
 			ti = self.tcTi.GetValue()
 			au = self.tcAu.GetValue()
-			cm = self.tcCm.GetValue()	
-			if cm == "": cm = "Sin Comentarios"
+			cm = self.tcCm.GetValue()
+			if cm.strip() == "":
+				cm = "Sin Comentarios"
 			#need to check a bunch of things here
 			
 			#Saving Actual Book Data:
 			if (error == 0):
-				nbk = cfg.Book(cfg.topidb, isbn, 2, ti, au, 1, cm)		#0=eliminado, 1=old, 2=new,3=modificado
+				nbk = Book(cfg.topidb, isbn, 2, ti, au, 1, cm)		#0=eliminado, 1=old, 2=new,3=modificado
 				cfg.bks[cfg.topidb] = nbk
 				cfg.topidb = cfg.topidb + 1
-				cfg.chk("Libro ha sido registrado", 1)
+				Iface.showmessage('Libro registrado con exito.', 'Información')
 				self.Clean()
 			else:
 				cfg.chk("Hubo al menos un error en el proceso. Libro no ha sido registrado", 2)

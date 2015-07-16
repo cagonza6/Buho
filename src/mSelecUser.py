@@ -19,7 +19,7 @@ class SortedVirtualAutoWidthListCtrl(wx.ListCtrl, listmix.ListCtrlAutoWidthMixin
 		self.InsertColumn(0, "Nombre", width = 100)
 		#self.InsertColumn(1, u"Autor")
 		self.Bind(wx.EVT_LIST_ITEM_ACTIVATED, self.OnItemActivated)
-		
+
 	def OnItemActivated(self, event):
 		#Maybe there's a simple way to get the index. I don't know it, and don't know how to search for it.
 		item = event.m_itemIndex
@@ -30,7 +30,7 @@ class SortedVirtualAutoWidthListCtrl(wx.ListCtrl, listmix.ListCtrlAutoWidthMixin
 		index = self.itemIndexMap[item]
 		if col == 0: return cfg.uss[index].GetName()
 		#if col == 1: return cfg.bks[index].GetAuthor()
-		
+
 	def SortItems(self,sorter=cmp):
 		items = list(self.itemDataMap.keys())
 		items.sort(sorter)
@@ -56,13 +56,13 @@ class SelecUser(wx.Frame):
 		self.Centre()
 		self.Show()
 		#self.Maximize()
-        
+
 	def PanelUI(self):
 		self.limlist = cfg.uss
 		self.idn = ""
 		vbox = wx.BoxSizer(wx.VERTICAL)
 		panel = wx.Panel(self, -1)
-			
+
 		fgs = wx.FlexGridSizer(2, 1, 2, 2)		#row, col, margin, margin
 		self.ckbNm = wx.CheckBox(panel, label = u"El nombre del usuario contiene:")
 		self.tcNm = wx.TextCtrl(panel)
@@ -73,7 +73,7 @@ class SelecUser(wx.Frame):
 		fgs.AddGrowableCol(1)
 		self.Bind(wx.EVT_CHECKBOX, self.OnCheckText)				#All events go to OnCheck, regardless of list
 		self.Bind(wx.EVT_TEXT,self.OnCheckText)
-	
+
 		self.stinst = wx.StaticText(panel,label = u"Haga doble click para seleccionar el usuario:")
 		auxlst = {}
 		self.lst = SortedVirtualAutoWidthListCtrl(panel)
@@ -81,13 +81,13 @@ class SelecUser(wx.Frame):
 		vbox.AddMany([(fgs, 0, wx.EXPAND),(self.stinst, 0, wx.ALIGN_CENTER_HORIZONTAL)])
 		vbox.Add(self.lst, 1, wx.EXPAND)
 		panel.SetSizer(vbox)
-		
+
 		#Initialization/Default values	
 		self.ckbNm.SetValue(True) #Asumo que la búsqueda por nombre es el default.
 		#self.ckbfv.SetValue(True)
 		#self.Limit("")	#For filling.
 		self.ReDoList()
-			
+
 	def ReDoList(self):
 		self.lst.DeleteAllItems()
 		auxlst = {}
@@ -101,7 +101,7 @@ class SelecUser(wx.Frame):
 		#~ for key,se in items:
 			#~ index = self.lst.InsertStringItem(sys.maxint, se.GetPal())
 			#~ self.lst.SetItemData(index, key)
-				
+
 	def OnCheckText(self, e):
 		#stSn = ""
 		stNm = ""
@@ -110,7 +110,7 @@ class SelecUser(wx.Frame):
 		#stSn = stSn.strip()
 		stNm = stNm.strip()
 		self.Limit(stNm)
-			
+
 	def Limit(self, stNm):
 		new_list = {}
 		items = cfg.uss.items()
@@ -120,9 +120,9 @@ class SelecUser(wx.Frame):
 				new_list[key] = us
 		self.limlist = new_list
 		self.ReDoList()
-			
+
 	def SendIdn(self, idn):
 		self.GetParent().RecieveIdn(idn, 1)
 		self.Close()
 		#print idn
-			
+

@@ -4,17 +4,21 @@
 #beginnning routines
 #exit routines
 
+#metodos y paquetes del system
+import cfg
+from classes import *
+
 from os import system
 import os.path
-import cfg
 import wx
 import mMainWin
-
 import codecs
 import json
-
 from json import JSONEncoder
 from json import JSONDecoder
+
+
+
 
 class MyEncoder(JSONEncoder):
 	def default(self, o):
@@ -22,11 +26,11 @@ class MyEncoder(JSONEncoder):
 
 def from_json_dict(json_object):
 		if "name" in json_object:		#user
-			aux = cfg.User(json_object["idn"], json_object["status"], json_object["name"])
+			aux = User(json_object["idn"], json_object["status"], json_object["name"])
 			aux.SetBooks(json_object["books"])
 			return aux
 		if "title" in json_object:		#bk
-			return cfg.Book(json_object["idn"], json_object["status"], json_object["isbn"], json_object["title"], json_object["author"], json_object["owner"], json_object["cmnt"])
+			return Book(json_object["idn"], json_object["status"], json_object["isbn"], json_object["title"], json_object["author"], json_object["owner"], json_object["cmnt"])
 		else: #es uno de los dicts de cfg.*s
 			aux = {}
 			for key in json_object.keys():
@@ -82,18 +86,3 @@ if __name__ == '__main__':
 	app = wx.App()
 	mMainWin.MainWin(None)
 	app.MainLoop()
-	
-	
-#Non-JSON version
-#~ #topid
-#~ def extract_topid():  
-	#~ auxf = codecs.open(cfg.dataDir + cfg.topidfn,"r","utf-8")
-	#~ cfg.topidb = int(auxf.readline())
-	#~ cfg.topidu = int(auxf.readline())
-	#~ auxf.close()
-#~ 
-#~ def update_topid():
-	#~ auxf = codecs.open(cfg.dataDir+cfg.topidfn,"w","utf-8")
-	#~ auxf.write(str(cfg.topidb) + "\n")
-	#~ auxf.write(str(cfg.topidu) + "\n")
-	#~ auxf.close()

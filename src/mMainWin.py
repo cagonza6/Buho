@@ -14,6 +14,7 @@ import mDispBook
 import mDispUser
 import mLoanBook
 import mRetBook
+import Tools.interface as Iface # mensajes por pantall
 
 class MainWin(wx.Frame):   
 	def __init__(self, parent):
@@ -88,7 +89,7 @@ class MainWin(wx.Frame):
         
 	def ChangePanel(self, Panel):
 		if cfg.lockwin:
-			if cfg.cnt(u"La información no guardada se perderá. "):
+			if Iface.cnt(u'La información no guardada se perderá. '):
 				cfg.lockwin = False			#If user wants to continue, act as if there's no lock
 
 		if not(cfg.lockwin):								#Windows empty or user has said xe doesn't care

@@ -103,7 +103,10 @@ class NewUser(wx.Panel):
 
 			if saveuser(newUserData,cfg.sqdbPath):
 				Iface.showmessage("Usuario ha sido registrado","Mensaje")
+				#cleans just if the user was correctly added, de otra forma seria hincha-pelotas
+				self.Clean()
 			else:
 				Iface.showmessage("Error Al intentar guardar Usuario","Error!")
-			self.Clean()
-
+				
+if __name__ == '__main__':
+	print "Aca se Agregan usuarios... suerte con eso..."
