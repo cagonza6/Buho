@@ -8,7 +8,7 @@ import cfg
 
 class NewBook(wx.Panel):
 	def __init__(self, parent, size):
-		wx.Panel.__init__(self, parent = parent, size = size)	
+		wx.Panel.__init__(self, parent = parent, size = size)
 		vbox = wx.BoxSizer(wx.VERTICAL)
 		fgs = wx.FlexGridSizer(5,2,7,15)
 		ste = wx.StaticText(self,label = "")
@@ -20,7 +20,10 @@ class NewBook(wx.Panel):
 		self.tcTi = wx.TextCtrl(self)
 		self.tcAu = wx.TextCtrl(self)
 		self.tcCm = wx.TextCtrl(self,style=wx.TE_MULTILINE)
-		fgs.AddMany([(self.stIs),(self.tcIs, 1, wx.EXPAND),(self.stTi),(self.tcTi, 1, wx.EXPAND),(self.stAu),(self.tcAu, 1, wx.EXPAND),(self.stCm),(self.tcCm, 2, wx.EXPAND)])
+		fgs.AddMany([(self.stIs),(self.tcIs, 1, wx.EXPAND),
+		             (self.stTi),(self.tcTi, 1, wx.EXPAND),
+		             (self.stAu),(self.tcAu, 1, wx.EXPAND),
+		             (self.stCm),(self.tcCm, 2, wx.EXPAND)])
 		fgs.AddGrowableCol(1, 0)	#me asegura que crezcan como deben
 	
 		##Fake Addition

@@ -27,13 +27,18 @@ ext = 0
 bks = {}
 uss = {}
 
-# da igual donde se ejecute, the main folder will always be automatically detected
+# Da igual donde se ejecute, the main folder will always be automatically detected
 # and dinamically asigned, I hope It works on wintendo...
 homeDir = os.getcwd()
 DataDir = '/Data/'
 
-dataDir = homeDir + DataDir
-topidfn = "topid.dat"
+#######
+# Paths
+#######
+
+sqdbPath = homeDir+'/database/Main.db'
+dataDir  = homeDir + DataDir
+topidfn  = "topid.dat"
 
 class Book:
 	def __init__(self, idn, status, isbn, title, author, owner, cmnt):
@@ -164,17 +169,6 @@ def day_month(month):
 #There shouldn't be any loans in Feb.
 
 
-def chk(msg,idn):
-	if idn == 1: msge = "Error"
-	if idn == 2: msge = "Check"
-	wx.MessageBox(msg, msge, wx.OK)
-	
-def cnt(msg):
-	dial = wx.MessageDialog(None, msg+"¿Desea continuar?".decode('utf-8'), 'Advertencia', wx.YES_NO | wx.NO_DEFAULT | wx.ICON_QUESTION)
-	ret = dial.ShowModal()
-	if ret == wx.ID_YES: return True
-	else: return False
-
 def stop(msg):
 	print msg
 	#op=raw_input()
@@ -186,3 +180,9 @@ def stop(msg):
 		#~ if ((int)(age[0]) >= (int)(dt[0])):
 			#~ yd = 1 + yd
 	#~ return  yd
+
+
+
+#configuraciones de parametros requeridos Para logueo de usuarios
+reqRut = False
+
