@@ -16,7 +16,7 @@ CREATE TABLE "main"."libros" (
 contiene todos los usuarios registrados
 llave: id_usuario
 */
-CREATE TABLE "main"."ursuarios" (
+CREATE TABLE "main"."usuarios" (
     "id_usuario" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
     "nombres" TEXT NOT NULL DEFAULT ('Nombre'),
     "apellidos" TEXT NOT NULL DEFAULT ('Apellidos'),
