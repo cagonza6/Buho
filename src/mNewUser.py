@@ -8,7 +8,7 @@ import wx
 import Tools.interface as Iface
 
 from Tools.regexe import *
-from Tools.sqlite import saveuser
+from Tools.sqlite import save_new
 
 import cfg
 import Main
@@ -42,7 +42,7 @@ class NewUser(wx.Panel):
 		             (self.stCm),(self.tcCm, 2, wx.EXPAND)])
 		fgs.AddGrowableCol(1, 0)	#me asegura que crezcan como deben
 	
-		self.Clean()
+		self.Clean() # limpia campos
 
 		btsv = wx.Button(self, label = 'Guardar')#, pos=(30, 160))
 		btsv.Bind(wx.EVT_BUTTON, self.OnSave)
@@ -62,28 +62,27 @@ class NewUser(wx.Panel):
 
 	def isValid(self):
 		#fix from here on
-		error = 0
+		error = False
 		error_str=''
-		#taking data
-		name = unicode(self.tcNm.GetValue())
-		name = unicode(name.strip().title())
-		if not validar('name',name): 
-			error += 1
-			error_str="Nombre No valido: ["+name+"] \n"
-		apellido = unicode(self.tcAp.GetValue())
-		apellido = unicode(apellido.strip().title())
-		if not validar('name',apellido): 
-			error += 1
-			error_str+="Apellido no valido: ["+apellido+"] \n"
 
-		rut = str(self.tcRu.GetValue()).strip()
-		if cfg.reqRut and not validar('rut',rut):
-			error_str+="Rut no valido: ["+rut+"] \n"
-			error += 1
+		name = self.tcNm.GetValue()
+		name = validar('name',name)
+		if not name: 
+			error = True
+			error_str="Nombre No valido.\n"
+
+		apellido = validar('name',self.tcAp.GetValue())
+		if not apellido: 
+			error = True
+			error_str+="Apellido no valido.\n"
+		rut = self.tcRu.GetValue()
+		if cfg.reqRut and not rut:
+			error_str+="Rut no valido \n"
+			error = True
 
 		direccion   = str(self.tcDi.GetValue()).strip()
 		telefono    = str(self.tcTe.GetValue()).strip()
-		comentarios = str(self.tcCm.GetValue()).strip()
+		comentarios = validar('name',self.tcCm.GetValue())
 
 		if (error):
 			Iface.showmessage(error_str,"Error!")
@@ -94,19 +93,13 @@ class NewUser(wx.Panel):
 	def OnSave(self,e):
 		newUserData = self.isValid()
 		if newUserData:
-			'''
-			nm = self.tcNm.GetValue()
-			nus = cfg.User(cfg.topidu, 2, nm)		#0=eliminado, 1=old, 2=new,3=modificado
-			cfg.uss[cfg.topidu] = nus
-			cfg.topidu = cfg.topidu + 1
-			'''
-
-			if saveuser(newUserData,cfg.sqdbPath):
+			#try to save the user to the DB
+			if save_new(newUserData,'user',cfg.sqdbPath):
 				Iface.showmessage("Usuario ha sido registrado","Mensaje")
 				#cleans just if the user was correctly added, de otra forma seria hincha-pelotas
 				self.Clean()
 			else:
 				Iface.showmessage("Error Al intentar guardar Usuario","Error!")
-				
+
 if __name__ == '__main__':
 	print "Aca se Agregan usuarios... suerte con eso..."

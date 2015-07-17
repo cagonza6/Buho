@@ -8,7 +8,7 @@ import wx
 import Tools.interface as Iface
 from classes import *
 from Tools.regexe import *
-from Tools.sqlite import saveuser
+from Tools.sqlite import save_new
 
 class NewBook(wx.Panel):
 	def __init__(self, parent, size):
@@ -31,60 +31,55 @@ class NewBook(wx.Panel):
 		fgs.AddGrowableCol(1, 0)	#me asegura que crezcan como deben
 	
 		##Fake Addition
-		self.tcIs.SetValue("0")
-		self.tcTi.SetValue("Tríbes")
-		self.tcAu.SetValue("M. Sandrïne")
-	
+		self.Clean() # limpia campos
+
 		btsv = wx.Button(self, label = 'Guardar')#, pos=(30, 160))
 		btsv.Bind(wx.EVT_BUTTON, self.OnSave)
 		fgs.AddMany([(ste),(btsv)])
-        
+
 		vbox.Add(fgs, proportion = 1, flag = wx.ALL | wx.EXPAND, border = 15)
 		self.SetSizer(vbox)
 		self.Hide()
-        
+
+
 	def Clean(self):
 		self.tcIs.SetValue("")
 		self.tcTi.SetValue("")
 		self.tcAu.SetValue("")
 		self.tcCm.SetValue("")
-              
+
+	def isValid(self):
+		#fix from here on
+		error = False
+		error_str=''
+
+		isbn = validar('isbn',self.tcIs.GetValue())
+		if not isbn:
+			error      = True
+			error_str += "ISBN no valido\n"
+
+		ti = validar('titulo',self.tcTi.GetValue())
+		if not ti:
+			error      = True
+			error_str += "Titulo no valido.\n"
+
+		au = validar('autor',self.tcAu.GetValue())
+		if not au:
+			if Iface.cnt(u'El campo Autor está en blanco, desea llenarlo con: "Anonimo"'):
+				au = "Anonimo"
+				self.tcAu.SetValue(au)
+		comentarios = validar('name',self.tcCm.GetValue())
+
+		if (error):
+			Iface.showmessage(error_str,"Error!")
+			return False
+		return [isbn,ti,au,comentarios]
 	def OnSave(self,e):
-		if True:
-			error = 0
-			#taking data
-			isbn = self.tcIs.GetValue()
-			if isbn == "":
-				error = 1
-				Iface.showmessage("ISBN no valido", "Error!!")
-			ti = self.tcTi.GetValue()
-			au = self.tcAu.GetValue()
-			cm = self.tcCm.GetValue()
-			if cm.strip() == "":
-				cm = "Sin Comentarios"
-			#need to check a bunch of things here
-			
-			#Saving Actual Book Data:
-			if (error == 0):
-				nbk = Book(cfg.topidb, isbn, 2, ti, au, 1, cm)		#0=eliminado, 1=old, 2=new,3=modificado
-				cfg.bks[cfg.topidb] = nbk
-				cfg.topidb = cfg.topidb + 1
+		newBookData = self.isValid()
+		if newBookData:
+			if save_new(newBookData,'book',cfg.sqdbPath):
 				Iface.showmessage('Libro registrado con exito.', 'Información')
 				self.Clean()
 			else:
-				cfg.chk("Hubo al menos un error en el proceso. Libro no ha sido registrado", 2)
-	  
-#class Example(wx.Frame):
-	#def __init__(self,parent):
-		#super(Example, self).__init__(parent=parent, size=(700, 250)) 
-		#vbox = wx.BoxSizer(wx.VERTICAL)
-		#self.panel = NewBook(self)
-		#vbox.Add(self.panel,2,wx.EXPAND)
-		#self.SetSizer(vbox)
-		#self.Centre()
-		#self.Show()
-
-#if __name__ == '__main__':
-	#ex = wx.App()
-	#Example(None)
-	#ex.MainLoop()    
+				Iface.showmessage("Error Al intentar guardar Libro","Error!")
+			return
