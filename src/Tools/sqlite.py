@@ -35,20 +35,3 @@ def save_new(userdata,type_,path2db = "../biblioteca/database/Main.db"):
 	Result = sth.fetchall()
 	con.close()
 	return True
-	
-def savebook(bookdata,path2db = "../biblioteca/database/Main.db"):
-
-	query = "INSERT INTO usuarios ( nombres, apellidos, rut, direccion, telefono, comentarios) VALUES ( ?, ?, ?, ?, ?, ?);"
-	con              = sqlite3.connect(path2db)
-	con.text_factory = str
-	con.row_factory  = query2dic
-	sth              = con.cursor()
-	try:
-		sth.execute(query,bookdata)
-	except sqlite3.Error as e:
-		print e
-		return False
-	con.commit()
-	Result = sth.fetchall()
-	con.close()
-	return True
