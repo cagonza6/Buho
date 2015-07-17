@@ -7,13 +7,10 @@ def validar_nombre(texto,patron="^([A-Z]{0,1}[a-zñáéíóú]+[\s]*)+$"):
 	texto  = texto.strip()
 	#texto=texto.title()
 	if texto == '':
-		print "\t X"
 		return False
 	if 'nombre' in texto.lower():
-		print "\t X"
 		return False
 	if 'apellido' in texto.lower():
-		print "\t X"
 		return False
 
 	if patron.match(texto):
