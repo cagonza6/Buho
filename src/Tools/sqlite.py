@@ -19,6 +19,8 @@ def save_new(userdata,type_,path2db = "../biblioteca/database/Main.db"):
 		query = "INSERT INTO libros ( isbn, autor, titulo, comentarios) VALUES ( ?, ?, ?, ?);"
 	elif type_=='user':
 		query = "INSERT INTO usuarios ( nombres, apellidos, rut, direccion, telefono, comentarios) VALUES ( ?, ?, ?, ?, ?, ?);"
+	else:
+		retutn False
 
 	con              = sqlite3.connect(path2db)
 	con.text_factory = str
