@@ -7,7 +7,7 @@ CREATE TABLE "main"."libros" (
     "isbn" TEXT NOT NULL DEFAULT ('-'),
     "autor" TEXT NOT NULL DEFAULT ('-'),
     "titulo" TEXT NOT NULL DEFAULT ('-'),
-    "estado" INTEGER NOT NULL DEFAULT (1),
+    "estado" INTEGER DEFAULT (1),
     "comentarios" TEXT
 );
 
@@ -23,6 +23,7 @@ CREATE TABLE "main"."usuarios" (
     "rut" TEXT NOT NULL DEFAULT ('-'),
     "direccion" TEXT NOT NULL DEFAULT ('-'),
     "telefono" TEXT NOT NULL DEFAULT ('-'),
+    "estado" INTEGER DEFAULT (1),
     "comentarios" TEXT
 );
 
@@ -30,9 +31,13 @@ CREATE TABLE "main"."usuarios" (
 /*
 Contiene los prestamos realizados
 */
-CREATE TABLE "prestamos" (
+-- Describe PRESTAMOS
+CREATE TABLE prestamos (
     "id_prestamo" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
     "id_libro" INTEGER NOT NULL,
-    "id_usuario" INTEGER NOT NULL
+    "id_usuario" INTEGER NOT NULL,
+    "desde" INTEGER NOT NULL,
+    "hasta" INTEGER NOT NULL,
+    "comentarios" TEXT,
+    "estado" INTEGER DEFAULT (1)
 );
-
