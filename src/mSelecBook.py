@@ -1,9 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*
 
-#mSelecBook.py: Shows all books, selects one, sends it to Display
-#
-
 import wx
 import cfg
 import mDispBook
@@ -13,7 +10,7 @@ from Tools.sqlite import load_table
 #import sys
 
 #All Glory for this goes to the people at http://code.activestate.com/recipes/426407-columnsortermixin-with-a-virtual-wxlistctrl/
-class SortedVirtualAutoWidthListCtrl(wx.ListCtrl, listmix.ListCtrlAutoWidthMixin, listmix.ColumnSorterMixin):
+class TempSortedListPanel(wx.ListCtrl, listmix.ListCtrlAutoWidthMixin, listmix.ColumnSorterMixin):
 	def __init__(self, parent):
 		wx.ListCtrl.__init__( self, parent, -1, style = wx.LC_REPORT | wx.LC_HRULES | wx.LC_VIRTUAL)
 
@@ -25,7 +22,7 @@ class SortedVirtualAutoWidthListCtrl(wx.ListCtrl, listmix.ListCtrlAutoWidthMixin
 
 		#mixins
 		listmix.ListCtrlAutoWidthMixin.__init__(self)
-		listmix.ColumnSorterMixin.__init__(self, 4)			#Cantidad de columnas
+		listmix.ColumnSorterMixin.__init__(self, 1)			#Cantidad de columnas
 
 		#building the columns
 		self.InsertColumn(0,  "ID"     , width = 50)
@@ -44,17 +41,21 @@ class SortedVirtualAutoWidthListCtrl(wx.ListCtrl, listmix.ListCtrlAutoWidthMixin
 		index = self.itemIndexMap[item]
 		self.GetGrandParent().SendIdn(index)
 
+    #---------------------------------------------------
+    # These methods are callbacks for implementing the
+    # "virtualness" of the list...
+	#este es el bicho que se encarga de llenar las columnas
 	def OnGetItemText(self, item, col):
 		index = self.itemIndexMap[item]
-		self.libro_t = self.LibrosDB[index]
-		if col == 0: return cfg.bks[index].GetTitle()
-		if col == 1: return cfg.bks[index].GetAuthor()
-		'''
-		if col == 0: return self.libro_t['id_libro']
-		if col == 1: return self.libro_t['isbn']
-		if col == 2: return self.libro_t['titulo']
-		if col == 3: return self.libro_t['autor']
-		'''
+		self.tbook_ = self.books[index]
+
+		if col == 0: return self.tbook_['id_libro']
+		if col == 1: return self.tbook_['isbn']
+		if col == 2: return self.tbook_['titulo']
+		if col == 3: return self.tbook_['autor']
+		return "Error"
+
+
 
 	def SortItems(self,sorter=cmp):
 		items = list(self.itemDataMap.keys())
@@ -67,17 +68,21 @@ class SortedVirtualAutoWidthListCtrl(wx.ListCtrl, listmix.ListCtrlAutoWidthMixin
 	def GetListCtrl(self):
 		return self
 
-	#~ # Used by the ColumnSorterMixin, see wx/lib/mixins/listctrl.py
-	#Will need it later
-	#~ def GetSortImages(self):
-		#~ return (self.sm_dn, self.sm_up)
+	#
+	# Methods that nobody needs but their names expalin more than the method that they call
+	#
+	
+	def cleanpanel(self):
+		self.DeleteAllItems() # existing method to clean the panel
+	def SetLists(self,books):
+		self.books=books
 
 #es la ventana que aparece al hacer click en el boton de buscar en el programa principal
-class SelecBook(wx.Frame):
-	def __init__(self, parent):
+class SearchBook(wx.Frame):
+	def __init__(self, parent,books):
 		wx.Frame.__init__(self, parent = parent,style = wx.MAXIMIZE_BOX | wx.RESIZE_BORDER | wx.CAPTION | wx.MINIMIZE_BOX| wx.CLOSE_BOX)
-
-		self.SetSize((1000, 600))
+		self.books = books
+		self.SetSize((600, 300))
 		self.SetTitle(u'Buscar Libro')
 		self.Centre()
 		self.Show()
@@ -85,73 +90,109 @@ class SelecBook(wx.Frame):
 		self.PanelUI()
 
 	def PanelUI(self):
-		self.limlist = cfg.bks
-		self.idn = ""
+		self.idn = 0 # el indice de los libros en el arreglo principal
+		self.limlist = self.books #este coso define los libros
+		
 		vbox = wx.BoxSizer(wx.VERTICAL)
 		panel = wx.Panel(self, -1)
-			
+
 		fgs = wx.FlexGridSizer(2, 2, 2, 2)		#row, col, margin, margin
-		self.ckbTi = wx.CheckBox(panel, label = u"El título contiene:")
-		self.tcTi = wx.TextCtrl(panel)
-		fgs.AddMany([(self.ckbTi), (self.tcTi, 1, wx.EXPAND)])
-		self.ckbAu = wx.CheckBox(panel, label = "El autor contiene:")
-		self.tcAu = wx.TextCtrl(panel)
-		fgs.AddMany([(self.ckbAu), (self.tcAu, 1, wx.EXPAND)])
+		#campos buscador
+		#ckeckbox para ajustar que parametro se busca
+		self.ckechboxTitle = wx.CheckBox(panel, label = u"El título contiene:")
+		self.ckechboxAutor = wx.CheckBox(panel, label = "El autor contiene:")
+		#campos asociados a las checkbox
+		self.tcTi          = wx.TextCtrl(panel)
+		self.tcAu          = wx.TextCtrl(panel)
+
+		#campos barra intermedia
+		self.stinst = wx.StaticText(panel,label = u"Haga doble click para seleccionar el libro.")
+
+		fgs.AddMany([(self.ckechboxTitle), (self.tcTi, 1, wx.EXPAND)])
+		fgs.AddMany([(self.ckechboxAutor), (self.tcAu, 1, wx.EXPAND)])
+
 		fgs.AddGrowableCol(1)
-		
+
 		#ventos
 		self.Bind(wx.EVT_CHECKBOX, self.OnCheckText)				#All events go to OnCheck, regardless of list
 		self.Bind(wx.EVT_TEXT,self.OnCheckText)
 
-		self.stinst = wx.StaticText(panel,label = u"Haga doble click para seleccionar el libro:")
-		auxlst = {}
-		#for key, item in self.limlist.iteritems(): auxlst[key] = item.GetTitle()				#it allows for the sorting
-		#self.lst = SortedVirtualAutoWidthListCtrl(panel, auxlst)
-		self.lst = SortedVirtualAutoWidthListCtrl(panel)
-
+		#Panel de busquedas
+		self.DinamicPanel = TempSortedListPanel(panel)
 		vbox.AddMany([(fgs, 0, wx.EXPAND),(self.stinst, 0, wx.ALIGN_CENTER_HORIZONTAL)])
-		vbox.Add(self.lst, 1, wx.EXPAND)
+		vbox.Add(self.DinamicPanel, 1, wx.EXPAND)
 		panel.SetSizer(vbox)
 
-		#Initialization/Default values	
-		self.ckbTi.SetValue(True) #Asumo que la búsqueda por título es el default.
-		#self.ckbfv.SetValue(True)
-		#self.Limit("")	#For filling.
-		self.ReDoList()
+		#Initialization/Default values, debe ser la lista completa
+		#inicializa la checkbox de titulo en true como basico
+		self.ckechboxTitle.SetValue(True)
+		#arma la primera lista de libtos
+		self.ReDoList(self.books)
 
-	def ReDoList(self):
-		self.lst.DeleteAllItems()
-		auxlst = {}
-		for key, item in self.limlist.iteritems(): 
-			if cfg.IsNotBor(item):
-				auxlst[key] = item.GetTitle()				#it allows for the sorting
-		self.lst.itemDataMap = auxlst
-		self.lst.itemIndexMap = self.limlist.keys()
-		self.lst.SetItemCount(len(self.limlist))
+	def ReDoList(self,books):
+		self.DinamicPanel.cleanpanel()
+		auxlst       = {}
+		self.auxKeys = []
+
+		# Aqui es donde agrego todos los metodos q vienen en el problema
+		# Se puede transformat un arreglo en diccionarios a mostrar de forma simple
+		# Este es el lugar
+		for i in range(0,len(books)):
+			auxlst[i] = books[i]
+			self.auxKeys.append(i)
+
+		self.DinamicPanel.SetLists(auxlst)
+		self.DinamicPanel.itemDataMap  = auxlst
+		self.DinamicPanel.itemIndexMap = self.auxKeys
+		self.DinamicPanel.SetItemCount(len(books)) #este bichodefine cuantas iteraciones se hacen, debe ser la cantidad de libros q se dan
 		#~ items = self.limlist.items()
 		#~ for key,se in items:
-			#~ index = self.lst.InsertStringItem(sys.maxint, se.GetPal())
-			#~ self.lst.SetItemData(index, key)
+			#~ index = self.DinamicPanel.InsertStringItem(sys.maxint, se.GetPal())
+			#~ self.DinamicPanel.SetItemData(index, key)
 
 	def OnCheckText(self, e):
-		stau = ""
-		stti = ""
-		if self.ckbAu.GetValue(): stau = self.tcAu.GetValue()
-		if self.ckbTi.GetValue(): stti = self.tcTi.GetValue()
-		stau = stau.strip()
-		stti = stti.strip()
-		self.Limit(stau, stti)
+		partial_autor = False
+		partial_title = False
 
-	def Limit(self,stau,stti):
-		new_list = {}
-		items = cfg.bks.items()
-		for key, bk in items:
-			if (stau in bk.GetAuthor()) and (stti in bk.GetTitle()):
-				new_list[key] = bk
-		self.limlist = new_list
-		self.ReDoList()
+		if self.ckechboxAutor.GetValue():
+			partial_autor = str(self.tcAu.GetValue())
+			partial_autor = partial_autor.strip()
+			if partial_autor=='':
+				partial_autor=False
+		if self.ckechboxTitle.GetValue():
+			partial_title = self.tcTi.GetValue()
+			partial_title = partial_title.strip()
+			if partial_title=='':
+				partial_title = False
+		self.ListaFiltrada(partial_autor, partial_title)
+
+	def ListaFiltrada(self,partial_autor,partial_title):
+		#si no hay filtros regresa la lista completa
+		if(not partial_autor and not partial_title):
+			self.ReDoList(self.books)
+			return
+		new_list = []
+		for i in range(0,len(self.books)):
+			self.libro_ = self.books[i]
+
+			if (partial_autor and partial_autor.lower() in self.libro_['autor'].lower()):
+				new_list.append(self.books[i])
+			if (partial_title and partial_title.lower() in self.libro_['titulo'].lower()):
+				new_list.append(self.books[i])
+
+		self.ReDoList(new_list)
 
 	def SendIdn(self, idn):
 		self.GetParent().RecieveIdn(idn, 'book')
 		self.Close()
 
+
+if __name__ == '__main__':
+	#dummy dictionary to test the method
+	ddic1={'id_libro':1,'titulo':'Titulo animal','autor': 'Autor Auto 1','isbn':'123456789','comentarios': 'no hay 1','estado':0}
+	ddic2={'id_libro':2,'titulo':'Titulo mueble','autor': 'Autor Casa 2','isbn':'223456789','comentarios': 'no hay 2','estado':1}
+	ddic3={'id_libro':3,'titulo':'Titulo pelota','autor': 'Autor mono 2','isbn':'323456789','comentarios': 'no hay 3','estado':1}
+	books=[ddic1,ddic2,ddic3]
+	ex = wx.App()
+	SearchBook(None,books)
+	ex.MainLoop()
