@@ -7,6 +7,7 @@
 import wx
 import cfg
 import mSearchWindows
+from Tools.sqlite import loanbook
 
 class LoanBook(wx.Panel):
 	def __init__(self, parent, size, books, users):
@@ -57,23 +58,41 @@ class LoanBook(wx.Panel):
 			self.user = data
 			self.tcUs.SetValue(self.user['nombres']+" "+self.user['apellidos'])
 
+	def validarUser(self, user):
+		if not user['estado']:
+			return False
+		return True
+
+	def validarLibro(self, libro):
+		if not libro['estado']:
+			return False
+		return True
+
+	def validateLoan(self):
+		if not self.validarUser (self.user):
+			return False
+			print "Usuario no puede recibir libros"
+
+		if not self.validarLibro(self.book):
+			return False
+			print "Libro ya se encuentra prestado"
+		self.desde=20160105
+		self.hasta=20160106
+		return [self.book['id_libro'],self.user['id_usuario'],self.desde,self.hasta]
+
 	def OnLoan(self, e):
-		print "Prestando"
-		if (self.bk_id != -1) and (self.us_id != -1):
-			bk = cfg.bks[self.bk_id]
-			us = cfg.uss[self.us_id]
-			if not(bk.IsLoaned()):
-				aux = us.LateBook()
-				if aux == "":
-					bk.SetOwner(self.us_id)
-					us.BorrowBook(self.bk_id, cfg.calc_return_date() )
-					print "Loaned"
-				else: 
-					cfg.chk("Usuario debe:" + aux, 2)
-			else:
-				print "Libro está prestado."
+		self.data_loan = self.validateLoan()
+
+		if not self.data_loan:
+			print "Problem while validating loan!"
+			return
+
+		self.saving = loanbook(self.data_loan)
+		if self.saving:
+			return
 
 	def Clean(self):
+
 		self.tcBk.SetValue("")
 		self.tcUs.SetValue("")
 
