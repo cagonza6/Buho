@@ -19,6 +19,14 @@ class TempSortedListPanelUser(wx.ListCtrl, listmix.ListCtrlAutoWidthMixin, listm
 		self.attr1 = wx.ListItemAttr()
 		self.attr1.SetBackgroundColour("green")
 
+		#Status icons
+		self.il = wx.ImageList(16, 16)
+		a={"sm_ok":"TICK_MARK","sm_no":"CROSS_MARK"}
+		for k,v in a.items():
+			s="self.%s= self.il.Add(wx.ArtProvider_GetBitmap(wx.ART_%s,wx.ART_TOOLBAR,(16,16)))" % (k,v)
+			exec(s)
+		self.SetImageList(self.il, wx.IMAGE_LIST_SMALL)
+
 		#mixins
 		listmix.ListCtrlAutoWidthMixin.__init__(self)
 		listmix.ColumnSorterMixin.__init__(self, 1)			#Cantidad de columnas
@@ -27,7 +35,7 @@ class TempSortedListPanelUser(wx.ListCtrl, listmix.ListCtrlAutoWidthMixin, listm
 		self.InsertColumn(0,  "ID"       , width = 50)
 		self.InsertColumn(1,  "Nombre"   , width = 250)
 		self.InsertColumn(2, u"Apellido" , width = 250)
-		self.InsertColumn(3,  "estado"   , width = 50)
+
 
 		#events
 		self.Bind(wx.EVT_LIST_ITEM_ACTIVATED, self.OnItemActivated)
@@ -50,11 +58,10 @@ class TempSortedListPanelUser(wx.ListCtrl, listmix.ListCtrlAutoWidthMixin, listm
 		index = self.itemIndexMap[item]
 		self.tuser_ = self.users[index]
 
-		if col == 0: return self.tuser_['id_usuario']
+		if col == 0: return '' #self.tuser_['id_usuario']
 		if col == 1: return self.tuser_['nombres']
 		if col == 2: return self.tuser_['apellidos']
-		if col == 3: return self.tuser_['estado']
-		return "Error"
+		return ''
 
 
 
@@ -75,15 +82,27 @@ class TempSortedListPanelUser(wx.ListCtrl, listmix.ListCtrlAutoWidthMixin, listm
 	
 	def cleanpanel(self):
 		self.DeleteAllItems() # existing method to clean the panel
+
 	def SetLists(self,users):
 		self.users=users
+
+
+	def OnGetItemImage(self, item):
+		index=self.itemIndexMap[item]
+		self.estado=self.itemDataMap[index]['estado']
+		if not self.estado:
+			return self.sm_no
+		elif self.estado==1:
+			return self.sm_ok
+		else:
+			return -1
 
 #es la ventana que aparece al hacer click en el boton de buscar en el programa principal
 class SearchUser(wx.Frame):
 	def __init__(self, parent,users):
 		wx.Frame.__init__(self, parent = parent,style = wx.MAXIMIZE_BOX | wx.RESIZE_BORDER | wx.CAPTION | wx.MINIMIZE_BOX| wx.CLOSE_BOX)
 		self.users = users
-		self.SetSize((600, 300))
+		self.SetSize((1000, 300))
 		self.SetTitle(u'Buscar Usuario')
 		self.Centre()
 		self.Show()
@@ -198,6 +217,14 @@ class TempSortedListPanelBook(wx.ListCtrl, listmix.ListCtrlAutoWidthMixin, listm
 		self.attr1 = wx.ListItemAttr()
 		self.attr1.SetBackgroundColour("green")
 
+		#Status icons
+		self.il = wx.ImageList(16, 16)
+		a={"sm_ok":"TICK_MARK","sm_no":"CROSS_MARK"}
+		for k,v in a.items():
+			s="self.%s= self.il.Add(wx.ArtProvider_GetBitmap(wx.ART_%s,wx.ART_TOOLBAR,(16,16)))" % (k,v)
+			exec(s)
+		self.SetImageList(self.il, wx.IMAGE_LIST_SMALL)
+
 		#mixins
 		listmix.ListCtrlAutoWidthMixin.__init__(self)
 		listmix.ColumnSorterMixin.__init__(self, 1)			#Cantidad de columnas
@@ -206,7 +233,7 @@ class TempSortedListPanelBook(wx.ListCtrl, listmix.ListCtrlAutoWidthMixin, listm
 		self.InsertColumn(0,  "ID"     , width = 50)
 		self.InsertColumn(1,  "ISBN"   , width = 150)
 		self.InsertColumn(2, u"Título" , width = 350)
-		self.InsertColumn(3,  "Autor"  , width = 250)
+		self.InsertColumn(3,  "Autor"  , width = 350)
 
 		#events
 		self.Bind(wx.EVT_LIST_ITEM_ACTIVATED, self.OnItemActivated)
@@ -229,11 +256,11 @@ class TempSortedListPanelBook(wx.ListCtrl, listmix.ListCtrlAutoWidthMixin, listm
 		index = self.itemIndexMap[item]
 		self.tbook_ = self.books[index]
 
-		if col == 0: return self.tbook_['id_libro']
+		if col == 0: return ''
 		if col == 1: return self.tbook_['isbn']
 		if col == 2: return self.tbook_['titulo']
 		if col == 3: return self.tbook_['autor']
-		return "Error"
+		return ''
 
 
 
@@ -254,15 +281,26 @@ class TempSortedListPanelBook(wx.ListCtrl, listmix.ListCtrlAutoWidthMixin, listm
 	
 	def cleanpanel(self):
 		self.DeleteAllItems() # existing method to clean the panel
+
 	def SetLists(self,books):
 		self.books=books
+
+	def OnGetItemImage(self, item):
+		index=self.itemIndexMap[item]
+		self.estado=self.itemDataMap[index]['estado']
+		if not self.estado:
+			return self.sm_no
+		elif self.estado==1:
+			return self.sm_ok
+		else:
+			return -1
 
 #es la ventana que aparece al hacer click en el boton de buscar en el programa principal
 class SearchBook(wx.Frame):
 	def __init__(self, parent,books):
 		wx.Frame.__init__(self, parent = parent,style = wx.MAXIMIZE_BOX | wx.RESIZE_BORDER | wx.CAPTION | wx.MINIMIZE_BOX| wx.CLOSE_BOX)
 		self.books = books
-		self.SetSize((600, 300))
+		self.SetSize((1000, 300))
 		self.SetTitle(u'Buscar Libro')
 		self.Centre()
 		self.Show()
