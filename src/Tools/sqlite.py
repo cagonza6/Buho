@@ -59,3 +59,34 @@ def load_table(table, path2db = "../biblioteca/database/Main.db"):
 	Result = sth.fetchall()
 	con.close()
 	return Result
+
+def loanbook(data, path2db = "../biblioteca/database/Main.db"):
+
+	libroid = str(data[0])
+
+	query1 = "INSERT INTO prestamos ( id_libro , id_usuario, desde, hasta,retorno, comentarios) VALUES ( ?, ?, ?, ?,0,'');"
+	query2 = "UPDATE libros SET estado = 0 WHERE id_libro = "+libroid;
+
+	con              = sqlite3.connect(path2db)
+	con.text_factory = str
+	con.row_factory  = query2dic
+	sth              = con.cursor()
+
+	try:
+		sth.execute(query2)
+	except sqlite3.Error as e:
+		print e
+		print "Loan Failed!"
+		return False
+
+	try:
+		sth.execute(query2)
+	except sqlite3.Error as e:
+		print e
+		print "Udate Book Failed!"
+		return False
+
+	con.commit()
+	con.close()
+	return True
+
