@@ -15,6 +15,8 @@ import mDispUser
 import mLoanBook
 import mRetBook
 import Tools.interface as Iface # mensajes por pantall
+import wx.lib.mixins.listctrl as listmix
+from Tools.sqlite import load_table
 
 class MainWin(wx.Frame):   
 	def __init__(self, parent):
@@ -22,12 +24,14 @@ class MainWin(wx.Frame):
 		self.InitUI()
 		self.Centre()
 		self.Show(True)
+		self.loadUsers() # carga db de usuarios
+		self.loadbooks() # carga db de libros
 
-        
+
 	def InitUI(self):
 		self.vbox = wx.BoxSizer(wx.VERTICAL)
 		self.panel = wx.Panel(self,-1)
-		
+
 		mb = wx.MenuBar()
 		#Acciones
 		fM = wx.Menu()
@@ -35,19 +39,19 @@ class MainWin(wx.Frame):
 		mFqt = wx.MenuItem(fM, wx.ID_EXIT, 'Salir (&Q) \tCtrl+Q')
 		fM.AppendItem(mitry)
 		fM.AppendItem(mFqt)
-		
+
 		#Libros
 		bM = wx.Menu()
 		mBln = wx.MenuItem(bM, wx.ID_FORWARD, '&Prestar Libro\tCtrl+P')
 		mBrt = wx.MenuItem(bM, wx.ID_BACKWARD, '&Devolver Libro\tCtrl+D')
 		mBnw = wx.MenuItem(bM, wx.ID_NEW, '&Nuevo Libro\tCtrl+N')
 		mBse = wx.MenuItem(bM, wx.ID_FIND, '&Buscar Libro\tCtrl+B')
-		
+
 		bM.AppendItem(mBln)
 		bM.AppendItem(mBrt)
 		bM.AppendItem(mBnw)
 		bM.AppendItem(mBse)
-		
+
 		#Usuarios
 		uM = wx.Menu()
 		mUnw = wx.MenuItem(bM, wx.ID_ADD, 'Nuevo &Usuario\tCtrl+U')
@@ -71,7 +75,7 @@ class MainWin(wx.Frame):
 
 		self.SetSize((750, 500))
 		self.SetTitle('Biblioteca')
-    
+
 	def OnTry(self, e):
 		pass
 		#aux = mLoanBook.LoanBook(self,self.GetSize())
@@ -83,10 +87,10 @@ class MainWin(wx.Frame):
 		
 	def OnLoanBook(self, e):
 		self.ChangePanel(mLoanBook.LoanBook(self,self.GetSize()))
-		
+
 	def OnNewBook(self, e):
 		self.ChangePanel(mNewBook.NewBook(self,self.GetSize()))
-        
+
 	def ChangePanel(self, Panel):
 		if cfg.lockwin:
 			if Iface.cnt(u'La información no guardada se perderá. '):
@@ -101,7 +105,7 @@ class MainWin(wx.Frame):
 	def OnSearchBook(self, e):
 		self.panel.Hide()
 		mSelecBook.SelecBook(self)
-	      
+
 	def OnNewUser(self, e):
 		self.ChangePanel(mNewUser.NewUser(self,self.GetSize()))
 		
@@ -109,18 +113,63 @@ class MainWin(wx.Frame):
 		self.panel.Hide()
 
 		mSelecUser.SelecUser(self)
-		
-	def RecieveIdn(self, idn, what):
-		if what == 0: mDispBook.DispBook(self, idn)
-		if what == 1: mDispUser.DispUser(self, idn)
-		
+
+	def RecieveIdn(self, data, tipo):
+		if what == 'book': mDispBook.DispBook(self, data)
+		if what == 'user': mDispUser.DispUser(self, data)
+
 	def OnQuit(self, e):
 		Main.end_save()
 		self.Close(True)
-        
+
 	def to_do(self,what):
 		wx.MessageBox(what+' no está implementado', 'Falla Temporal', wx.OK)
-      
+
+	def getBook(self,book_id):
+		if book_id > len (self.BooksDB):
+			print "Libro no existente: ",book_id
+			return False
+		return self.BooksDB[book_id]
+
+	def getUser(self,user_id):
+		if user_id > len (self.UsersDB):
+			print "Usuario no existente: ",user_id
+			return False
+		return self.UsersDB[user_id]
+
+		#
+		# Carga la Base de datos
+		#
+
+	def loadUsers(self):
+		##################cargar libros... toodos#######################
+		self.error_str=''
+		self.error = False
+		self.UsersDB = load_table('usuarios')
+		if not self.UsersDB:
+			self.error_str +="Error al cargar Base de datos de usuarios"
+			self.error      = True
+		else: 
+			print "Usuarios cargados correctamente"
+		if self.error:
+			Iface.showmessage(self.error_str,"Error!")
+
+		####### fin carga libros #######################################
+
+	def loadbooks(self):
+		##################cargar libros... toodos#######################
+		self.error_str=''
+		self.error = False
+		self.BooksDB = load_table('libros')
+		if not self.BooksDB:
+			self.error_str +="Error al cargar Base de datos de libros"
+			self.error      = True
+		else: 
+			print "libros cargados correctamente"
+		if self.error:
+			Iface.showmessage(self.error_str,"Error!")
+		####### fin carga libros #######################################
+
 if __name__ == '__main__':
   
 	app = wx.App()
