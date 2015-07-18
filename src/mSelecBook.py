@@ -3,7 +3,7 @@
 
 import wx
 import cfg
-import mDispBook
+import mDisplayinfo
 import wx.lib.mixins.listctrl as listmix
 from Tools.sqlite import load_table
 #import sys
@@ -37,7 +37,6 @@ class TempSortedListPanel(wx.ListCtrl, listmix.ListCtrlAutoWidthMixin, listmix.C
 	def OnItemActivated(self, event):
 		#Maybe there's a simple way to get the index. I don't know it, and don't know how to search for it.
 		item = event.m_itemIndex
-		print "item activado: ", item
 		index = self.itemIndexMap[item]
 		self.GetGrandParent().SendIdn(self.books[index])
 

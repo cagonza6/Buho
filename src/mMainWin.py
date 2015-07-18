@@ -10,8 +10,7 @@ import mNewBook
 import mSelecBook
 import mNewUser
 import mSelecUser
-import mDispBook
-import mDispUser
+import mDisplayinfo
 import mLoanBook
 import mRetBook
 import Tools.interface as Iface # mensajes por pantall
@@ -116,9 +115,9 @@ class MainWin(wx.Frame):
 
 	def RecieveIdn(self, data, tipo):
 		if tipo == 'book':
-			mDispBook.DispBook(self, data)
+			mDisplayinfo.DispBook(self, data)
 		if tipo == 'user':
-			mDispUser.DispUser(self, data)
+			mDisplayinfo.DispUser(self, data)
 
 	def OnQuit(self, e):
 		Main.end_save()
@@ -129,13 +128,11 @@ class MainWin(wx.Frame):
 
 	def getBook(self,book_id):
 		if book_id > len (self.BooksDB):
-			print "Libro no existente: ",book_id
 			return False
 		return self.BooksDB[book_id]
 
 	def getUser(self,user_id):
 		if user_id > len (self.UsersDB):
-			print "Usuario no existente: ",user_id
 			return False
 		return self.UsersDB[user_id]
 

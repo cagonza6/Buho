@@ -6,7 +6,7 @@
 
 import wx
 import cfg
-import mDispUser
+import mDisplayinfo
 import wx.lib.mixins.listctrl as listmix
 #import sys
 

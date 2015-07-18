@@ -1,11 +1,58 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-#This is the panel to display a User
+#This is the Frame to display a book
 
 import wx
 import cfg
 
+'''
+@user: diccionario con los datos del libro a mostrar
+'''
+class DispBook(wx.Frame):
+	def __init__(self, parent, book):
+		wx.Frame.__init__(self, parent = parent, style = wx.RESIZE_BORDER | wx.CLOSE_BOX)
+
+		self.book = book
+		self.SetTitle('Datos del Libro')
+
+		self.PanelUI()
+		self.Centre()
+		self.Show()
+
+	def PanelUI(self):
+
+		vbox  = wx.BoxSizer(wx.VERTICAL)
+		panel = wx.Panel(self, -1)
+		fgs   = wx.FlexGridSizer(4,2,7,15)
+		# Identificadores
+		ste   = wx.StaticText(panel, label = "")
+		stTi  = wx.StaticText(panel, label = "Título: ")
+		stAu  = wx.StaticText(panel, label = "Autor: ")
+		stPt  = wx.StaticText(panel, label = "Prestado: ")
+		stCm  = wx.StaticText(panel, label = "Comentario: ")
+		# Campos
+		stTio = wx.StaticText(panel, label = self.book['titulo'])
+		stAuo = wx.StaticText(panel, label = self.book['autor'])
+		if self.book['estado']:
+			stPto = wx.StaticText(panel, label = "No")
+		else:
+			stPto = wx.StaticText(panel, label = "Si")
+		stCmo = wx.StaticText(panel, label = self.book['comentarios'])
+		fgs.AddMany([(stTi),(stTio, 1, wx.EXPAND),
+		             (stAu),(stAuo, 1, wx.EXPAND),
+		             (stPt),(stPto, 2, wx.EXPAND),
+		             (stCm),(stCmo, 2, wx.EXPAND)])
+		fgs.AddGrowableCol(1, 0)	#me asegura que crezcan como deben
+
+		vbox.Add(fgs, proportion = 1, flag = wx.ALL | wx.EXPAND, border = 15)
+		panel.SetSizerAndFit(vbox)
+		self.Hide()
+
+
+'''
+@user: diccionario con los datos del usuario a mostrar
+'''
 class DispUser(wx.Frame):
 	def __init__(self, parent, user):
 		wx.Frame.__init__(self, parent = parent, style = wx.RESIZE_BORDER | wx.CLOSE_BOX)
@@ -18,7 +65,6 @@ class DispUser(wx.Frame):
 		self.Show()
 
 	def PanelUI(self):
-		print self.user
 		vbox  = wx.BoxSizer(wx.VERTICAL)
 		panel = wx.Panel(self, -1)
 		fgs   = wx.FlexGridSizer(5,2,7,15)
@@ -73,4 +119,11 @@ if __name__ == '__main__':
 	ddic={'telefono':'555-corriente','nombres':'Juan Carlos','apellidos': 'Perez Perez','rut':'12345678-9','comentarios': 'no hay comentarios','estado':1, 'direccion':'Su casa'}
 	ex = wx.App()
 	DispUser(None, ddic)
-	ex.MainLoop()    
+	ex.MainLoop()
+
+	#dummy dictionary to test the method
+	ddic={'titulo':'Titulo','autor': 'Autor','isbn':'123456789','comentarios': 'no hay comentarios','estado':1}
+	ex = wx.App()
+	DispBook(None, ddic)
+	ex.MainLoop()
+
