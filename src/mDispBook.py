@@ -42,7 +42,9 @@ class DispBook(wx.Frame):
 		self.Hide()
 
 
-#if __name__ == '__main__':
-	#ex = wx.App()
-	#DispBook(None, 0)
-	#ex.MainLoop()    
+if __name__ == '__main__':
+	#dummy dictionary to test the method
+	ddic={'titulo':'Titulo','autor': 'Autor','isbn':'123456789','comentarios': 'no hay comentarios','estado':1}
+	ex = wx.App()
+	DispBook(None, ddic)
+	ex.MainLoop()
