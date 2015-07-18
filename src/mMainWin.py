@@ -22,9 +22,6 @@ class MainWin(wx.Frame):
 		self.InitUI()
 		self.Centre()
 		self.Show(True)
-		self.loadUsers() # carga db de usuarios
-		self.loadbooks() # carga db de libros
-
 
 	def InitUI(self):
 		self.vbox = wx.BoxSizer(wx.VERTICAL)
@@ -84,7 +81,7 @@ class MainWin(wx.Frame):
 		self.ChangePanel(mRetBook.RetBook(self,self.GetSize()))
 		
 	def OnLoanBook(self, e):
-		self.ChangePanel(mLoanBook.LoanBook(self,self.GetSize() , self.BooksDB , self.UsersDB) )
+		self.ChangePanel(mLoanBook.LoanBook(self,self.GetSize()) )
 
 	def OnNewBook(self, e):
 		self.ChangePanel(mNewBook.NewBook(self,self.GetSize()))
@@ -102,15 +99,14 @@ class MainWin(wx.Frame):
 
 	def OnSearchBook(self, e ):
 		self.panel.Hide()
-		mSearchWindows.SearchBook(self,self.BooksDB)
+		mSearchWindows.SearchBook(self)
 
 	def OnNewUser(self, e):
 		self.ChangePanel(mNewUser.NewUser(self,self.GetSize()))
 		
 	def OnSearchUser(self,e):
 		self.panel.Hide()
-
-		mSearchWindows.SearchUser(self,self.UsersDB)
+		mSearchWindows.SearchUser(self)
 
 	def RecieveIdn(self, data, tipo):
 		if tipo == 'book':
@@ -134,43 +130,6 @@ class MainWin(wx.Frame):
 		if user_id > len (self.UsersDB):
 			return False
 		return self.UsersDB[user_id]
-
-		#
-		# Carga la Base de datos
-		#
-
-	def loadUsers(self):
-		##################cargar libros... toodos#######################
-		self.error_str=''
-		self.error = False
-		self.UsersDB = load_table('usuarios')
-		if not self.UsersDB:
-			self.error_str +="Error al cargar Base de datos de usuarios"
-			self.error      = True
-		else: 
-			print "Usuarios cargados correctamente"
-		if self.error:
-			Iface.showmessage(self.error_str,"Error!")
-			return False
-		return self.UsersDB
-
-		####### fin carga libros #######################################
-
-	def loadbooks(self):
-		##################cargar libros... toodos#######################
-		self.error_str=''
-		self.error = False
-		self.BooksDB = load_table('libros')
-		if not self.BooksDB:
-			self.error_str +="Error al cargar Base de datos de libros"
-			self.error      = True
-		else: 
-			print "libros cargados correctamente"
-		if self.error:
-			Iface.showmessage(self.error_str,"Error!")
-			return False
-		return self.UsersDB
-		####### fin carga libros #######################################
 
 if __name__ == '__main__':
   

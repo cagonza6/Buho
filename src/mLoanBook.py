@@ -10,9 +10,8 @@ import mSearchWindows
 from Tools.sqlite import loanbook
 
 class LoanBook(wx.Panel):
-	def __init__(self, parent, size, books, users):
-		self.books=books
-		self.users=users
+	def __init__(self, parent, size):
+
 		wx.Panel.__init__(self, parent = parent, size = size)
 		vbox = wx.BoxSizer(wx.VERTICAL)
 		self.bk_id = -1
@@ -44,10 +43,10 @@ class LoanBook(wx.Panel):
 		self.Hide()
 
 	def OnSelecBook(self, e):
-		mSearchWindows.SearchBook(self,self.books)
+		mSearchWindows.SearchBook(self)
 
 	def OnSelecUser(self, e):
-		mSearchWindows.SearchUser(self,self.users)
+		mSearchWindows.SearchUser(self)
 
 	def RecieveIdn(self, data, tipo):
 		#print idn, what
@@ -89,6 +88,7 @@ class LoanBook(wx.Panel):
 
 		self.saving = loanbook(self.data_loan)
 		if self.saving:
+			self.Clean()
 			return
 
 	def Clean(self):

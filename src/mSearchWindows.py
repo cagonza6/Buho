@@ -8,6 +8,42 @@ import wx.lib.mixins.listctrl as listmix
 from Tools.sqlite import load_table
 #import sys
 
+#
+# Carga la Base de datos
+#
+
+def loadUsers():
+	##################cargar libros... toodos#######################
+	error_str=''
+	error = False
+	UsersDB = load_table('usuarios')
+	if not UsersDB:
+		error_str +="Error al cargar Base de datos de usuarios"
+		error      = True
+	else: 
+		print "Usuarios cargados correctamente"
+	if error:
+		Iface.showmessage(error_str,"Error!")
+		return False
+	return UsersDB
+		####### fin carga libros #######################################
+
+def loadbooks():
+	##################cargar libros... toodos#######################
+	error_str=''
+	error = False
+	BooksDB = load_table('libros')
+	if not BooksDB:
+		error_str +="Error al cargar Base de datos de libros"
+		error      = True
+	else: 
+		print "libros cargados correctamente"
+	if error:
+		Iface.showmessage(error_str,"Error!")
+		return False
+	return BooksDB
+	####### fin carga libros #######################################
+
 #All Glory for this goes to the people at http://code.activestate.com/recipes/426407-columnsortermixin-with-a-virtual-wxlistctrl/
 class TempSortedListPanelUser(wx.ListCtrl, listmix.ListCtrlAutoWidthMixin, listmix.ColumnSorterMixin):
 	def __init__(self, parent):
@@ -99,9 +135,10 @@ class TempSortedListPanelUser(wx.ListCtrl, listmix.ListCtrlAutoWidthMixin, listm
 
 #es la ventana que aparece al hacer click en el boton de buscar en el programa principal
 class SearchUser(wx.Frame):
-	def __init__(self, parent,users):
+	def __init__(self, parent,users=False):
 		wx.Frame.__init__(self, parent = parent,style = wx.MAXIMIZE_BOX | wx.RESIZE_BORDER | wx.CAPTION | wx.MINIMIZE_BOX| wx.CLOSE_BOX)
-		self.users = users
+		if not users:
+			self.users = loadUsers()
 		self.SetSize((1000, 300))
 		self.SetTitle(u'Buscar Usuario')
 		self.Centre()
@@ -297,9 +334,9 @@ class TempSortedListPanelBook(wx.ListCtrl, listmix.ListCtrlAutoWidthMixin, listm
 
 #es la ventana que aparece al hacer click en el boton de buscar en el programa principal
 class SearchBook(wx.Frame):
-	def __init__(self, parent,books):
+	def __init__(self, parent,books=False):
 		wx.Frame.__init__(self, parent = parent,style = wx.MAXIMIZE_BOX | wx.RESIZE_BORDER | wx.CAPTION | wx.MINIMIZE_BOX| wx.CLOSE_BOX)
-		self.books = books
+		self.books = loadbooks()
 		self.SetSize((1000, 300))
 		self.SetTitle(u'Buscar Libro')
 		self.Centre()
