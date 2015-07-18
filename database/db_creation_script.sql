@@ -38,6 +38,7 @@ CREATE TABLE prestamos (
     "id_usuario" INTEGER NOT NULL,
     "desde" INTEGER NOT NULL,
     "hasta" INTEGER NOT NULL,
+    "retorno" INTEGER NOT NULL,
     "comentarios" TEXT,
     "estado" INTEGER DEFAULT (1)
 );
