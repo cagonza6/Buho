@@ -35,3 +35,27 @@ def save_new(userdata,type_,path2db = "../biblioteca/database/Main.db"):
 	Result = sth.fetchall()
 	con.close()
 	return True
+
+def load_table(table, path2db = "../biblioteca/database/Main.db"):
+
+	if table   =='libros':
+		query  = "SELECT * FROM libros ;"
+	elif table =='usuarios':
+		query  = "SELECT * FROM usuarios ;"
+	else:
+		return False
+
+	con              = sqlite3.connect(path2db)
+	con.text_factory = str
+	con.row_factory  = query2dic
+	sth              = con.cursor()
+
+	try:
+		sth.execute(query)
+	except sqlite3.Error as e:
+		print e
+		return False
+
+	Result = sth.fetchall()
+	con.close()
+	return Result
