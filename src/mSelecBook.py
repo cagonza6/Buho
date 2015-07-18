@@ -6,7 +6,6 @@ import cfg
 import mDispBook
 import wx.lib.mixins.listctrl as listmix
 from Tools.sqlite import load_table
-
 #import sys
 
 #All Glory for this goes to the people at http://code.activestate.com/recipes/426407-columnsortermixin-with-a-virtual-wxlistctrl/
@@ -38,8 +37,11 @@ class TempSortedListPanel(wx.ListCtrl, listmix.ListCtrlAutoWidthMixin, listmix.C
 	def OnItemActivated(self, event):
 		#Maybe there's a simple way to get the index. I don't know it, and don't know how to search for it.
 		item = event.m_itemIndex
+		print "item activado: ", item
 		index = self.itemIndexMap[item]
-		self.GetGrandParent().SendIdn(index)
+		self.GetGrandParent().SendIdn(self.books[index])
+
+
 
     #---------------------------------------------------
     # These methods are callbacks for implementing the
@@ -174,7 +176,6 @@ class SearchBook(wx.Frame):
 		new_list = []
 		for i in range(0,len(self.books)):
 			self.libro_ = self.books[i]
-
 			if (partial_autor and partial_autor.lower() in self.libro_['autor'].lower()):
 				new_list.append(self.books[i])
 			if (partial_title and partial_title.lower() in self.libro_['titulo'].lower()):
@@ -182,8 +183,8 @@ class SearchBook(wx.Frame):
 
 		self.ReDoList(new_list)
 
-	def SendIdn(self, idn):
-		self.GetParent().RecieveIdn(idn, 'book')
+	def SendIdn(self, book):
+		self.GetParent().RecieveIdn(book, 'book')
 		self.Close()
 
 

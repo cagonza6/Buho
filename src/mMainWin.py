@@ -102,9 +102,9 @@ class MainWin(wx.Frame):
 			self.panel.Show()
 			cfg.lockwin = True
 
-	def OnSearchBook(self, e):
+	def OnSearchBook(self, e ):
 		self.panel.Hide()
-		mSelecBook.SelecBook(self)
+		mSelecBook.SearchBook(self,self.BooksDB)
 
 	def OnNewUser(self, e):
 		self.ChangePanel(mNewUser.NewUser(self,self.GetSize()))
@@ -115,8 +115,10 @@ class MainWin(wx.Frame):
 		mSelecUser.SelecUser(self)
 
 	def RecieveIdn(self, data, tipo):
-		if what == 'book': mDispBook.DispBook(self, data)
-		if what == 'user': mDispUser.DispUser(self, data)
+		if tipo == 'book':
+			mDispBook.DispBook(self, data)
+		if tipo == 'user':
+			mDispUser.DispUser(self, data)
 
 	def OnQuit(self, e):
 		Main.end_save()
