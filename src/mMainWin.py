@@ -7,9 +7,8 @@ import wx
 import cfg
 import Main
 import mNewBook
-import mSelecBook
+import mSearchWindows
 import mNewUser
-import mSelecUser
 import mDisplayinfo
 import mLoanBook
 import mRetBook
@@ -85,7 +84,7 @@ class MainWin(wx.Frame):
 		self.ChangePanel(mRetBook.RetBook(self,self.GetSize()))
 		
 	def OnLoanBook(self, e):
-		self.ChangePanel(mLoanBook.LoanBook(self,self.GetSize()))
+		self.ChangePanel(mLoanBook.LoanBook(self,self.GetSize() , self.BooksDB , self.UsersDB) )
 
 	def OnNewBook(self, e):
 		self.ChangePanel(mNewBook.NewBook(self,self.GetSize()))
@@ -103,7 +102,7 @@ class MainWin(wx.Frame):
 
 	def OnSearchBook(self, e ):
 		self.panel.Hide()
-		mSelecBook.SearchBook(self,self.BooksDB)
+		mSearchWindows.SearchBook(self,self.BooksDB)
 
 	def OnNewUser(self, e):
 		self.ChangePanel(mNewUser.NewUser(self,self.GetSize()))
@@ -111,7 +110,7 @@ class MainWin(wx.Frame):
 	def OnSearchUser(self,e):
 		self.panel.Hide()
 
-		mSelecUser.SelecUser(self)
+		mSearchWindows.SearchUser(self,self.UsersDB)
 
 	def RecieveIdn(self, data, tipo):
 		if tipo == 'book':
@@ -152,6 +151,8 @@ class MainWin(wx.Frame):
 			print "Usuarios cargados correctamente"
 		if self.error:
 			Iface.showmessage(self.error_str,"Error!")
+			return False
+		return self.UsersDB
 
 		####### fin carga libros #######################################
 
@@ -167,6 +168,8 @@ class MainWin(wx.Frame):
 			print "libros cargados correctamente"
 		if self.error:
 			Iface.showmessage(self.error_str,"Error!")
+			return False
+		return self.UsersDB
 		####### fin carga libros #######################################
 
 if __name__ == '__main__':

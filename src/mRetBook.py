@@ -6,8 +6,8 @@
 
 import wx
 import cfg
-import mSelecBook
-import mSelecUser
+import mSearchWindows
+import mSearchWindows
 
 class RetBook(wx.Panel):
 	def __init__(self, parent, size):
@@ -34,7 +34,7 @@ class RetBook(wx.Panel):
 		self.Hide()
 
 	def OnSelecBook(self, e):
-		mSelecBook.SelecBook(self)
+		mSearchWindows.SelecBook(self)
 		
 	def RecieveIdn(self, idn, what):
 		#print idn, what

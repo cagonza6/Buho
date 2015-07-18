@@ -6,12 +6,13 @@
 
 import wx
 import cfg
-import mSelecBook
-import mSelecUser
+import mSearchWindows
 
 class LoanBook(wx.Panel):
-	def __init__(self, parent, size):
-		wx.Panel.__init__(self, parent = parent, size = size)	
+	def __init__(self, parent, size, books, users):
+		self.books=books
+		self.users=users
+		wx.Panel.__init__(self, parent = parent, size = size)
 		vbox = wx.BoxSizer(wx.VERTICAL)
 		self.bk_id = -1
 		self.us_id = -1
@@ -39,11 +40,11 @@ class LoanBook(wx.Panel):
 		self.Hide()
 
 	def OnSelecBook(self, e):
-		mSelecBook.SelecBook(self)
-		
+		mSearchWindows.SearchBook(self,self.books)
+
 	def OnSelecUser(self, e):
-		mSelecUser.SelecUser(self)
-			
+		mSearchWindows.SearchUser(self,self.users)
+
 	def RecieveIdn(self, idn, what):
 		#print idn, what
 		if what == 0:
@@ -53,7 +54,7 @@ class LoanBook(wx.Panel):
 		if what == 1:
 			self.us_id = idn
 			self.tcUs.SetValue(cfg.uss[idn].GetName())
-    
+
 	def OnLoan(self, e):
 		if (self.bk_id != -1) and (self.us_id != -1):
 			bk = cfg.bks[self.bk_id]
@@ -68,11 +69,10 @@ class LoanBook(wx.Panel):
 					cfg.chk("Usuario debe:" + aux, 2)
 			else:
 				print "Libro está prestado."
-		
+
 	def Clean(self):
 		self.tcBk.SetValue("")
 		self.tcUs.SetValue("")
-              
 
 #class Example(wx.Frame):
 	#def __init__(self,parent):
@@ -84,7 +84,7 @@ class LoanBook(wx.Panel):
 		#self.Centre()
 		#self.Show()
 
-#if __name__ == '__main__':
-	#ex = wx.App()
-	#Example(None)
-	#ex.MainLoop()    
+if __name__ == '__main__':
+	ex = wx.App()
+	LoanBook(None)
+	ex.MainLoop()    
