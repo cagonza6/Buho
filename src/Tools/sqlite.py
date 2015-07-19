@@ -76,9 +76,9 @@ def load_table(table, path2db = "../biblioteca/database/Main.db"):
 
 def loanbook(idlibro,idusuario,desde_,hasta_, path2db = "../biblioteca/database/Main.db"):
 
-	data =  [idlibro,idusuario,desde_,hasta_]
-
-	query1 = "INSERT INTO prestamos ( id_libro , id_usuario, desde, hasta,retorno, comentarios) VALUES ( ?, ?, ?, ?,0,'');"
+	data  =  [idlibro,idusuario,desde_,hasta_]
+	query1 = "INSERT INTO prestamos ( id_libro , id_usuario, desde, hasta, comentarios) VALUES ( ?, ?, ?, ?, '');"
+	query2 = "INSERT INTO historial ( id_libro , id_usuario, desde, hasta,retorno, comentarios) VALUES ( ?, ?, ?, ?,0,'');"
 
 	con              = sqlite3.connect(path2db)
 	con.text_factory = str
@@ -87,18 +87,30 @@ def loanbook(idlibro,idusuario,desde_,hasta_, path2db = "../biblioteca/database/
 
 	try:
 		sth.execute(query1,data)
+		sth.execute(query2,data)
 	except sqlite3.Error as e:
+		Result = sth.fetchall()
+		print "Fail al registrar pedido",Result
+		print e
 		return False
 
 	con.commit()
 	con.close()
 	return True
 
-def returnbook(idlibro,hasta_, path2db = "../biblioteca/database/Main.db"):
+def returnbook(idlibro,retorno, path2db = "../biblioteca/database/Main.db"):
 
-	data =  [hasta_,idlibro]
+#	Con esto sabremos cual es la ID del prestamo que se esta utilizando
+	data0  =  [idlibro,]
+	query0 = "SELECT id_prestamo FROM prestamos WHERE id_libro= ? LIMIT 1;"
 
-	query = "UPDATE prestamos set estado=0, hasta = ? WHERE id_libro= ?;"
+#	Elimina de los prestamos activos el libro en cuestion
+	data1  =  [idlibro,]
+	query1 = "DELETE FROM prestamos WHERE id_libro= ?;"
+
+#	actualiza la fecha de la devolucion en el historial y cierra el prestamo
+#   data2 se genera a partir de la primera query, ver llamado a query3
+	query2 = "UPDATE historial set estado = 0, retorno = ? WHERE id_prestamo= ? and id_libro = ?; "
 
 	con              = sqlite3.connect(path2db)
 	con.text_factory = str
@@ -106,12 +118,42 @@ def returnbook(idlibro,hasta_, path2db = "../biblioteca/database/Main.db"):
 	sth              = con.cursor()
 
 	try:
-		sth.execute(query,data)
+		sth.execute(query0,data0)
+		Result = sth.fetchone()
+		idPrestamo = Result['id_prestamo']
+		print idPrestamo
+		sth.execute(query1,data1)
+		data1  =  [idlibro,]
+
+		data2  =  [retorno,idPrestamo,idlibro]
+		sth.execute(query2,data2)
 	except sqlite3.Error as e:
+		print e
 		return False
-	Result = sth.fetchall()
-	print Result
+
+
 	con.commit()
 	con.close()
 	return True
 
+
+def loadprestamo(idlibro,idusuario, path2db = "../biblioteca/database/Main.db"):
+
+	data =  [idlibro,idusuario,desde_,hasta_]
+
+	query1 = "Select id_prestamo,id_libro, id_usuario FROM prestamos WHERE id_libro = ? ;"
+
+	con              = sqlite3.connect(path2db)
+	con.text_factory = str
+	con.row_factory  = query2dic
+	sth              = con.cursor()
+
+	try:
+		sth.execute(query1,data)
+		sth.execute(query2,data)
+	except sqlite3.Error as e:
+		return False
+
+	con.commit()
+	con.close()
+	return True

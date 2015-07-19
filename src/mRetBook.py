@@ -57,8 +57,8 @@ class RetBook(wx.Panel):
 		'''
 		Aqui hai q incluir los metodo para validar las fechas desde un calendario
 		'''
-		self.fecha=20160105
-		return [self.book['id_libro'],self.fecha]
+		self.retorno=20160105
+		return [self.book['id_libro'],self.retorno]
 
 	def OnRet(self, e):
 		#segunda validacion de los parametros de usuario y libro,
@@ -75,7 +75,7 @@ class RetBook(wx.Panel):
 		if self.saving:
 			self.book = False
 			self.Clean()
-			Iface.showmessage('Prestamo realizado con exito.','Prestamos')
+			Iface.showmessage(u'Devolución realizado con exito.','Prestamos')
 			return
 
 	def Clean(self):
