@@ -87,24 +87,29 @@ class RetBook(wx.Panel):
 			self.book = self.validarLibro(data)
 			if self.book:
 				self.tcBk.SetValue(self.book['titulo'])
-			self.user = load_single_from_prestamos('usuario',self.book['id_prestamo'])
+				self.user = load_single_from_prestamos('usuario',self.book['id_prestamo'])[0]
+			if self.user:
+				self.llenarDatos()
 
 	def llenarDatos(self):
 		#Libro
 		self.stIso.SetLabel(self.book['isbn'])
 		self.stTio.SetLabel(self.book['titulo'])
 		self.stAuo.SetLabel(self.book['autor'])
-		if self.book['estado']: self.stPto.SetLabel(label = "Si")
-		else: self.stPto.SetLabel("No")
+		if self.book['estado']:
+			self.stPto.SetLabel(label = "Si")
+		else:
+			self.stPto.SetLabel("No")
 		
 		#Usuario
-		'''
-		self.user = self.book['id_usuario']
 		self.laNm.SetLabel(self.user['nombres'])
 		self.laAp.SetLabel(self.user['apellidos'])
-		if self.user['estado']: self.laSt.SetLabel("Activo")
-		else: self.laSt.SetLabel("Inactivo")
-		'''
+
+		if self.user['estado']:
+			self.laSt.SetLabel("Activo")
+		else:
+			self.laSt.SetLabel("Inactivo")
+
 		self.pnlUs.Layout()
 		self.pnlBk.Layout()
 		self.pnlUs.Show()
