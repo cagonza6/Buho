@@ -139,12 +139,13 @@ class SearchUser(wx.Frame):
 		wx.Frame.__init__(self, parent = parent,style = wx.MAXIMIZE_BOX | wx.RESIZE_BORDER | wx.CAPTION | wx.MINIMIZE_BOX| wx.CLOSE_BOX)
 		if not users:
 			self.users = loadUsers()
+		self.PanelUI()
 		self.SetSize((1000, 300))
 		self.SetTitle(u'Buscar Usuario')
 		self.Centre()
 		self.Show()
 		#self.Maximize()
-		self.PanelUI()
+		
 
 	def PanelUI(self):
 		self.idn = 0 # el indice de los usuarios en el arreglo principal
@@ -337,12 +338,13 @@ class SearchBook(wx.Frame):
 	def __init__(self, parent,books=False):
 		wx.Frame.__init__(self, parent = parent,style = wx.MAXIMIZE_BOX | wx.RESIZE_BORDER | wx.CAPTION | wx.MINIMIZE_BOX| wx.CLOSE_BOX)
 		self.books = loadbooks()
+		self.PanelUI()
 		self.SetSize((1000, 300))
 		self.SetTitle(u'Buscar Libro')
 		self.Centre()
 		self.Show()
 		#self.Maximize()
-		self.PanelUI()
+
 
 	def PanelUI(self):
 		self.idn = 0 # el indice de los libros en el arreglo principal
