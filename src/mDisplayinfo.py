@@ -24,7 +24,7 @@ class DispBook(wx.Frame):
 
 		vbox  = wx.BoxSizer(wx.VERTICAL)
 		panel = wx.Panel(self, -1)
-		fgs   = wx.FlexGridSizer(4,2,7,15)
+		fgs   = wx.FlexGridSizer(6,2,7,15)
 		# Identificadores
 		ste   = wx.StaticText(panel, label = "")
 		stIs  = wx.StaticText(panel, label = "ISBN: ")
@@ -43,9 +43,9 @@ class DispBook(wx.Frame):
 		stCmo = wx.StaticText(panel, label = self.book['comentarios'])
 		fgs.AddMany([(stIs),(stIso, 1, wx.EXPAND),
 		             (stTi),(stTio, 1, wx.EXPAND),
-		             (stAu),(stAuo, 1, wx.EXPAND),
+		             (stAu),(stAuo, 2, wx.EXPAND),
 		             (stPt),(stPto, 2, wx.EXPAND),
-		             (stCm),(stCmo, 2, wx.EXPAND)])
+		             (stCm),(stCmo, 3, wx.EXPAND)])
 		fgs.AddGrowableCol(1, 0)	#me asegura que crezcan como deben
 
 		vbox.Add(fgs, proportion = 1, flag = wx.ALL | wx.EXPAND, border = 15)
@@ -124,10 +124,9 @@ if __name__ == '__main__':
 	ex = wx.App()
 	DispUser(None, ddic)
 	ex.MainLoop()
-
+	
 	#dummy dictionary to test the method
-	ddic={'titulo':'Titulo','autor': 'Autor','isbn':'123456789','comentarios': 'no hay comentarios','estado':1}
+	ddic={'titulo':'Titulo deli libro','autor': 'Autor del libro','isbn':'123456789','comentarios': 'no hay comentarios','estado':1}
 	ex = wx.App()
 	DispBook(None, ddic)
 	ex.MainLoop()
-
