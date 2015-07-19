@@ -77,7 +77,6 @@ class TempSortedListPanelUser(wx.ListCtrl, listmix.ListCtrlAutoWidthMixin, listm
 		self.Bind(wx.EVT_LIST_ITEM_ACTIVATED, self.OnItemActivated)
 
 	# Se activa con el doble click al elemento de la lista
-	#Maybe there's a simple way to get the index. I don't know it, and don't know how to search for it.
 	def OnItemActivated(self, event):
 		#Maybe there's a simple way to get the index. I don't know it, and don't know how to search for it.
 		item = event.m_itemIndex
@@ -148,30 +147,29 @@ class SearchUser(wx.Frame):
 		
 
 	def PanelUI(self):
-		self.idn = 0 # el indice de los usuarios en el arreglo principal
-		self.limlist = self.users #este coso define los usuarios
 		
 		vbox = wx.BoxSizer(wx.VERTICAL)
 		panel = wx.Panel(self, -1)
 
 		fgs = wx.FlexGridSizer(2, 2, 2, 2)		#row, col, margin, margin
 		#campos buscador
-		#ckeckbox para ajustar que parametro se busca
-		self.ckechboxNombre = wx.CheckBox(panel, label = u"El Nombre contiene:")
-		self.ckechboxApellido = wx.CheckBox(panel, label = "El Apellido contiene:")
-		#campos asociados a las checkbox
-		self.tcTi          = wx.TextCtrl(panel)
-		self.tcAu          = wx.TextCtrl(panel)
+		#checkbox para ajustar que parametro se busca
+		self.checkboxNombre = wx.CheckBox(panel, label = u"El Nombre contiene:")
+		self.checkboxApellido = wx.CheckBox(panel, label = "El Apellido contiene:")
+		#campos de texto asociados a las checkbox
+		self.tcNm          = wx.TextCtrl(panel)
+		self.tcAp          = wx.TextCtrl(panel)
 
 		#campos barra intermedia
 		self.stinst = wx.StaticText(panel,label = u"Haga doble click para seleccionar el usuario.")
 
-		fgs.AddMany([(self.ckechboxNombre), (self.tcTi, 1, wx.EXPAND)])
-		fgs.AddMany([(self.ckechboxApellido), (self.tcAu, 1, wx.EXPAND)])
-
+		fgs.AddMany([(self.checkboxNombre, 0), (self.tcNm, 1, wx.EXPAND),
+		            (self.checkboxApellido, 0), (self.tcAp, 1, wx.EXPAND),
+		            ]
+		)
 		fgs.AddGrowableCol(1)
 
-		#ventos
+		#eventos
 		self.Bind(wx.EVT_CHECKBOX, self.OnCheckText)				#All events go to OnCheck, regardless of list
 		self.Bind(wx.EVT_TEXT,self.OnCheckText)
 
@@ -183,11 +181,11 @@ class SearchUser(wx.Frame):
 
 		#Initialization/Default values, debe ser la lista completa
 		#inicializa la checkbox de titulo en true como basico
-		self.ckechboxNombre.SetValue(True)
+		self.checkboxNombre.SetValue(True)
 		#arma la primera lista de libtos
 		self.ReDoList(self.users)
 
-	def ReDoList(self,users):
+	def ReDoList(self, users):
 		self.DinamicPanel.cleanpanel()
 		auxlst       = {}
 		self.auxKeys = []
@@ -209,34 +207,32 @@ class SearchUser(wx.Frame):
 			#~ self.DinamicPanel.SetItemData(index, key)
 
 	def OnCheckText(self, e):
-		partial_autor = False
-		partial_title = False
+		partial_nombre = ''
+		partial_apellido = ''
+		if self.checkboxNombre.GetValue():
+			partial_nombre = str(self.tcNm.GetValue())
+			partial_nombre = partial_nombre.strip()
+		if self.checkboxApellido.GetValue():
+			partial_apellido = self.tcAp.GetValue()
+			partial_apellido = partial_apellido.strip()
+		self.ListaFiltrada(partial_nombre, partial_apellido)
 
-		if self.ckechboxApellido.GetValue():
-			partial_autor = str(self.tcAu.GetValue())
-			partial_autor = partial_autor.strip()
-			if partial_autor=='':
-				partial_autor=False
-		if self.ckechboxNombre.GetValue():
-			partial_title = self.tcTi.GetValue()
-			partial_title = partial_title.strip()
-			if partial_title=='':
-				partial_title = False
-		self.ListaFiltrada(partial_autor, partial_title)
-
-	def ListaFiltrada(self,partial_autor,partial_title):
-		#si no hay filtros regresa la lista completa
-		if(not partial_autor and not partial_title):
-			self.ReDoList(self.users)
-			return
+	def ListaFiltrada(self, partial_nombre, partial_apellido):		
+		aux_list = []
+		#check name
+		if self.checkboxNombre.GetValue():
+			for i in range(0,len(self.users)):
+				if partial_nombre.lower() in self.users[i]['nombres'].lower():
+					aux_list.append(self.users[i])
+		else: aux_list = self.users
+			
 		new_list = []
-		for i in range(0,len(self.users)):
-			self.usuario_ = self.users[i]
-			if (partial_autor and partial_autor.lower() in self.usuario_['apellidos'].lower()):
-				new_list.append(self.users[i])
-			if (partial_title and partial_title.lower() in self.usuario_['nombres'].lower()):
-				new_list.append(self.users[i])
-
+		#check apellido
+		if self.checkboxApellido.GetValue():
+			for i in range(0,len(aux_list)):
+				if partial_apellido.lower() in aux_list[i]['apellidos'].lower():
+					new_list.append(aux_list[i])
+		else: new_list = aux_list
 		self.ReDoList(new_list)
 
 	def SendIdn(self, user):
@@ -345,19 +341,15 @@ class SearchBook(wx.Frame):
 		self.Show()
 		#self.Maximize()
 
-
 	def PanelUI(self):
-		self.idn = 0 # el indice de los libros en el arreglo principal
-		self.limlist = self.books #este coso define los libros
-		
 		vbox = wx.BoxSizer(wx.VERTICAL)
 		panel = wx.Panel(self, -1)
 
 		fgs = wx.FlexGridSizer(2, 2, 2, 2)		#row, col, margin, margin
 		#campos buscador
 		#ckeckbox para ajustar que parametro se busca
-		self.ckechboxTitle = wx.CheckBox(panel, label = u"El título contiene:")
-		self.ckechboxAutor = wx.CheckBox(panel, label = "El autor contiene:")
+		self.checkboxTitle = wx.CheckBox(panel, label = u"El título contiene:")
+		self.checkboxAutor = wx.CheckBox(panel, label = "El autor contiene:")
 		#campos asociados a las checkbox
 		self.tcTi          = wx.TextCtrl(panel)
 		self.tcAu          = wx.TextCtrl(panel)
@@ -365,8 +357,8 @@ class SearchBook(wx.Frame):
 		#campos barra intermedia
 		self.stinst = wx.StaticText(panel,label = u"Haga doble click para seleccionar el libro.")
 
-		fgs.AddMany([(self.ckechboxTitle), (self.tcTi, 1, wx.EXPAND)])
-		fgs.AddMany([(self.ckechboxAutor), (self.tcAu, 1, wx.EXPAND)])
+		fgs.AddMany([(self.checkboxTitle), (self.tcTi, 1, wx.EXPAND)])
+		fgs.AddMany([(self.checkboxAutor), (self.tcAu, 1, wx.EXPAND)])
 
 		fgs.AddGrowableCol(1)
 
@@ -382,7 +374,7 @@ class SearchBook(wx.Frame):
 
 		#Initialization/Default values, debe ser la lista completa
 		#inicializa la checkbox de titulo en true como basico
-		self.ckechboxTitle.SetValue(True)
+		self.checkboxTitle.SetValue(True)
 		#arma la primera lista de libtos
 		self.ReDoList(self.books)
 
@@ -402,40 +394,34 @@ class SearchBook(wx.Frame):
 		self.DinamicPanel.itemDataMap  = auxlst
 		self.DinamicPanel.itemIndexMap = self.auxKeys
 		self.DinamicPanel.SetItemCount(len(books)) #este bichodefine cuantas iteraciones se hacen, debe ser la cantidad de libros q se dan
-		#~ items = self.limlist.items()
-		#~ for key,se in items:
-			#~ index = self.DinamicPanel.InsertStringItem(sys.maxint, se.GetPal())
-			#~ self.DinamicPanel.SetItemData(index, key)
 
 	def OnCheckText(self, e):
-		partial_autor = False
-		partial_title = False
-
-		if self.ckechboxAutor.GetValue():
+		partial_autor = ''
+		partial_title = ''
+		if self.checkboxAutor.GetValue():
 			partial_autor = str(self.tcAu.GetValue())
 			partial_autor = partial_autor.strip()
-			if partial_autor=='':
-				partial_autor=False
-		if self.ckechboxTitle.GetValue():
+		if self.checkboxTitle.GetValue():
 			partial_title = self.tcTi.GetValue()
 			partial_title = partial_title.strip()
-			if partial_title=='':
-				partial_title = False
 		self.ListaFiltrada(partial_autor, partial_title)
 
 	def ListaFiltrada(self,partial_autor,partial_title):
-		#si no hay filtros regresa la lista completa
-		if(not partial_autor and not partial_title):
-			self.ReDoList(self.books)
-			return
+		aux_list = []
+		#check Autor
+		if self.checkboxAutor.GetValue():
+			for i in range(0,len(self.books)):
+				if partial_autor.lower() in self.books[i]['autor'].lower():
+					aux_list.append(self.books[i])
+		else: aux_list = self.books
+			
 		new_list = []
-		for i in range(0,len(self.books)):
-			self.libro_ = self.books[i]
-			if (partial_autor and partial_autor.lower() in self.libro_['autor'].lower()):
-				new_list.append(self.books[i])
-			if (partial_title and partial_title.lower() in self.libro_['titulo'].lower()):
-				new_list.append(self.books[i])
-
+		#check Titulo
+		if self.checkboxTitle.GetValue():
+			for i in range(0,len(aux_list)):
+				if partial_title.lower() in aux_list[i]['titulo'].lower():
+					new_list.append(aux_list[i])
+		else: new_list = aux_list
 		self.ReDoList(new_list)
 
 	def SendIdn(self, book):
