@@ -64,7 +64,7 @@ class RetBook(wx.Panel):
 		self.pnlBk.SetSizerAndFit(fgsBk)
 		self.pnlBk.Hide()
 		
-		bsDt.AddMany([(self.pnlUs, 0),(self.pnlBk, 0)])
+		bsDt.AddMany([(self.pnlBk, 1), (wx.StaticLine(self, -1, style=wx.LI_VERTICAL),1,wx.ALIGN_CENTER_HORIZONTAL ),(self.pnlUs, 1)])
 		
 		btRt = wx.Button(self, label = "Devolver")
 		
@@ -72,7 +72,7 @@ class RetBook(wx.Panel):
 		btRt.Bind(wx.EVT_BUTTON, self.OnRet)
 			
 		vbox.Add(bsBus, 0, wx.EXPAND)
-		vbox.Add(bsDt, 0)
+		vbox.Add(bsDt, 0, wx.EXPAND)
 		vbox.Add(btRt, 0 , wx.EXPAND | wx.ALIGN_CENTER_VERTICAL)
 		self.SetSizer(vbox)
 		self.Hide()
@@ -99,15 +99,19 @@ class RetBook(wx.Panel):
 		else: self.stPto.SetLabel("No")
 		
 		#Usuario
+		'''
 		self.user = self.book['id_usuario']
 		self.laNm.SetLabel(self.user['nombres'])
 		self.laAp.SetLabel(self.user['apellidos'])
 		if self.user['estado']: self.laSt.SetLabel("Activo")
 		else: self.laSt.SetLabel("Inactivo")
-		
-		self.GetParent().Refresh()
+		'''
+		self.pnlUs.Layout()
+		self.pnlBk.Layout()
 		self.pnlUs.Show()
 		self.pnlBk.Show()
+
+		self.Layout()
 
 		
 		
