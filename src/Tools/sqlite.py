@@ -39,9 +39,22 @@ def save_new(userdata,type_,path2db = "../biblioteca/database/Main.db"):
 def load_table(table, path2db = "../biblioteca/database/Main.db"):
 
 	if table   =='libros':
-		query  = "SELECT * FROM libros ;"
+		query  = "SELECT "
+		query += "        libros.id_libro, libros.isbn, libros.autor, libros.titulo, libros.comentarios, "
+		query += "        count(prestamos.estado) as estado "
+		query += "FROM libros "
+		query += "LEFT OUTER JOIN prestamos "
+		query += "        ON libros.id_libro = prestamos.id_libro "
+		query += "group by libros.id_libro;"
+
 	elif table =='usuarios':
-		query  = "SELECT * FROM usuarios ;"
+
+		query  = "SELECT "
+		query += "usuarios.id_usuario , usuarios.nombres , usuarios.apellidos , usuarios.rut , usuarios.direccion , usuarios.telefono , usuarios.estado , usuarios.comentarios,	count(prestamos.estado) as prestamos "
+		query += "FROM usuarios "
+		query += "LEFT OUTER JOIN prestamos ON usuarios.id_usuario = prestamos.id_usuario and prestamos.estado>0 "
+		query += "group by usuarios.id_usuario; "
+
 	else:
 		return False
 
@@ -66,8 +79,6 @@ def loanbook(idlibro,idusuario,desde_,hasta_, path2db = "../biblioteca/database/
 	data =  [idlibro,idusuario,desde_,hasta_]
 
 	query1 = "INSERT INTO prestamos ( id_libro , id_usuario, desde, hasta,retorno, comentarios) VALUES ( ?, ?, ?, ?,0,'');"
-	query2 = "UPDATE libros SET estado = 0 WHERE id_libro = ? ;"
-	query3 = "UPDATE usuarios SET prestamos = (prestamos+1) WHERE id_usuario = ? ;"
 
 	con              = sqlite3.connect(path2db)
 	con.text_factory = str
@@ -76,14 +87,6 @@ def loanbook(idlibro,idusuario,desde_,hasta_, path2db = "../biblioteca/database/
 
 	try:
 		sth.execute(query1,data)
-	except sqlite3.Error as e:
-		return False
-	try:
-		sth.execute(query2, [idlibro,])
-	except sqlite3.Error as e:
-		return False
-	try:
-		sth.execute(query3, [idusuario,])
 	except sqlite3.Error as e:
 		return False
 

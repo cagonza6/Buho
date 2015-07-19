@@ -70,7 +70,7 @@ class LoanBook(wx.Panel):
 		return user
 
 	def validarLibro(self, libro):
-		if not ('estado' in libro.keys()) or not libro['estado']:
+		if not ('estado' in libro.keys()) or libro['estado']:
 			Iface.showmessage('El Libro que seleccionado ya se encuentra prestado.',"Prestado")
 			return False
 		return libro
@@ -105,6 +105,7 @@ class LoanBook(wx.Panel):
 			self.book=False
 			self.user=False
 			self.Clean()
+			Iface.showmessage('Prestamo realizado con exito.','Prestamos')
 			return
 
 	def Clean(self):

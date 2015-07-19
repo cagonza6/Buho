@@ -36,10 +36,12 @@ class DispBook(wx.Frame):
 		stIso = wx.StaticText(panel, label = self.book['isbn'])
 		stTio = wx.StaticText(panel, label = self.book['titulo'])
 		stAuo = wx.StaticText(panel, label = self.book['autor'])
+
 		if self.book['estado']:
-			stPto = wx.StaticText(panel, label = "No")
-		else:
 			stPto = wx.StaticText(panel, label = "Si")
+		else:
+			stPto = wx.StaticText(panel, label = "N0")
+
 		stCmo = wx.StaticText(panel, label = self.book['comentarios'])
 		fgs.AddMany([(stIs),(stIso, 1, wx.EXPAND),
 		             (stTi),(stTio, 1, wx.EXPAND),

@@ -124,14 +124,14 @@ class TempSortedListPanelUser(wx.ListCtrl, listmix.ListCtrlAutoWidthMixin, listm
 
 
 	def OnGetItemImage(self, item):
-		index=self.itemIndexMap[item]
-		self.estado=self.itemDataMap[index]['estado']
-		if not self.estado:
-			return self.sm_no
-		elif self.estado==1:
+		index       = self.itemIndexMap[item]
+		self.estado = self.itemDataMap[index]['estado']
+		#pars users
+		#estado =1 : activo
+		if self.estado:
 			return self.sm_ok
 		else:
-			return -1
+			return self.sm_no
 
 #es la ventana que aparece al hacer click en el boton de buscar en el programa principal
 class SearchUser(wx.Frame):
@@ -326,12 +326,12 @@ class TempSortedListPanelBook(wx.ListCtrl, listmix.ListCtrlAutoWidthMixin, listm
 	def OnGetItemImage(self, item):
 		index=self.itemIndexMap[item]
 		self.estado=self.itemDataMap[index]['estado']
-		if not self.estado:
+		#para libros
+		#estado=1: prestado
+		if self.estado:
 			return self.sm_no
-		elif self.estado==1:
-			return self.sm_ok
 		else:
-			return -1
+			return self.sm_ok
 
 #es la ventana que aparece al hacer click en el boton de buscar en el programa principal
 class SearchBook(wx.Frame):
