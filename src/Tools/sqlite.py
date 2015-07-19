@@ -41,7 +41,7 @@ def load_table(table, path2db = "../biblioteca/database/Main.db"):
 	if table   =='libros':
 		query  = "SELECT "
 		query += "        libros.id_libro, libros.isbn, libros.autor, libros.titulo, libros.comentarios, "
-		query += "        count(prestamos.estado) as estado "
+		query += "        sum(prestamos.estado) as estado "
 		query += "FROM libros "
 		query += "LEFT OUTER JOIN prestamos "
 		query += "        ON libros.id_libro = prestamos.id_libro "
@@ -90,6 +90,27 @@ def loanbook(idlibro,idusuario,desde_,hasta_, path2db = "../biblioteca/database/
 	except sqlite3.Error as e:
 		return False
 
+	con.commit()
+	con.close()
+	return True
+
+def returnbook(idlibro,hasta_, path2db = "../biblioteca/database/Main.db"):
+
+	data =  [hasta_,idlibro]
+
+	query = "UPDATE prestamos set estado=0, hasta = ? WHERE id_libro= ?;"
+
+	con              = sqlite3.connect(path2db)
+	con.text_factory = str
+	con.row_factory  = query2dic
+	sth              = con.cursor()
+
+	try:
+		sth.execute(query,data)
+	except sqlite3.Error as e:
+		return False
+	Result = sth.fetchall()
+	print Result
 	con.commit()
 	con.close()
 	return True

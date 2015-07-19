@@ -7,7 +7,8 @@
 import wx
 import cfg
 import mSearchWindows
-import mSearchWindows
+from Tools.sqlite import returnbook
+import Tools.interface as Iface # mensajes por pantall
 
 class RetBook(wx.Panel):
 	def __init__(self, parent, size):
@@ -34,43 +35,59 @@ class RetBook(wx.Panel):
 		self.Hide()
 
 	def OnSelecBook(self, e):
-		mSearchWindows.SelecBook(self)
-		
-	def RecieveIdn(self, idn, what):
-		#print idn, what
-		if what == 0:
-			self.bk_id = idn
-			self.tcBk.SetValue(cfg.bks[idn].GetTitle())
-			self.us_id = cfg.bks[idn].GetOwner()
-			self.stUs.SetLabel(cfg.uss[self.us_id].GetName())
-			
+		mSearchWindows.SearchBook(self)
+
+	def RecieveIdn(self, data, tipo):
+
+		if tipo == 'book':
+			self.tcBk.SetValue('')
+			self.book = self.validarLibro(data)
+			if self.book:
+				self.tcBk.SetValue(self.book['titulo'])
+
+	def validarLibro(self, libro):
+		if not ('estado' in libro.keys()) or not libro['estado']:
+			Iface.showmessage('El Libro que seleccionado no se encuentra prestado.',"No Prestado")
+			return False
+		return libro
+
+	def validateReturn(self):
+		if not self.validarLibro(self.book):
+			return False
+		'''
+		Aqui hai q incluir los metodo para validar las fechas desde un calendario
+		'''
+		self.fecha=20160105
+		return [self.book['id_libro'],self.fecha]
+
 	def OnRet(self, e):
-		if (self.bk_id != -1) and (self.us_id != -1):
-			if cfg.bks[self.bk_id].IsLoaned():
-				aux = cfg.uss[self.us_id].ReturnBook(self.bk_id)
-				if aux == 1: 
-					print "Devuelto"
-					self.Clean()
-				else: print "Libro no estaba prestado a este usuario."
-			else:
-				print "Libro no está prestado."
-		
+		#segunda validacion de los parametros de usuario y libro,
+		#tambien obtiene los parametro
+		self.data_return = self.validateReturn()
+
+		if not self.data_return:
+			Iface.showmessage('Se encontro un problema al prestar libros.\nPrestamo cancelado.',"Prestamo")
+			return
+
+		self.saving = returnbook(*self.data_return)
+		if not self.saving:
+			Iface.showmessage('Error al registrar el retorno.',"Database")
+		if self.saving:
+			self.book = False
+			self.Clean()
+			Iface.showmessage('Prestamo realizado con exito.','Prestamos')
+			return
+
 	def Clean(self):
 		self.tcBk.SetValue("")
 		self.stUs.SetLabel("")
-              
 
-#class Example(wx.Frame):
-	#def __init__(self,parent):
-		#super(Example, self).__init__(parent=parent, size=(700, 250)) 
-		#vbox = wx.BoxSizer(wx.VERTICAL)
-		#self.panel = NewBook(self)
-		#vbox.Add(self.panel,2,wx.EXPAND)
-		#self.SetSizer(vbox)
-		#self.Centre()
-		#self.Show()
+if __name__ == '__main__':
+	ddic1={'id_libro':1,'titulo':'Titulo animal','autor': 'Autor Auto 1','isbn':'123456789','comentarios': 'no hay 1','estado':0}
+	ddic2={'id_libro':2,'titulo':'Titulo mueble','autor': 'Autor Casa 2','isbn':'223456789','comentarios': 'no hay 2','estado':1}
+	ddic3={'id_libro':3,'titulo':'Titulo pelota','autor': 'Autor mono 2','isbn':'323456789','comentarios': 'no hay 3','estado':1}
+	books=[ddic1,ddic2,ddic3]
 
-#if __name__ == '__main__':
-	#ex = wx.App()
-	#Example(None)
-	#ex.MainLoop()    
+	ex = wx.App()
+	RetBook(None)
+	ex.MainLoop()    
