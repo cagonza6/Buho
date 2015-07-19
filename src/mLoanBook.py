@@ -70,17 +70,16 @@ class LoanBook(wx.Panel):
 		return user
 
 	def validarLibro(self, libro):
-		if not libro['estado']:
+		if not ('estado' in libro.keys()) or not libro['estado']:
 			Iface.showmessage('El Libro que seleccionado ya se encuentra prestado.',"Prestado")
 			return False
 		return libro
 
 	def validateLoan(self):
 
-		if not self.user:
-			self.validarUser(self.user)
+		if not self.validarUser(self.user):
 			return False
-		if self.validarLibro(self.book)
+		if not self.validarLibro(self.book):
 			return False
 		'''
 		Aqui hai q incluir los metodo para validar las fechas desde un calendario
@@ -98,7 +97,9 @@ class LoanBook(wx.Panel):
 			Iface.showmessage('Se encontro un problema al prestar libros.\nPrestamo cancelado.',"Prestamo")
 			return
 
-		self.saving = loanbook(self.data_loan)
+		self.saving = loanbook(*self.data_loan)
+		if not self.saving:
+			Iface.showmessage('Error al registrar el prestamo.',"Database")
 		if self.saving:
 			#actualiza los valores despues de prestar un libro para no prestarlo otra vez
 			self.book=False
