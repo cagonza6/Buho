@@ -7,7 +7,7 @@
 import wx
 import cfg
 import mSearchWindows
-from Tools.sqlite import returnbook
+from Tools.sqlite import returnbook, load_single_from_prestamos
 import Tools.interface as Iface # mensajes por pantall
 
 class RetBook(wx.Panel):
@@ -44,6 +44,7 @@ class RetBook(wx.Panel):
 			self.book = self.validarLibro(data)
 			if self.book:
 				self.tcBk.SetValue(self.book['titulo'])
+			print load_single_from_prestamos('usuario',self.book['id_prestamo'])
 
 	def validarLibro(self, libro):
 		if not ('estado' in libro.keys()) or not libro['estado']:
