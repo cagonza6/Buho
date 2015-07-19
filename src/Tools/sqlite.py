@@ -40,7 +40,7 @@ def load_table(table, path2db = "../biblioteca/database/Main.db"):
 
 	if table   =='libros':
 		query  = "SELECT "
-		query += "        libros.id_libro, libros.isbn, libros.autor, libros.titulo, libros.comentarios, "
+		query += "        libros.id_libro, libros.isbn, libros.autor, libros.titulo, libros.comentarios, prestamos.id_prestamo, "
 		query += "        sum(prestamos.estado) as estado "
 		query += "FROM libros "
 		query += "LEFT OUTER JOIN prestamos "
@@ -98,19 +98,14 @@ def loanbook(idlibro,idusuario,desde_,hasta_, path2db = "../biblioteca/database/
 	con.close()
 	return True
 
-def returnbook(idlibro,retorno, path2db = "../biblioteca/database/Main.db"):
-
-#	Con esto sabremos cual es la ID del prestamo que se esta utilizando
-	data0  =  [idlibro,]
-	query0 = "SELECT id_prestamo FROM prestamos WHERE id_libro= ? LIMIT 1;"
+def returnbook(idprestamo,retorno, path2db = "../biblioteca/database/Main.db"):
 
 #	Elimina de los prestamos activos el libro en cuestion
-	data1  =  [idlibro,]
-	query1 = "DELETE FROM prestamos WHERE id_libro= ?;"
+	data1 =  [idprestamo,]
+	query1 = "DELETE FROM prestamos WHERE id_prestamo= ?;"
 
-#	actualiza la fecha de la devolucion en el historial y cierra el prestamo
-#   data2 se genera a partir de la primera query, ver llamado a query3
-	query2 = "UPDATE historial set estado = 0, retorno = ? WHERE id_prestamo= ? and id_libro = ?; "
+	data2  =  [retorno,idprestamo]
+	query2 = "UPDATE historial set estado = 0, retorno = ? WHERE id_prestamo= ? ; "
 
 	con              = sqlite3.connect(path2db)
 	con.text_factory = str
@@ -118,14 +113,7 @@ def returnbook(idlibro,retorno, path2db = "../biblioteca/database/Main.db"):
 	sth              = con.cursor()
 
 	try:
-		sth.execute(query0,data0)
-		Result = sth.fetchone()
-		idPrestamo = Result['id_prestamo']
-		print idPrestamo
 		sth.execute(query1,data1)
-		data1  =  [idlibro,]
-
-		data2  =  [retorno,idPrestamo,idlibro]
 		sth.execute(query2,data2)
 	except sqlite3.Error as e:
 		print e
@@ -136,7 +124,8 @@ def returnbook(idlibro,retorno, path2db = "../biblioteca/database/Main.db"):
 	con.close()
 	return True
 
-
+#aun no usado ni implementado
+'''
 def loadprestamo(idlibro,idusuario, path2db = "../biblioteca/database/Main.db"):
 
 	data =  [idlibro,idusuario,desde_,hasta_]
@@ -157,3 +146,4 @@ def loadprestamo(idlibro,idusuario, path2db = "../biblioteca/database/Main.db"):
 	con.commit()
 	con.close()
 	return True
+'''

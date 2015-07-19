@@ -57,8 +57,8 @@ class RetBook(wx.Panel):
 		'''
 		Aqui hai q incluir los metodo para validar las fechas desde un calendario
 		'''
-		self.retorno=20160105
-		return [self.book['id_libro'],self.retorno]
+		self.retorno=20160105 #es la fecha de cuando se entrega
+		return [self.book['id_prestamo'],self.retorno]
 
 	def OnRet(self, e):
 		#segunda validacion de los parametros de usuario y libro,
