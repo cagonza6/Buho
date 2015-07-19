@@ -27,11 +27,13 @@ class DispBook(wx.Frame):
 		fgs   = wx.FlexGridSizer(4,2,7,15)
 		# Identificadores
 		ste   = wx.StaticText(panel, label = "")
+		stIs  = wx.StaticText(panel, label = "ISBN: ")
 		stTi  = wx.StaticText(panel, label = "Título: ")
 		stAu  = wx.StaticText(panel, label = "Autor: ")
 		stPt  = wx.StaticText(panel, label = "Prestado: ")
 		stCm  = wx.StaticText(panel, label = "Comentario: ")
 		# Campos
+		stIso = wx.StaticText(panel, label = self.book['isbn'])
 		stTio = wx.StaticText(panel, label = self.book['titulo'])
 		stAuo = wx.StaticText(panel, label = self.book['autor'])
 		if self.book['estado']:
@@ -39,7 +41,8 @@ class DispBook(wx.Frame):
 		else:
 			stPto = wx.StaticText(panel, label = "Si")
 		stCmo = wx.StaticText(panel, label = self.book['comentarios'])
-		fgs.AddMany([(stTi),(stTio, 1, wx.EXPAND),
+		fgs.AddMany([(stIs),(stIso, 1, wx.EXPAND),
+		             (stTi),(stTio, 1, wx.EXPAND),
 		             (stAu),(stAuo, 1, wx.EXPAND),
 		             (stPt),(stPto, 2, wx.EXPAND),
 		             (stCm),(stCmo, 2, wx.EXPAND)])
@@ -116,6 +119,7 @@ class DispUser(wx.Frame):
 		panel.Show()
 
 if __name__ == '__main__':
+	
 	ddic={'telefono':'555-corriente','nombres':'Juan Carlos','apellidos': 'Perez Perez','rut':'12345678-9','comentarios': 'no hay comentarios','estado':1, 'direccion':'Su casa'}
 	ex = wx.App()
 	DispUser(None, ddic)
