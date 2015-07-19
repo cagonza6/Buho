@@ -28,24 +28,32 @@ class MainWin(wx.Frame):
 		self.panel = wx.Panel(self,-1)
 
 		mb = wx.MenuBar()
+		
 		#Acciones
 		fM = wx.Menu()
 		mitry = wx.MenuItem(fM, wx.ID_RETRY, '&TryTest\tCtrl+T')
 		mFqt = wx.MenuItem(fM, wx.ID_EXIT, 'Salir (&Q) \tCtrl+Q')
+		
 		fM.AppendItem(mitry)
 		fM.AppendItem(mFqt)
 
 		#Libros
 		bM = wx.Menu()
-		mBln = wx.MenuItem(bM, wx.ID_FORWARD, '&Prestar Libro\tCtrl+P')
-		mBrt = wx.MenuItem(bM, wx.ID_BACKWARD, '&Devolver Libro\tCtrl+D')
 		mBnw = wx.MenuItem(bM, wx.ID_NEW, '&Nuevo Libro\tCtrl+N')
 		mBse = wx.MenuItem(bM, wx.ID_FIND, '&Buscar Libro\tCtrl+B')
 
-		bM.AppendItem(mBln)
-		bM.AppendItem(mBrt)
 		bM.AppendItem(mBnw)
 		bM.AppendItem(mBse)
+
+		#Prestamos
+		pM = wx.Menu()
+		mPln = wx.MenuItem(pM, wx.ID_FORWARD, '&Prestar Libro\tCtrl+P')
+		mPed = wx.MenuItem(pM, wx.ID_EDIT, '&Editar Préstamo \tCtrl+E')
+		mPrt = wx.MenuItem(pM, wx.ID_BACKWARD, '&Devolver Libro\tCtrl+D')
+		
+		pM.AppendItem(mPln)
+		pM.AppendItem(mPed)
+		pM.AppendItem(mPrt)
 
 		#Usuarios
 		uM = wx.Menu()
@@ -54,8 +62,9 @@ class MainWin(wx.Frame):
 		uM.AppendItem(mUnw)
 		uM.AppendItem(mUse)
 
-		self.Bind(wx.EVT_MENU, self.OnLoanBook, mBln)
-		self.Bind(wx.EVT_MENU, self.OnRetBook, mBrt)
+		self.Bind(wx.EVT_MENU, self.OnLoanBook, mPln)
+		self.Bind(wx.EVT_MENU, self.OnEditLoan, mPed)
+		self.Bind(wx.EVT_MENU, self.OnRetBook, mPrt)
 		self.Bind(wx.EVT_MENU, self.OnNewBook, mBnw)
 		self.Bind(wx.EVT_MENU, self.OnSearchBook, mBse)
 		self.Bind(wx.EVT_MENU, self.OnNewUser, mUnw)
@@ -64,6 +73,7 @@ class MainWin(wx.Frame):
 		self.Bind(wx.EVT_MENU, self.OnQuit, mFqt)
 
 		mb.Append(fM, '&Acciones')
+		mb.Append(pM, '&Préstamos')
 		mb.Append(bM, '&Libro')
 		mb.Append(uM, '&Usuario')
 		self.SetMenuBar(mb)
@@ -79,6 +89,10 @@ class MainWin(wx.Frame):
 
 	def OnRetBook(self, e):
 		self.ChangePanel(mRetBook.RetBook(self,self.GetSize()))
+	
+	def OnEditLoan(self, e):
+		print "No está hecho"
+		pass
 		
 	def OnLoanBook(self, e):
 		self.ChangePanel(mLoanBook.LoanBook(self,self.GetSize()) )
