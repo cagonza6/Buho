@@ -8,6 +8,7 @@ import wx
 import cfg
 import mSearchWindows
 from Tools.sqlite import loanbook
+import Tools.interface as Iface # mensajes por pantall
 
 class LoanBook(wx.Panel):
 	def __init__(self, parent, size):
@@ -51,48 +52,61 @@ class LoanBook(wx.Panel):
 	def RecieveIdn(self, data, tipo):
 		#print idn, what
 		if tipo == 'book':
-			self.book = data
-			self.tcBk.SetValue(self.book['titulo'])
-		if tipo == 'user':
-			self.user = data
-			self.tcUs.SetValue(self.user['nombres']+" "+self.user['apellidos'])
+			self.tcBk.SetValue('')
+			self.book = self.validarLibro(data)
+			if self.book:
+				self.tcBk.SetValue(self.book['titulo'])
+
+		elif tipo == 'user':
+			self.tcUs.SetValue('')
+			self.user = self.validarUser(data)
+			if self.user:
+				self.tcUs.SetValue(self.user['nombres']+" "+self.user['apellidos'])
 
 	def validarUser(self, user):
-		if not user['estado']:
+		if not ('estado' in user.keys()) or not user['estado']:
+			Iface.showmessage('El usuario seleccionado no puede recibir libros ya que se encuentra bloqueado.',"Bloqueado")
 			return False
-		return True
+		return user
 
 	def validarLibro(self, libro):
 		if not libro['estado']:
+			Iface.showmessage('El Libro que seleccionado ya se encuentra prestado.',"Prestado")
 			return False
-		return True
+		return libro
 
 	def validateLoan(self):
-		if not self.validarUser (self.user):
-			return False
-			print "Usuario no puede recibir libros"
 
-		if not self.validarLibro(self.book):
+		if not self.user:
+			self.validarUser(self.user)
 			return False
-			print "Libro ya se encuentra prestado"
+		if self.validarLibro(self.book)
+			return False
+		'''
+		Aqui hai q incluir los metodo para validar las fechas desde un calendario
+		'''
 		self.desde=20160105
 		self.hasta=20160106
 		return [self.book['id_libro'],self.user['id_usuario'],self.desde,self.hasta]
 
 	def OnLoan(self, e):
+		#segunda validacion de los parametros de usuario y libro,
+		#tambien obtiene los parametros para prestar
 		self.data_loan = self.validateLoan()
 
 		if not self.data_loan:
-			print "Problem while validating loan!"
+			Iface.showmessage('Se encontro un problema al prestar libros.\nPrestamo cancelado.',"Prestamo")
 			return
 
 		self.saving = loanbook(self.data_loan)
 		if self.saving:
+			#actualiza los valores despues de prestar un libro para no prestarlo otra vez
+			self.book=False
+			self.user=False
 			self.Clean()
 			return
 
 	def Clean(self):
-
 		self.tcBk.SetValue("")
 		self.tcUs.SetValue("")
 
