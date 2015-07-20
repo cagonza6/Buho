@@ -198,7 +198,6 @@ class LoanBook(wx.Panel):
 		#Las fechas se leen del calendario, ya está bloqueado elegir fechas de devolución anteriores a fecha de préstamo.
 		self.desde = date2int(self.cal_hoy.PyGetDate())
 		self.hasta = date2int(self.cal_fut.PyGetDate())
-		print self.cal_fut.IsDayInWeekend()
 
 		if self.desde>self.hasta:
 			Iface.showmessage('El dia de retorno debe ser posterior al dia de prestamo.','Período Invalido')
