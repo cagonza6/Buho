@@ -120,10 +120,10 @@ class LoanBook(wx.Panel):
 		self.Hide()
 
 	def OnSelecBook(self, e):
-		mSearchWindows.SearchBook(self)
+		mSearchWindows.SearchBook(self, 2)	#2: Mostrar solo libros disponibles
 
 	def OnSelecUser(self, e):
-		mSearchWindows.SearchUser(self)
+		mSearchWindows.SearchUser(self, 1)	#1: Mostrar solo usuarios activos.
 
 	def RecieveIdn(self, data, tipo):
 		#print idn, what

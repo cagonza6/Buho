@@ -134,11 +134,11 @@ class TempSortedListPanelUser(wx.ListCtrl, listmix.ListCtrlAutoWidthMixin, listm
 
 #es la ventana que aparece al hacer click en el boton de buscar en el programa principal
 class SearchUser(wx.Frame):
-	def __init__(self, parent,users=False):
+	def __init__(self, parent, mostrar, users=False):
 		wx.Frame.__init__(self, parent = parent,style = wx.MAXIMIZE_BOX | wx.RESIZE_BORDER | wx.CAPTION | wx.MINIMIZE_BOX| wx.CLOSE_BOX)
 		if not users:
 			self.users = loadUsers()
-		self.PanelUI()
+		self.PanelUI(mostrar)
 		self.SetSize((1000, 300))
 		self.SetTitle(u'Buscar Usuario')
 		self.Centre()
@@ -146,14 +146,14 @@ class SearchUser(wx.Frame):
 		#self.Maximize()
 		
 
-	def PanelUI(self):
+	def PanelUI(self, mostrar):
 		
 		vbox = wx.BoxSizer(wx.VERTICAL)
 		panel = wx.Panel(self, -1)
 
 		fgs = wx.FlexGridSizer(2, 2, 2, 2)		#row, col, margin, margin
 		#campos buscador
-		#checkbox para ajustar que parametro se busca
+		#checkbox para ajustar que parámetro se busca
 		self.checkboxNombre = wx.CheckBox(panel, label = u"El Nombre contiene:")
 		self.checkboxApellido = wx.CheckBox(panel, label = "El Apellido contiene:")
 		#campos de texto asociados a las checkbox
@@ -181,11 +181,11 @@ class SearchUser(wx.Frame):
 		vbox.Add(self.DinamicPanel, 1, wx.EXPAND)
 		panel.SetSizer(vbox)
 
-		#Initialization/Default values, debe ser la lista completa
-		#inicializa la checkbox de titulo en true como basico
-		self.checkboxNombre.SetValue(True)
-		#arma la primera lista de Usuarios
-		self.ReDoList(self.users)
+		#Initialization/Default values
+		self.rbMostrar.SetSelection(mostrar)	#marca si mostrar todos, activos o inactivos. Viene del parent.
+		self.ListaFiltrada("","")		#Llenar lista.
+		
+		self.checkboxNombre.SetValue(True) 		#inicializa la checkbox de titulo en true como basico. No puede ir antes de cargar la lista para no perder tiempo.
 
 	def ReDoList(self, users):
 		self.DinamicPanel.cleanpanel()
@@ -337,17 +337,17 @@ class TempSortedListPanelBook(wx.ListCtrl, listmix.ListCtrlAutoWidthMixin, listm
 
 #es la ventana que aparece al hacer click en el boton de buscar en el programa principal
 class SearchBook(wx.Frame):
-	def __init__(self, parent,books=False):
+	def __init__(self, parent, mostrar, books=False):
 		wx.Frame.__init__(self, parent = parent,style = wx.MAXIMIZE_BOX | wx.RESIZE_BORDER | wx.CAPTION | wx.MINIMIZE_BOX| wx.CLOSE_BOX)
 		self.books = loadbooks()
-		self.PanelUI()
+		self.PanelUI(mostrar)
 		self.SetSize((1000, 300))
 		self.SetTitle(u'Buscar Libro')
 		self.Centre()
 		self.Show()
 		#self.Maximize()
 
-	def PanelUI(self):
+	def PanelUI(self, mostrar):
 		vbox = wx.BoxSizer(wx.VERTICAL)
 		panel = wx.Panel(self, -1)
 
@@ -367,7 +367,7 @@ class SearchBook(wx.Frame):
 		fgs.AddMany([(self.checkboxAutor), (self.tcAu, 1, wx.EXPAND)])
 
 		fgs.AddGrowableCol(1)
-		self.rbMostrar = wx.RadioBox(panel, -1, "Mostrar",  choices = ["Todos", "Solo Prestados", "Solo No Prestados"])
+		self.rbMostrar = wx.RadioBox(panel, -1, "Mostrar",  choices = ["Todos", "Solo Prestados", "Solo Disponibles"])
 		
 		#eventos
 		self.Bind(wx.EVT_CHECKBOX, self.OnCheckText)				#All events go to OnCheck, regardless of list
@@ -380,11 +380,11 @@ class SearchBook(wx.Frame):
 		vbox.Add(self.DinamicPanel, 1, wx.EXPAND)
 		panel.SetSizer(vbox)
 
-		#Initialization/Default values, debe ser la lista completa
-		#inicializa la checkbox de titulo en true como basico
-		self.checkboxTitle.SetValue(True)
-		#arma la primera lista de libtos
-		self.ReDoList(self.books)
+		#Initialization/Default values
+		self.rbMostrar.SetSelection(mostrar)	#marca si mostrar todos, activos o inactivos. Viene del parent.
+		self.ListaFiltrada("","")		#Llenar lista.
+		
+		self.checkboxTitle.SetValue(True) 		#inicializa la checkbox de titulo en true como basico. No puede ir antes de cargar la lista para no perder tiempo.
 
 	def ReDoList(self,books):
 		self.DinamicPanel.cleanpanel()

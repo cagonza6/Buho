@@ -113,14 +113,14 @@ class MainWin(wx.Frame):
 
 	def OnSearchBook(self, e ):
 		self.panel.Hide()
-		mSearchWindows.SearchBook(self)
+		mSearchWindows.SearchBook(self, 0)			#Mostrar todo
 
 	def OnNewUser(self, e):
 		self.ChangePanel(mNewUser.NewUser(self,self.GetSize()))
 		
 	def OnSearchUser(self,e):
 		self.panel.Hide()
-		mSearchWindows.SearchUser(self)
+		mSearchWindows.SearchUser(self, 0)			#0: Mostrar Todo
 
 	def RecieveIdn(self, data, tipo):
 		if tipo == 'book':
