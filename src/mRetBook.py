@@ -6,6 +6,7 @@
 import wx
 import cfg
 import mSearchWindows
+import wx.calendar as cal
 from Tools.sqlite import returnbook, load_single_from_prestamos
 import Tools.interface as Iface # mensajes por pantall
 
@@ -66,13 +67,51 @@ class RetBook(wx.Panel):
 		
 		bsDt.AddMany([(self.pnlBk, 1), (wx.StaticLine(self, -1, style=wx.LI_VERTICAL),1,wx.ALIGN_CENTER_HORIZONTAL ),(self.pnlUs, 1)])
 		
+		fgsCal = wx.FlexGridSizer(3,2,10,20)
+		
+		stTitHoy = wx.StaticText(self, label = "Fecha de Hoy")
+		font = stTitHoy.GetFont()
+		font.SetWeight(wx.BOLD)
+		stTitHoy.SetFont(font)
+		self.cal_hoy = cal.CalendarCtrl(self, -1, wx.DateTime.Today())
+		self.cal_hoy.EnableMonthChange(False)
+		self.cal_hoy.EnableHolidayDisplay(False)
+		
+		stTitEnt = wx.StaticText(self, label = "Fecha debida de Entrega")
+		stTitEnt.SetFont(font)
+		self.cal_ent = cal.CalendarCtrl(self, -1)
+		self.cal_ent.EnableMonthChange(False)
+		self.cal_ent.EnableHolidayDisplay(False)
+		
+		fgsCal.AddMany([(stTitHoy, 1, wx.ALIGN_CENTER_HORIZONTAL), (stTitEnt, 1, wx.ALIGN_CENTER_HORIZONTAL, 0),
+		               (self.cal_hoy, 1, wx.ALIGN_CENTER_HORIZONTAL), (self.cal_ent, 1, wx.ALIGN_CENTER_HORIZONTAL)])
+		fgsCal.AddGrowableCol(0)
+		fgsCal.AddGrowableCol(1)
+		fgsCal.AddGrowableRow(1)
+		
+		
 		btRt = wx.Button(self, label = "Devolver")
 		
 		btBk.Bind(wx.EVT_BUTTON, self.OnSelecBook)
 		btRt.Bind(wx.EVT_BUTTON, self.OnRet)
+		
+		#calendario dia actual: 
+		self.cal_hoy.Bind(cal.EVT_CALENDAR, self.OnHoyMove)						#Locking all possible movement of today's date.
+		self.cal_hoy.Bind(cal.EVT_CALENDAR_SEL_CHANGED, self.OnHoyMove)
+		self.cal_hoy.Bind(cal.EVT_CALENDAR_DAY, self.OnHoyMove)
+		#calendario dia debido retorno
+		self.cal_ent.Bind(cal.EVT_CALENDAR, self.OnEntMove)						#Locking all possible movement of date to keep it in range
+		self.cal_ent.Bind(cal.EVT_CALENDAR_SEL_CHANGED, self.OnEntMove)
+		self.cal_ent.Bind(cal.EVT_CALENDAR_DAY, self.OnEntMove)
+
+		
 			
 		vbox.Add(bsBus, 0, wx.EXPAND)
+		vbox.Add(wx.StaticLine(self, size = (1000,10), style = wx.LI_HORIZONTAL), 0, wx.ALL, 10)
 		vbox.Add(bsDt, 0, wx.EXPAND)
+		vbox.Add(wx.StaticLine(self, size = (1000,10), style = wx.LI_HORIZONTAL), 0, wx.ALL, 10)
+		vbox.Add(fgsCal, 0, wx.EXPAND)
+		vbox.Add(wx.StaticLine(self, size = (1000,10), style = wx.LI_HORIZONTAL), 0, wx.ALL, 10)
 		vbox.Add(btRt, 0 , wx.EXPAND | wx.ALIGN_CENTER_VERTICAL)
 		self.SetSizer(vbox)
 		self.Hide()
@@ -101,6 +140,7 @@ class RetBook(wx.Panel):
 			self.stPto.SetLabel(label = "Si")
 		else:
 			self.stPto.SetLabel("No")
+		self.cal_ent.SetDate(self.book['desde']) 	#Mostrar fecha en calendario
 		
 		#Usuario
 		self.laNm.SetLabel(self.user['nombres'])
@@ -118,7 +158,17 @@ class RetBook(wx.Panel):
 
 		self.Layout()
 
+	def OnHoyMove(self, e):
+		#Bloquea movimientos de fecha
+		self.cal_hoy.SetDate(wx.DateTime_Now())
 		
+	def OnEntMove(self, e):
+		#Bloquea movimientos de fecha
+		pass
+		'''
+		if self.book:
+			self.cal_ent.SetDate(self.book['desde'])
+		'''
 		
 	def validarLibro(self, libro):
 		if not ('estado' in libro.keys()) or not libro['estado']:
