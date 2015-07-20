@@ -2,21 +2,19 @@
 # -*- coding: utf-8 -*-
 
 #This is the panel to loan a book
-#Cannibalized from mNewBook
 
 import wx
 import cfg
 import mSearchWindows
+import wx.calendar as cal
 from Tools.sqlite import loanbook
 import Tools.interface as Iface # mensajes por pantall
 
 class LoanBook(wx.Panel):
 	def __init__(self, parent, size):
-
 		wx.Panel.__init__(self, parent = parent, size = size)
 		vbox = wx.BoxSizer(wx.VERTICAL)
 		fgs = wx.FlexGridSizer(2,2,7,15)
-		ste = wx.StaticText(self,label = "")
 
 		#Botones
 		btBk = wx.Button(self, label = "Buscar Libro")
@@ -73,16 +71,47 @@ class LoanBook(wx.Panel):
 		
 		bsDt.AddMany([(self.pnlBk, 1), (wx.StaticLine(self, -1, style=wx.LI_VERTICAL),1,wx.ALIGN_CENTER_HORIZONTAL ),(self.pnlUs, 1)])
 
-		self.stDt = wx.StaticText(self, label = "Libro será prestado hasta el " + cfg.calc_return_date())
 		btPt = wx.Button(self, label = "Prestar")
 		
+		fgsCal = wx.FlexGridSizer(3,2,5,10)
+		
+		stTitHoy = wx.StaticText(self, label = "Fecha de Préstamo")
+		font = stTitHoy.GetFont()
+		font.SetWeight(wx.BOLD)
+		stTitHoy.SetFont(font)
+		self.cal_hoy = cal.CalendarCtrl(self, -1, wx.DateTime.Today())
+		self.cal_hoy.EnableMonthChange(False)
+		self.cal_hoy.EnableHolidayDisplay()
+		
+		stTitFut = wx.StaticText(self, label = "Fecha de Entrega")
+		stTitFut.SetFont(font)
+		self.cal_fut = cal.CalendarCtrl(self, -1, wx.DateTime_Now(), style = cal.CAL_NO_YEAR_CHANGE)
+		self.cal_fut.EnableMonthChange(True)
+		self.cal_fut.EnableHolidayDisplay()
+		default_loan_span = wx.DateSpan.Days(14)
+		today = wx.DateTime_Now()
+		default_return_date = today.AddDS(default_loan_span)
+		self.cal_fut.SetDate(default_return_date)
+
+		fgsCal.AddMany([(stTitHoy, 0, wx.ALIGN_CENTER_HORIZONTAL), (stTitFut, 0, wx.ALIGN_CENTER_HORIZONTAL),
+		               (self.cal_hoy, 1, wx.EXPAND |wx.ALIGN_CENTER_HORIZONTAL | wx.ALL, 20), (self.cal_fut, 1, wx.EXPAND |wx.ALIGN_CENTER_HORIZONTAL | wx.ALL, 20)])
+
 		btBk.Bind(wx.EVT_BUTTON, self.OnSelecBook)
 		btUs.Bind(wx.EVT_BUTTON, self.OnSelecUser)
 		btPt.Bind(wx.EVT_BUTTON, self.OnLoan)
-			
+		self.cal_hoy.Bind(cal.EVT_CALENDAR, self.OnHoyMove)						#Locking all possible movement of today's date.
+		self.cal_hoy.Bind(cal.EVT_CALENDAR_SEL_CHANGED, self.OnHoyMove)
+		self.cal_hoy.Bind(cal.EVT_CALENDAR_DAY, self.OnHoyMove)
+		self.cal_fut.Bind(cal.EVT_CALENDAR, self.OnFutMove)						#Locking all possible movement of today's date.
+		self.cal_fut.Bind(cal.EVT_CALENDAR_SEL_CHANGED, self.OnFutMove)
+		self.cal_fut.Bind(cal.EVT_CALENDAR_DAY, self.OnFutMove)
+		
 		vbox.Add(fgs, 0, wx.EXPAND)
+		vbox.Add(wx.StaticLine(self, size = (1000,10), style = wx.LI_HORIZONTAL), 0, wx.ALL, 10)
 		vbox.Add(bsDt, 0, wx.EXPAND)
-		vbox.Add(self.stDt, 0)
+		vbox.Add(wx.StaticLine(self, size = (1000,10), style = wx.LI_HORIZONTAL), 0, wx.ALL, 10)
+		vbox.Add(fgsCal, 0, wx.EXPAND)
+		vbox.Add(wx.StaticLine(self, size = (1000,10), style = wx.LI_HORIZONTAL), 0, wx.ALL, 10)
 		vbox.Add(btPt, 0 , wx.EXPAND | wx.ALIGN_CENTER_VERTICAL)
 		self.SetSizer(vbox)
 		self.Hide()
@@ -129,7 +158,18 @@ class LoanBook(wx.Panel):
 		self.pnlUs.Show()
 		self.Layout()
 
-
+	def OnHoyMove(self, e):
+		self.cal_hoy.SetDate(wx.DateTime_Now())
+		
+	def OnFutMove(self, e):
+		un_dia = wx.DateSpan.Days(1)
+		today = wx.DateTime_Now()
+		manana = today.AddDS(un_dia)
+		'''
+		#No cacho como se supone que funca IsEarlierThan, y sospecho q se arregla si le hago el upgrade a wxpython (tengo 2.8, va en la 3.0)
+		#if (wx.DateTime.IsEarlierThan(self.cal_fut.PyGetDate(),manana)):		#Si la fecha es anterior a mañana, automáticamente se corre a mañana. 
+			self.cal_fut.PySetDate(manana)
+		'''
 	def validarUser(self, user):
 		if not ('estado' in user.keys()) or not user['estado']:
 			Iface.showmessage('El usuario seleccionado no puede recibir libros ya que se encuentra bloqueado.',"Bloqueado")
@@ -149,10 +189,10 @@ class LoanBook(wx.Panel):
 		if not self.validarLibro(self.book):
 			return False
 		'''
-		Aqui hai q incluir los metodo para validar las fechas desde un calendario
+		Las fechas se leen del calendario, voy a bloquear la posibilidad de elegir días anteriores al del préstamo en el calendario mismo.
 		'''
-		self.desde=20160105
-		self.hasta=20160106
+		self.desde = self.cal_hoy.PyGetData()
+		self.hasta = self.cal_fut.PyGetData()
 		return [self.book['id_libro'],self.user['id_usuario'],self.desde,self.hasta]
 
 	def OnLoan(self, e):
