@@ -82,11 +82,13 @@ def load_single_from_prestamos(table,id_, path2db = "../biblioteca/database/Main
 
 		query   = "SELECT  "
 		query  += "        usuarios.id_usuario , usuarios.nombres , usuarios.apellidos , usuarios.rut , usuarios.direccion , "
-		query  += "        usuarios.telefono , usuarios.estado , usuarios.comentarios, prestamos.id_prestamo, count(prestamos.estado) as prestamos "
+		query  += "        usuarios.telefono , usuarios.estado , usuarios.comentarios, prestamos.id_prestamo, count(prestamos.estado) as prestamos, "
+		query  += "        prestamos.desde,prestamos.hasta,prestamos.comentarios "
 		query  += "FROM usuarios "
 		query  += "LEFT OUTER JOIN prestamos ON usuarios.id_usuario = prestamos.id_usuario and prestamos.estado>0 "
 		query  += "WHERE  prestamos.id_prestamo = ? "
 		query  += "group by prestamos.id_usuario;"
+
 	else:
 		return False
 	con              = sqlite3.connect(path2db)
