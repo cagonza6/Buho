@@ -8,7 +8,7 @@ import cfg
 import mSearchWindows
 import wx.calendar as cal
 from Tools.sqlite import loanbook
-from Tools.calendar import date2int
+from Tools.calendar import date2int,isweekend
 import Tools.interface as Iface # mensajes por pantall
 
 class LoanBook(wx.Panel):
@@ -195,15 +195,24 @@ class LoanBook(wx.Panel):
 			return False
 		if not self.validarLibro(self.book):
 			return False
-		#Las fechas se leen del calendario, ya está bloqueado elegir fechas de devolución anteriores a fecha de préstamo.
-		self.desde = date2int(self.cal_hoy.PyGetDate())
-		self.hasta = date2int(self.cal_fut.PyGetDate())
+		if not self.checkdate(self.cal_hoy.PyGetDate(),self.cal_fut.PyGetDate()):
+			return False
+
+		return [self.book['id_libro'],self.user['id_usuario'],self.desde,self.hasta]
+
+	def checkdate(self,desde,hasta):
+		self.desde = date2int(desde)
+		self.hasta = date2int(hasta)
+
+		if isweekend(hasta):
+			Iface.showmessage('El dia de retorno no puede ser Fin de semana','Período Invalido')
+			return False
 
 		if self.desde>self.hasta:
 			Iface.showmessage('El dia de retorno debe ser posterior al dia de prestamo.','Período Invalido')
 			return False
 
-		return [self.book['id_libro'],self.user['id_usuario'],self.desde,self.hasta]
+		return True
 
 	def OnLoan(self, e):
 		#segunda validacion de los parametros de usuario y libro,
