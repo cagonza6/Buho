@@ -150,7 +150,6 @@ class RetBook(wx.Panel):
 
 	def Clean(self):
 		self.tcBk.SetValue("")
-		self.stUs.SetLabel("")
 
 
 class DummyFrame(wx.Frame):
