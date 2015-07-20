@@ -160,29 +160,31 @@ class SearchUser(wx.Frame):
 		self.tcNm          = wx.TextCtrl(panel)
 		self.tcAp          = wx.TextCtrl(panel)
 
-		#campos barra intermedia
-		self.stinst = wx.StaticText(panel,label = u"Haga doble click para seleccionar el usuario.")
-
 		fgs.AddMany([(self.checkboxNombre, 0), (self.tcNm, 1, wx.EXPAND),
 		            (self.checkboxApellido, 0), (self.tcAp, 1, wx.EXPAND),
 		            ]
 		)
 		fgs.AddGrowableCol(1)
+		self.rbMostrar = wx.RadioBox(panel, -1, "Mostrar",  choices = ["Todos", "Solo Activos", "Solo Inactivos"])
+
+		#campos barra intermedia
+		self.stinst = wx.StaticText(panel,label = u"Haga doble click para seleccionar el usuario.")
 
 		#eventos
 		self.Bind(wx.EVT_CHECKBOX, self.OnCheckText)				#All events go to OnCheck, regardless of list
 		self.Bind(wx.EVT_TEXT,self.OnCheckText)
+		self.Bind(wx.EVT_RADIOBOX, self.OnCheckText)
 
 		#Panel de busquedas
 		self.DinamicPanel = TempSortedListPanelUser(panel)
-		vbox.AddMany([(fgs, 0, wx.EXPAND),(self.stinst, 0, wx.ALIGN_CENTER_HORIZONTAL)])
+		vbox.AddMany([(fgs, 0, wx.EXPAND), (self.rbMostrar, 0), (self.stinst, 0, wx.ALIGN_CENTER_HORIZONTAL)])
 		vbox.Add(self.DinamicPanel, 1, wx.EXPAND)
 		panel.SetSizer(vbox)
 
 		#Initialization/Default values, debe ser la lista completa
 		#inicializa la checkbox de titulo en true como basico
 		self.checkboxNombre.SetValue(True)
-		#arma la primera lista de libtos
+		#arma la primera lista de Usuarios
 		self.ReDoList(self.users)
 
 	def ReDoList(self, users):
@@ -201,10 +203,6 @@ class SearchUser(wx.Frame):
 		self.DinamicPanel.itemDataMap  = auxlst
 		self.DinamicPanel.itemIndexMap = self.auxKeys
 		self.DinamicPanel.SetItemCount(len(users)) #este bichodefine cuantas iteraciones se hacen, debe ser la cantidad de usuarios q se dan
-		#~ items = self.limlist.items()
-		#~ for key,se in items:
-			#~ index = self.DinamicPanel.InsertStringItem(sys.maxint, se.GetPal())
-			#~ self.DinamicPanel.SetItemData(index, key)
 
 	def OnCheckText(self, e):
 		partial_nombre = ''
@@ -217,21 +215,29 @@ class SearchUser(wx.Frame):
 			partial_apellido = partial_apellido.strip()
 		self.ListaFiltrada(partial_nombre, partial_apellido)
 
-	def ListaFiltrada(self, partial_nombre, partial_apellido):		
+	def ListaFiltrada(self, partial_nombre, partial_apellido):
+		new_list = []
+		if self.rbMostrar.GetSelection() == 0: new_list = self.users
+		else:
+			if self.rbMostrar.GetSelection() == 1: activo = True
+			else: activo = False									#radiobox no deselecciona
+			for user in self.users:
+				if user['estado'] == activo: new_list.append(user)
+			
 		aux_list = []
 		#check name
 		if self.checkboxNombre.GetValue():
-			for i in range(0,len(self.users)):
-				if partial_nombre.lower() in self.users[i]['nombres'].lower():
-					aux_list.append(self.users[i])
-		else: aux_list = self.users
+			for user in new_list:
+				if partial_nombre.lower() in user['nombres'].lower():
+					aux_list.append(user)
+		else: aux_list = new_list
 			
 		new_list = []
 		#check apellido
 		if self.checkboxApellido.GetValue():
-			for i in range(0,len(aux_list)):
-				if partial_apellido.lower() in aux_list[i]['apellidos'].lower():
-					new_list.append(aux_list[i])
+			for user in aux_list:
+				if partial_apellido.lower() in user['apellidos'].lower():
+					new_list.append(user)
 		else: new_list = aux_list
 		self.ReDoList(new_list)
 
@@ -361,14 +367,16 @@ class SearchBook(wx.Frame):
 		fgs.AddMany([(self.checkboxAutor), (self.tcAu, 1, wx.EXPAND)])
 
 		fgs.AddGrowableCol(1)
-
-		#ventos
+		self.rbMostrar = wx.RadioBox(panel, -1, "Mostrar",  choices = ["Todos", "Solo Prestados", "Solo No Prestados"])
+		
+		#eventos
 		self.Bind(wx.EVT_CHECKBOX, self.OnCheckText)				#All events go to OnCheck, regardless of list
 		self.Bind(wx.EVT_TEXT,self.OnCheckText)
-
+		self.Bind(wx.EVT_RADIOBOX, self.OnCheckText)
+		
 		#Panel de busquedas
 		self.DinamicPanel = TempSortedListPanelBook(panel)
-		vbox.AddMany([(fgs, 0, wx.EXPAND),(self.stinst, 0, wx.ALIGN_CENTER_HORIZONTAL)])
+		vbox.AddMany([(fgs, 0, wx.EXPAND), (self.rbMostrar, 0), (self.stinst, 0, wx.ALIGN_CENTER_HORIZONTAL)])
 		vbox.Add(self.DinamicPanel, 1, wx.EXPAND)
 		panel.SetSizer(vbox)
 
@@ -407,20 +415,29 @@ class SearchBook(wx.Frame):
 		self.ListaFiltrada(partial_autor, partial_title)
 
 	def ListaFiltrada(self,partial_autor,partial_title):
+		new_list = []
+		if self.rbMostrar.GetSelection() == 0: new_list = self.books
+		else:
+			if self.rbMostrar.GetSelection() == 1: prestado = True
+			else: prestado = None									#I hate it with the fiery heat of a thousand suns, but it works.
+			for book in self.books:
+				if book['estado'] == prestado: 
+					new_list.append(book)
+				
 		aux_list = []
 		#check Autor
 		if self.checkboxAutor.GetValue():
-			for i in range(0,len(self.books)):
-				if partial_autor.lower() in self.books[i]['autor'].lower():
-					aux_list.append(self.books[i])
-		else: aux_list = self.books
+			for book in new_list:
+				if partial_autor.lower() in book['autor'].lower():
+					aux_list.append(book)
+		else: aux_list = new_list
 			
 		new_list = []
 		#check Titulo
 		if self.checkboxTitle.GetValue():
-			for i in range(0,len(aux_list)):
-				if partial_title.lower() in aux_list[i]['titulo'].lower():
-					new_list.append(aux_list[i])
+			for book in aux_list:
+				if partial_title.lower() in book['titulo'].lower():
+					new_list.append(book)
 		else: new_list = aux_list
 		self.ReDoList(new_list)
 
