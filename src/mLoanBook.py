@@ -73,7 +73,7 @@ class LoanBook(wx.Panel):
 
 		btPt = wx.Button(self, label = "Prestar")
 		
-		fgsCal = wx.FlexGridSizer(3,2,5,10)
+		fgsCal = wx.FlexGridSizer(3,2,10,20)
 		
 		stTitHoy = wx.StaticText(self, label = "Fecha de Préstamo")
 		font = stTitHoy.GetFont()
@@ -90,11 +90,14 @@ class LoanBook(wx.Panel):
 		self.cal_fut.EnableHolidayDisplay()
 		default_loan_span = wx.DateSpan.Days(14)
 		today = wx.DateTime_Now()
-		default_return_date = today.AddDS(default_loan_span)
+		default_return_date = today.AddDS(default_loan_span)		#modifica today
 		self.cal_fut.SetDate(default_return_date)
 
-		fgsCal.AddMany([(stTitHoy, 0, wx.ALIGN_CENTER_HORIZONTAL), (stTitFut, 0, wx.ALIGN_CENTER_HORIZONTAL),
-		               (self.cal_hoy, 1, wx.EXPAND |wx.ALIGN_CENTER_HORIZONTAL | wx.ALL, 20), (self.cal_fut, 1, wx.EXPAND |wx.ALIGN_CENTER_HORIZONTAL | wx.ALL, 20)])
+		fgsCal.AddMany([(stTitHoy, 1, wx.ALIGN_CENTER_HORIZONTAL), (stTitFut, 1, wx.ALIGN_CENTER_HORIZONTAL, 0),
+		               (self.cal_hoy, 1, wx.ALIGN_CENTER_HORIZONTAL), (self.cal_fut, 1, wx.ALIGN_CENTER_HORIZONTAL)])
+		fgsCal.AddGrowableCol(0)
+		fgsCal.AddGrowableCol(1)
+		fgsCal.AddGrowableRow(1)
 
 		btBk.Bind(wx.EVT_BUTTON, self.OnSelecBook)
 		btUs.Bind(wx.EVT_BUTTON, self.OnSelecUser)
@@ -159,17 +162,17 @@ class LoanBook(wx.Panel):
 		self.Layout()
 
 	def OnHoyMove(self, e):
+		#Todos los posibles cambios de fecha en cal_hoy están bloqueados.
 		self.cal_hoy.SetDate(wx.DateTime_Now())
 		
 	def OnFutMove(self, e):
 		un_dia = wx.DateSpan.Days(1)
 		today = wx.DateTime_Now()
-		manana = today.AddDS(un_dia)
-		'''
-		#No cacho como se supone que funca IsEarlierThan, y sospecho q se arregla si le hago el upgrade a wxpython (tengo 2.8, va en la 3.0)
-		#if (wx.DateTime.IsEarlierThan(self.cal_fut.PyGetDate(),manana)):		#Si la fecha es anterior a mañana, automáticamente se corre a mañana. 
-			self.cal_fut.PySetDate(manana)
-		'''
+		manana = today.AddDS(un_dia)		#modifica today
+		
+		if (self.cal_fut.GetDate().IsEarlierThan(manana)):		#Si la fecha es anterior a mañana, automáticamente se corre a mañana. 
+			self.cal_fut.SetDate(manana)
+		
 	def validarUser(self, user):
 		if not ('estado' in user.keys()) or not user['estado']:
 			Iface.showmessage('El usuario seleccionado no puede recibir libros ya que se encuentra bloqueado.',"Bloqueado")
@@ -188,11 +191,9 @@ class LoanBook(wx.Panel):
 			return False
 		if not self.validarLibro(self.book):
 			return False
-		'''
-		Las fechas se leen del calendario, voy a bloquear la posibilidad de elegir días anteriores al del préstamo en el calendario mismo.
-		'''
-		self.desde = self.cal_hoy.PyGetData()
-		self.hasta = self.cal_fut.PyGetData()
+		#Las fechas se leen del calendario, ya está bloqueado elegir fechas de devolución anteriores a fecha de préstamo.
+		self.desde = self.cal_hoy.PyGetDate()
+		self.hasta = self.cal_fut.PyGetDate()
 		return [self.book['id_libro'],self.user['id_usuario'],self.desde,self.hasta]
 
 	def OnLoan(self, e):
@@ -201,18 +202,18 @@ class LoanBook(wx.Panel):
 		self.data_loan = self.validateLoan()
 
 		if not self.data_loan:
-			Iface.showmessage('Se encontro un problema al prestar libros.\nPrestamo cancelado.',"Prestamo")
+			Iface.showmessage('Se encontró un problema al prestar libros.\nPrestamo cancelado.',"Prestamo")
 			return
 
 		self.saving = loanbook(*self.data_loan)
 		if not self.saving:
-			Iface.showmessage('Error al registrar el prestamo.',"Database")
+			Iface.showmessage('Error al registrar el préstamo.',"Database")
 		if self.saving:
 			#actualiza los valores despues de prestar un libro para no prestarlo otra vez
 			self.book=False
 			self.user=False
 			self.Clean()
-			Iface.showmessage('Prestamo realizado con exito.','Prestamos')
+			Iface.showmessage('Prestamo realizado con éxito.','Préstamos')
 			return
 
 	def Clean(self):
