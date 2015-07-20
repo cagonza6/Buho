@@ -78,7 +78,7 @@ class RetBook(wx.Panel):
 		self.Hide()
 
 	def OnSelecBook(self, e):
-		mSearchWindows.SearchBook(self)
+		mSearchWindows.SearchBook(self, 1)		#1: Mostrar solo libros prestados
 
 	def RecieveIdn(self, data, tipo):
 
@@ -90,6 +90,7 @@ class RetBook(wx.Panel):
 				self.user = load_single_from_prestamos('usuario',self.book['id_prestamo'])[0]
 			if self.user:
 				self.llenarDatos()
+			
 
 	def llenarDatos(self):
 		#Libro
@@ -154,7 +155,6 @@ class RetBook(wx.Panel):
 
 	def Clean(self):
 		self.tcBk.SetValue("")
-
 
 
 class DummyFrame(wx.Frame):
