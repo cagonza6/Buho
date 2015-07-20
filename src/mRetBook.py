@@ -135,6 +135,7 @@ class RetBook(wx.Panel):
 		self.retorno=20160105 #es la fecha de cuando se entrega
 		return [self.book['id_prestamo'],self.retorno]
 
+
 	def OnRet(self, e):
 		#segunda validacion de los parametros de usuario y libro,
 		#tambien obtiene los parametro

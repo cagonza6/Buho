@@ -8,6 +8,7 @@ import cfg
 import mSearchWindows
 import wx.calendar as cal
 from Tools.sqlite import loanbook
+from Tools.calendar import date2int
 import Tools.interface as Iface # mensajes por pantall
 
 class LoanBook(wx.Panel):
@@ -88,6 +89,7 @@ class LoanBook(wx.Panel):
 		self.cal_fut = cal.CalendarCtrl(self, -1, wx.DateTime_Now(), style = cal.CAL_NO_YEAR_CHANGE)
 		self.cal_fut.EnableMonthChange(True)
 		self.cal_fut.EnableHolidayDisplay()
+
 		default_loan_span = wx.DateSpan.Days(14)
 		today = wx.DateTime_Now()
 		default_return_date = today.AddDS(default_loan_span)		#modifica today
@@ -102,9 +104,11 @@ class LoanBook(wx.Panel):
 		btBk.Bind(wx.EVT_BUTTON, self.OnSelecBook)
 		btUs.Bind(wx.EVT_BUTTON, self.OnSelecUser)
 		btPt.Bind(wx.EVT_BUTTON, self.OnLoan)
+		#calendario dia actual: dia del prestamo
 		self.cal_hoy.Bind(cal.EVT_CALENDAR, self.OnHoyMove)						#Locking all possible movement of today's date.
 		self.cal_hoy.Bind(cal.EVT_CALENDAR_SEL_CHANGED, self.OnHoyMove)
 		self.cal_hoy.Bind(cal.EVT_CALENDAR_DAY, self.OnHoyMove)
+		#caledario dia retorno
 		self.cal_fut.Bind(cal.EVT_CALENDAR, self.OnFutMove)						#Locking all possible movement of today's date.
 		self.cal_fut.Bind(cal.EVT_CALENDAR_SEL_CHANGED, self.OnFutMove)
 		self.cal_fut.Bind(cal.EVT_CALENDAR_DAY, self.OnFutMove)
@@ -172,7 +176,7 @@ class LoanBook(wx.Panel):
 		
 		if (self.cal_fut.GetDate().IsEarlierThan(manana)):		#Si la fecha es anterior a mañana, automáticamente se corre a mañana. 
 			self.cal_fut.SetDate(manana)
-		
+
 	def validarUser(self, user):
 		if not ('estado' in user.keys()) or not user['estado']:
 			Iface.showmessage('El usuario seleccionado no puede recibir libros ya que se encuentra bloqueado.',"Bloqueado")
@@ -192,8 +196,14 @@ class LoanBook(wx.Panel):
 		if not self.validarLibro(self.book):
 			return False
 		#Las fechas se leen del calendario, ya está bloqueado elegir fechas de devolución anteriores a fecha de préstamo.
-		self.desde = self.cal_hoy.PyGetDate()
-		self.hasta = self.cal_fut.PyGetDate()
+		self.desde = date2int(self.cal_hoy.PyGetDate())
+		self.hasta = date2int(self.cal_fut.PyGetDate())
+		print self.cal_fut.IsDayInWeekend()
+
+		if self.desde>self.hasta:
+			Iface.showmessage('El dia de retorno debe ser posterior al dia de prestamo.','Período Invalido')
+			return False
+
 		return [self.book['id_libro'],self.user['id_usuario'],self.desde,self.hasta]
 
 	def OnLoan(self, e):
