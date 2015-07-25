@@ -59,7 +59,6 @@ class DatabaseManager(object):
 			query += "LEFT OUTER JOIN prestamos ON usuarios.id_usuario = prestamos.id_usuario and prestamos.estado>0 "
 			query += "group by usuarios.id_usuario; "
 
-
 		else:
 			return False
 
@@ -72,31 +71,42 @@ class DatabaseManager(object):
 
 		return self.Result
 
-	def load_single_from_prestamos(self,table,id_):
+	def load_user(self,id_):
+		query  = "SELECT "
+		query += "        usuarios.id_usuario , usuarios.nombres , usuarios.apellidos , usuarios.rut , usuarios.direccion , usuarios.telefono , "
+		query += "        usuarios.estado , usuarios.comentarios, count(prestamos.estado) as prestamos "
+		query += "FROM usuarios "
+		query += "LEFT JOIN prestamos ON usuarios.id_usuario = prestamos.id_usuario "
+		query += "WHERE  "
+		query += "      usuarios.id_usuario = ? "
+		query += "group by usuarios.id_usuario; "
 
-		if table   =='libro':
+		try:
+			self.cur.execute(query,[id_,])
+		except sqlite3.Error as e:
 			return False
-		elif table =='usuario':
 
-			query   = "SELECT  "
-			query  += "		usuarios.id_usuario , usuarios.nombres , usuarios.apellidos , usuarios.rut , usuarios.direccion , "
-			query  += "		usuarios.telefono , usuarios.estado , usuarios.comentarios, prestamos.id_prestamo, count(prestamos.estado) as prestamos, "
-			query  += "		prestamos.desde,prestamos.hasta,prestamos.comentarios "
-			query  += "FROM usuarios "
-			query  += "LEFT OUTER JOIN prestamos ON usuarios.id_usuario = prestamos.id_usuario and prestamos.estado>0 "
-			query  += "WHERE  prestamos.id_prestamo = ? "
-			query  += "group by prestamos.id_usuario;"
+		self.Result = self.cur.fetchall()
+		if len (self.Result)>0:
+			return self.Result[0]
 
-		else:
-			return False
+		return False
+
+	def load_loan_data(self,id_):
+
+		query   = "SELECT  "
+		query  += "id_prestamo, id_libro, id_usuario, estado, desde ,hasta, comentarios "
+		query  += "FROM prestamos "
+		query  += "WHERE id_prestamo = ? "
+		query  += "Limit 1;"
 
 		try:
 			self.cur.execute(query,[id_,])
 		except sqlite3.Error as e:
 
 			return False
+		self.Result = self.cur.fetchall()[0]
 		if len (self.Result)>0:
-			self.Result = self.cur.fetchall()[0]
 			return self.Result
 		return False
 

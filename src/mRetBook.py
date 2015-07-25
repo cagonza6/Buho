@@ -8,37 +8,35 @@ import cfg
 import mSearchWindows
 import wx.calendar as cal
 from Tools.sqlite import DatabaseManager
-from Tools.calendar import int2date
+from Tools.calendar import int2date,date2int
 import Tools.interface as Iface # mensajes por pantalla
 
 
 class RetBook(wx.Panel):
-	def __init__(self, parent, size,books=False,users=False):
+	def __init__(self, parent, size,books=False):
 		wx.Panel.__init__(self, parent = parent, size = size)
 		vbox = wx.BoxSizer(wx.VERTICAL)
 
-		self.user = False
-		self.book = False
+		self.user     = False
+		self.book     = False
+		self.prestamo = False
 
 		self.DBmanager = DatabaseManager()
 		if not books:
 			self.books     = self.DBmanager.load_table('libros')
 		else:
 			self.books     = books
-		if not users:
-			self.users     = self.DBmanager.load_table('usuarios')
-		else:
-			self.users = books
+
 
 		#Búsqueda libro
 		bsBus = wx.BoxSizer(wx.HORIZONTAL)
 		btBk = wx.Button(self, label = "Buscar Libro")
 		self.tcBk = wx.TextCtrl(self)
 		bsBus.AddMany([(btBk, 0),(self.tcBk, 1, wx.EXPAND)])
-		
+
 		#Paneles datos
 		bsDt = wx.BoxSizer(wx.HORIZONTAL)
-		
+
 		#Panel datos Usuario
 		self.pnlUs = wx.Panel(self, -1)
 		fgsUs   = wx.FlexGridSizer(3,2,7,15)
@@ -56,10 +54,10 @@ class RetBook(wx.Panel):
 		            (stSt),(self.laSt , 0),
 		            ]
 		)
-		
+
 		self.pnlUs.SetSizerAndFit(fgsUs, 0)
 		self.pnlUs.Hide()
-		
+
 		#Datos Libro
 		self.pnlBk = wx.Panel(self, -1)
 		fgsBk = wx.FlexGridSizer(4,2,7,15)
@@ -79,11 +77,11 @@ class RetBook(wx.Panel):
 		             (stPt, 0),(self.stPto, 0)])
 		self.pnlBk.SetSizerAndFit(fgsBk)
 		self.pnlBk.Hide()
-		
+
 		bsDt.AddMany([(self.pnlBk, 1), (wx.StaticLine(self, -1, style=wx.LI_VERTICAL),1,wx.ALIGN_CENTER_HORIZONTAL ),(self.pnlUs, 1)])
-		
+
 		fgsCal = wx.FlexGridSizer(3,2,10,20)
-		
+
 		stTitHoy = wx.StaticText(self, label = "Fecha de Hoy")
 		font = stTitHoy.GetFont()
 		font.SetWeight(wx.BOLD)
@@ -91,25 +89,25 @@ class RetBook(wx.Panel):
 		self.cal_hoy = cal.CalendarCtrl(self, -1, wx.DateTime.Today())
 		self.cal_hoy.EnableMonthChange(False)
 		self.cal_hoy.EnableHolidayDisplay(False)
-		
+
 		stTitEnt = wx.StaticText(self, label = "Fecha debida de Entrega")
 		stTitEnt.SetFont(font)
 		self.cal_ent = cal.CalendarCtrl(self, -1, style = cal.CAL_NO_YEAR_CHANGE)
 		self.cal_ent.EnableMonthChange(False)
 		self.cal_ent.EnableHolidayDisplay(False)
-		
+
 		fgsCal.AddMany([(stTitHoy, 1, wx.ALIGN_CENTER_HORIZONTAL), (stTitEnt, 1, wx.ALIGN_CENTER_HORIZONTAL, 0),
 		               (self.cal_hoy, 1, wx.ALIGN_CENTER_HORIZONTAL), (self.cal_ent, 1, wx.ALIGN_CENTER_HORIZONTAL)])
 		fgsCal.AddGrowableCol(0)
 		fgsCal.AddGrowableCol(1)
 		fgsCal.AddGrowableRow(1)
-		
-		
+
+
 		btRt = wx.Button(self, label = "Devolver")
-		
+
 		btBk.Bind(wx.EVT_BUTTON, self.OnSelecBook)
 		btRt.Bind(wx.EVT_BUTTON, self.OnRet)
-		
+
 		#calendario dia actual: 
 		self.cal_hoy.Bind(cal.EVT_CALENDAR, self.OnHoyMove)						#Locking all possible movement of today's date.
 		self.cal_hoy.Bind(cal.EVT_CALENDAR_SEL_CHANGED, self.OnHoyMove)
@@ -119,8 +117,7 @@ class RetBook(wx.Panel):
 		self.cal_ent.Bind(cal.EVT_CALENDAR_SEL_CHANGED, self.OnEntMove)
 		self.cal_ent.Bind(cal.EVT_CALENDAR_DAY, self.OnEntMove)
 
-		
-			
+
 		vbox.Add(bsBus, 0, wx.EXPAND)
 		vbox.Add(wx.StaticLine(self, size = (1000,10), style = wx.LI_HORIZONTAL), 0, wx.ALL, 10)
 		vbox.Add(bsDt, 0, wx.EXPAND)
@@ -142,10 +139,10 @@ class RetBook(wx.Panel):
 			self.book = self.validarLibro(data)
 			if self.book:
 				self.tcBk.SetValue(self.book['titulo'])
-				self.user = self.DBmanager.load_single_from_prestamos('usuario',self.book['id_prestamo'])
+				self.prestamo = self.DBmanager.load_loan_data(self.book['id_prestamo'])
+				self.user     = self.DBmanager.load_user(self.prestamo['id_usuario'])
 			if self.user:
 				self.llenarDatos()
-
 
 	def llenarDatos(self):
 		#Libro
@@ -166,7 +163,7 @@ class RetBook(wx.Panel):
 			self.laSt.SetLabel("Activo")
 		else:
 			self.laSt.SetLabel("Inactivo")
-		self.cal_ent.PySetDate(int2date(self.user['hasta'])) 	#Mostrar fecha en calendario
+		self.cal_ent.PySetDate(int2date(self.prestamo['hasta'])) 	#Mostrar fecha en calendario
 
 		self.pnlUs.Layout()
 		self.pnlBk.Layout()
@@ -178,30 +175,30 @@ class RetBook(wx.Panel):
 	def OnHoyMove(self, e):
 		#Bloquea movimientos de fecha
 		self.cal_hoy.SetDate(wx.DateTime_Now())
-		if self.user:
-			self.cal_ent.PySetDate(int2date(self.user['hasta']))
 
 	def OnEntMove(self, e):
-		#Bloquea movimientos de fecha
-		pass
-		'''
-		if self.book:
-			self.cal_ent.SetDate(self.book['desde'])
-		'''
-		
+		self.cal_hoy.SetDate(wx.DateTime_Now())
+		if self.user:
+			self.cal_ent.PySetDate(int2date(self.prestamo['hasta']))
+
 	def validarLibro(self, libro):
+
 		if not ('estado' in libro.keys()) or not libro['estado']:
 			Iface.showmessage('El Libro que seleccionado no se encuentra prestado.',"No Prestado")
 			return False
 		return libro
 
+	def isdelayed(self):
+		self.delay=self.prestamo['hasta'] - self.retorno;
+		if self.delay<0:
+			Iface.showmessage(u'El libro se está entregando con ['+str(self.delay)+'] Dias de atraso.',"Atraso")
+			return self.delay
+		return 0
+
 	def validateReturn(self):
 		if not self.validarLibro(self.book):
 			return False
-		'''
-		Aqui hay q incluir los metodo para validar las fechas desde un calendario
-		'''
-		self.retorno=20160105 #es la fecha de cuando se entrega
+		self.retorno = date2int(self.cal_hoy.PyGetDate())
 		return [self.book['id_prestamo'],self.retorno]
 
 
@@ -218,9 +215,13 @@ class RetBook(wx.Panel):
 		if not self.saving:
 			Iface.showmessage('Error al registrar el retorno.',"Database")
 		if self.saving:
-			self.book = False
-			self.Clean()
+			self.isdelayed()
+			#self.multar()
+			self.book     = False
+			self.user     = False
+			self.prestamo = False
 			Iface.showmessage(u'Devolución realizado con exito.','Prestamos')
+			self.Clean()
 			return
 
 	def Clean(self):
