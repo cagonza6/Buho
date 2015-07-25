@@ -7,7 +7,7 @@ import wx
 import cfg
 import mSearchWindows
 import wx.calendar as cal
-from Tools.sqlite import loanbook
+from Tools.sqlite import DatabaseManager
 from Tools.calendar import date2int,isweekend
 import Tools.interface as Iface # mensajes por pantall
 
@@ -16,6 +16,10 @@ class LoanBook(wx.Panel):
 		wx.Panel.__init__(self, parent = parent, size = size)
 		vbox = wx.BoxSizer(wx.VERTICAL)
 		fgs = wx.FlexGridSizer(2,2,7,15)
+
+		self.DBmanager = DatabaseManager()
+		self.user=False
+		self.book=False
 
 		#Botones
 		btBk = wx.Button(self, label = "Buscar Libro")
@@ -124,13 +128,15 @@ class LoanBook(wx.Panel):
 		self.Hide()
 
 	def OnSelecBook(self, e):
-		mSearchWindows.SearchBook(self, 2)	#2: Mostrar solo libros disponibles
+		self.books     = self.DBmanager.load_table('libros')
+		mSearchWindows.SearchBook(self, 2,self.books)	#2: Mostrar solo libros disponibles
 
 	def OnSelecUser(self, e):
-		mSearchWindows.SearchUser(self, 1)	#1: Mostrar solo usuarios activos.
+		self.users     = self.DBmanager.load_table('usuarios')
+		mSearchWindows.SearchUser(self, 1,self.users)	#1: Mostrar solo usuarios activos.
 
 	def RecieveIdn(self, data, tipo):
-		#print idn, what
+
 		if tipo == 'book':
 			self.tcBk.SetValue('')
 			self.book = self.validarLibro(data)
@@ -178,17 +184,22 @@ class LoanBook(wx.Panel):
 			self.cal_fut.SetDate(manana)
 
 	def validarUser(self, user):
-		if not ('estado' in user.keys()) or not user['estado']:
-			Iface.showmessage('El usuario seleccionado no puede recibir libros ya que se encuentra bloqueado.',"Bloqueado")
-			return False
-		return user
+		if user:
+			if not ( 'estado' in user.keys()) or not user['estado']:
+				Iface.showmessage('El usuario seleccionado no puede recibir libros ya que se encuentra bloqueado.',"Bloqueado")
+				return False
+			return user
+		Iface.showmessage('Usuario no valido.',"Error")
+		return False
 
 	def validarLibro(self, libro):
-		if not ('estado' in libro.keys()) or libro['estado']:
-			Iface.showmessage('El Libro que seleccionado ya se encuentra prestado.',"Prestado")
-			return False
-		return libro
-
+		if libro:
+			if not ('estado' in libro.keys()) or libro['estado']:
+				Iface.showmessage('El Libro que seleccionado ya se encuentra prestado.',"Prestado")
+				return False
+			return libro
+		Iface.showmessage('Libro no valido.',"Error")
+		return False
 	def validateLoan(self):
 
 		if not self.validarUser(self.user):
@@ -223,7 +234,7 @@ class LoanBook(wx.Panel):
 			Iface.showmessage('Se encontró un problema al prestar libros.\nPrestamo cancelado.',"Prestamo")
 			return
 
-		self.saving = loanbook(*self.data_loan)
+		self.saving = self.DBmanager.loanbook(*self.data_loan)
 		if not self.saving:
 			Iface.showmessage('Error al registrar el préstamo.',"Database")
 		if self.saving:

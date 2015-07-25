@@ -7,14 +7,29 @@ import wx
 import cfg
 import mSearchWindows
 import wx.calendar as cal
-from Tools.sqlite import returnbook, load_single_from_prestamos
-import Tools.interface as Iface # mensajes por pantall
+from Tools.sqlite import DatabaseManager
+from Tools.calendar import int2date
+import Tools.interface as Iface # mensajes por pantalla
+
 
 class RetBook(wx.Panel):
-	def __init__(self, parent, size):
-		wx.Panel.__init__(self, parent = parent, size = size)	
+	def __init__(self, parent, size,books=False,users=False):
+		wx.Panel.__init__(self, parent = parent, size = size)
 		vbox = wx.BoxSizer(wx.VERTICAL)
-		
+
+		self.user = False
+		self.book = False
+
+		self.DBmanager = DatabaseManager()
+		if not books:
+			self.books     = self.DBmanager.load_table('libros')
+		else:
+			self.books     = books
+		if not users:
+			self.users     = self.DBmanager.load_table('usuarios')
+		else:
+			self.users = books
+
 		#Búsqueda libro
 		bsBus = wx.BoxSizer(wx.HORIZONTAL)
 		btBk = wx.Button(self, label = "Buscar Libro")
@@ -79,7 +94,7 @@ class RetBook(wx.Panel):
 		
 		stTitEnt = wx.StaticText(self, label = "Fecha debida de Entrega")
 		stTitEnt.SetFont(font)
-		self.cal_ent = cal.CalendarCtrl(self, -1)
+		self.cal_ent = cal.CalendarCtrl(self, -1, style = cal.CAL_NO_YEAR_CHANGE)
 		self.cal_ent.EnableMonthChange(False)
 		self.cal_ent.EnableHolidayDisplay(False)
 		
@@ -117,7 +132,8 @@ class RetBook(wx.Panel):
 		self.Hide()
 
 	def OnSelecBook(self, e):
-		mSearchWindows.SearchBook(self, 1)		#1: Mostrar solo libros prestados
+		self.books     = self.DBmanager.load_table('libros')
+		mSearchWindows.SearchBook(self, 1,self.books)	#2: Mostrar solo libros disponibles
 
 	def RecieveIdn(self, data, tipo):
 
@@ -126,13 +142,14 @@ class RetBook(wx.Panel):
 			self.book = self.validarLibro(data)
 			if self.book:
 				self.tcBk.SetValue(self.book['titulo'])
-				self.user = load_single_from_prestamos('usuario',self.book['id_prestamo'])[0]
+				self.user = self.DBmanager.load_single_from_prestamos('usuario',self.book['id_prestamo'])
 			if self.user:
 				self.llenarDatos()
-			
+
 
 	def llenarDatos(self):
 		#Libro
+		self.cal_ent.EnableMonthChange(True)
 		self.stIso.SetLabel(self.book['isbn'])
 		self.stTio.SetLabel(self.book['titulo'])
 		self.stAuo.SetLabel(self.book['autor'])
@@ -140,8 +157,7 @@ class RetBook(wx.Panel):
 			self.stPto.SetLabel(label = "Si")
 		else:
 			self.stPto.SetLabel("No")
-		self.cal_ent.SetDate(self.book['desde']) 	#Mostrar fecha en calendario
-		
+
 		#Usuario
 		self.laNm.SetLabel(self.user['nombres'])
 		self.laAp.SetLabel(self.user['apellidos'])
@@ -150,18 +166,21 @@ class RetBook(wx.Panel):
 			self.laSt.SetLabel("Activo")
 		else:
 			self.laSt.SetLabel("Inactivo")
+		self.cal_ent.PySetDate(int2date(self.user['hasta'])) 	#Mostrar fecha en calendario
 
 		self.pnlUs.Layout()
 		self.pnlBk.Layout()
 		self.pnlUs.Show()
 		self.pnlBk.Show()
-
+		#self.cal_ent.EnableMonthChange(False)					#Bloqueo el cambio de mes
 		self.Layout()
 
 	def OnHoyMove(self, e):
 		#Bloquea movimientos de fecha
 		self.cal_hoy.SetDate(wx.DateTime_Now())
-		
+		if self.user:
+			self.cal_ent.PySetDate(int2date(self.user['hasta']))
+
 	def OnEntMove(self, e):
 		#Bloquea movimientos de fecha
 		pass
@@ -195,7 +214,7 @@ class RetBook(wx.Panel):
 			Iface.showmessage('Se encontro un problema al prestar libros.\nPrestamo cancelado.',"Prestamo")
 			return
 
-		self.saving = returnbook(*self.data_return)
+		self.saving = self.DBmanager.returnbook(*self.data_return)
 		if not self.saving:
 			Iface.showmessage('Error al registrar el retorno.',"Database")
 		if self.saving:

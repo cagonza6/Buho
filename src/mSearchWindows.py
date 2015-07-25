@@ -5,44 +5,12 @@ import wx
 import cfg
 import mDisplayinfo
 import wx.lib.mixins.listctrl as listmix
-from Tools.sqlite import load_table
+from Tools.sqlite import DatabaseManager
 #import sys
 
 #
 # Carga la Base de datos
 #
-
-def loadUsers():
-	##################cargar libros... toodos#######################
-	error_str=''
-	error = False
-	UsersDB = load_table('usuarios')
-	if not UsersDB:
-		error_str +="Error al cargar Base de datos de usuarios"
-		error      = True
-	else: 
-		print "Usuarios cargados correctamente"
-	if error:
-		Iface.showmessage(error_str,"Error!")
-		return False
-	return UsersDB
-		####### fin carga libros #######################################
-
-def loadbooks():
-	##################cargar libros... toodos#######################
-	error_str=''
-	error = False
-	BooksDB = load_table('libros')
-	if not BooksDB:
-		error_str +="Error al cargar Base de datos de libros"
-		error      = True
-	else: 
-		print "libros cargados correctamente"
-	if error:
-		Iface.showmessage(error_str,"Error!")
-		return False
-	return BooksDB
-	####### fin carga libros #######################################
 
 #All Glory for this goes to the people at http://code.activestate.com/recipes/426407-columnsortermixin-with-a-virtual-wxlistctrl/
 class TempSortedListPanelUser(wx.ListCtrl, listmix.ListCtrlAutoWidthMixin, listmix.ColumnSorterMixin):
@@ -136,8 +104,13 @@ class TempSortedListPanelUser(wx.ListCtrl, listmix.ListCtrlAutoWidthMixin, listm
 class SearchUser(wx.Frame):
 	def __init__(self, parent, mostrar, users=False):
 		wx.Frame.__init__(self, parent = parent,style = wx.MAXIMIZE_BOX | wx.RESIZE_BORDER | wx.CAPTION | wx.MINIMIZE_BOX| wx.CLOSE_BOX)
+
 		if not users:
-			self.users = loadUsers()
+			self.DBmanager = DatabaseManager()
+			self.users     = self.DBmanager.load_table('usuarios')
+		else:
+			self.users = users
+
 		self.PanelUI(mostrar)
 		self.SetSize((1000, 300))
 		self.SetTitle(u'Buscar Usuario')
@@ -339,7 +312,12 @@ class TempSortedListPanelBook(wx.ListCtrl, listmix.ListCtrlAutoWidthMixin, listm
 class SearchBook(wx.Frame):
 	def __init__(self, parent, mostrar, books=False):
 		wx.Frame.__init__(self, parent = parent,style = wx.MAXIMIZE_BOX | wx.RESIZE_BORDER | wx.CAPTION | wx.MINIMIZE_BOX| wx.CLOSE_BOX)
-		self.books = loadbooks()
+
+		if not books:
+			self.DBmanager = DatabaseManager()
+			self.books     = self.DBmanager.load_table('libros')
+		else:
+			self.books = books
 		self.PanelUI(mostrar)
 		self.SetSize((1000, 300))
 		self.SetTitle(u'Buscar Libro')

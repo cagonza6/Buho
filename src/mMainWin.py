@@ -12,9 +12,9 @@ import mNewUser
 import mDisplayinfo
 import mLoanBook
 import mRetBook
-import Tools.interface as Iface # mensajes por pantall
+import Tools.interface as Iface # mensajes por pantalla
 import wx.lib.mixins.listctrl as listmix
-from Tools.sqlite import load_table
+
 
 class MainWin(wx.Frame):   
 	def __init__(self, parent):
@@ -28,12 +28,12 @@ class MainWin(wx.Frame):
 		self.panel = wx.Panel(self,-1)
 
 		mb = wx.MenuBar()
-		
+
 		#Acciones
 		fM = wx.Menu()
 		mitry = wx.MenuItem(fM, wx.ID_RETRY, '&TryTest\tCtrl+T')
 		mFqt = wx.MenuItem(fM, wx.ID_EXIT, 'Salir (&Q) \tCtrl+Q')
-		
+
 		fM.AppendItem(mitry)
 		fM.AppendItem(mFqt)
 
@@ -50,7 +50,7 @@ class MainWin(wx.Frame):
 		mPln = wx.MenuItem(pM, wx.ID_FORWARD, '&Prestar Libro\tCtrl+P')
 		mPed = wx.MenuItem(pM, wx.ID_EDIT, '&Editar Préstamo \tCtrl+E')
 		mPrt = wx.MenuItem(pM, wx.ID_BACKWARD, '&Devolver Libro\tCtrl+D')
-		
+
 		pM.AppendItem(mPln)
 		pM.AppendItem(mPed)
 		pM.AppendItem(mPrt)

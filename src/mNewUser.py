@@ -8,7 +8,7 @@ import wx
 import Tools.interface as Iface
 
 from Tools.regexe import *
-from Tools.sqlite import save_new
+from Tools.sqlite import DatabaseManager
 
 import cfg
 import Main
@@ -18,6 +18,8 @@ class NewUser(wx.Panel):
 		wx.Panel.__init__(self, parent = parent, size = size)
 		vbox = wx.BoxSizer(wx.VERTICAL)
 		Entradas = 7
+
+		self.DBmanager = DatabaseManager()
 
 		fgs = wx.FlexGridSizer(7,2,7,15)
 		#Cannons for mosquitoes? Totally. Need it for later
@@ -82,7 +84,7 @@ class NewUser(wx.Panel):
 
 		direccion   = str(self.tcDi.GetValue()).strip()
 		telefono    = str(self.tcTe.GetValue()).strip()
-		comentarios = validar('name',self.tcCm.GetValue())
+		comentarios = self.tcCm.GetValue()
 
 		if (error):
 			Iface.showmessage(error_str,"Error!")
@@ -94,7 +96,7 @@ class NewUser(wx.Panel):
 		newUserData = self.isValid()
 		if newUserData:
 			#try to save the user to the DB
-			if save_new(newUserData,'user',cfg.sqdbPath):
+			if self.DBmanager.save_new(newUserData,'user'):
 				Iface.showmessage("Usuario ha sido registrado","Mensaje")
 				#cleans just if the user was correctly added, de otra forma seria hincha-pelotas
 				self.Clean()

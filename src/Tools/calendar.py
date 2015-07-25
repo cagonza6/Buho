@@ -13,6 +13,10 @@ def isweekend(date):
 		return False
 	return True
 
+def int2date(intdate):
+	strdate = str(intdate)
+	return datetime.datetime.strptime(strdate,'%Y%m%d').date()
+
 if __name__ == '__main__':
 	date='2015-12-31'
 	print date2string(date)+1

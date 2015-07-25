@@ -8,10 +8,13 @@ import wx
 import Tools.interface as Iface
 from classes import *
 from Tools.regexe import *
-from Tools.sqlite import save_new
+from Tools.sqlite import DatabaseManager
 
 class NewBook(wx.Panel):
 	def __init__(self, parent, size):
+
+		self.DBmanager = DatabaseManager()
+
 		wx.Panel.__init__(self, parent = parent, size = size)
 		vbox = wx.BoxSizer(wx.VERTICAL)
 		fgs = wx.FlexGridSizer(5,2,7,15)
@@ -68,7 +71,8 @@ class NewBook(wx.Panel):
 			if Iface.cnt(u'El campo Autor está en blanco, desea llenarlo con: "Anonimo"'):
 				au = "Anonimo"
 				self.tcAu.SetValue(au)
-		comentarios = validar('name',self.tcCm.GetValue())
+
+		comentarios = self.tcCm.GetValue()
 
 		if (error):
 			Iface.showmessage(error_str,"Error!")
@@ -77,7 +81,7 @@ class NewBook(wx.Panel):
 	def OnSave(self,e):
 		newBookData = self.isValid()
 		if newBookData:
-			if save_new(newBookData,'book',cfg.sqdbPath):
+			if self.DBmanager.save_new(newBookData,'book'):
 				Iface.showmessage('Libro registrado con exito.', 'Información')
 				self.Clean()
 			else:
