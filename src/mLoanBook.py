@@ -58,10 +58,10 @@ class LoanBook(wx.Panel):
 		self.pnlBk = wx.Panel(self, -1)
 		fgsBk = wx.FlexGridSizer(4,2,7,15)
 		# Identificadores
-		stIs  = wx.StaticText(self.pnlBk, label = "ISBN: ")
-		stTi  = wx.StaticText(self.pnlBk, label = "Título: ")
-		stAu  = wx.StaticText(self.pnlBk, label = "Autor: ")
-		stPt  = wx.StaticText(self.pnlBk, label = "Prestado: ")
+		stIs  = wx.StaticText(self.pnlBk, label = "ISBN ")
+		stTi  = wx.StaticText(self.pnlBk, label = "Título ")
+		stAu  = wx.StaticText(self.pnlBk, label = "Autor ")
+		stPt  = wx.StaticText(self.pnlBk, label = "Prestado ")
 		# Campos
 		self.stIso = wx.StaticText(self.pnlBk, label =".")
 		self.stTio = wx.StaticText(self.pnlBk)
@@ -152,11 +152,12 @@ class LoanBook(wx.Panel):
 				self.llenarDatosUsuario()
 
 	def llenarDatosLibro(self):
-		
+
 		self.stIso.SetLabel(self.book['isbn'])
 		self.stTio.SetLabel(self.book['titulo'])
 		self.stAuo.SetLabel(self.book['autor'])
-		if self.book['estado']: self.stPto.SetLabel(label = "Si")
+		if self.book['estado']:
+			self.stPto.SetLabel(label = "Si")
 		else: self.stPto.SetLabel("No")
 		self.pnlBk.Layout()
 		self.pnlBk.Show()
@@ -165,8 +166,10 @@ class LoanBook(wx.Panel):
 	def	llenarDatosUsuario(self):
 		self.laNm.SetLabel(self.user['nombres'])
 		self.laAp.SetLabel(self.user['apellidos'])
-		if self.user['estado']: self.laSt.SetLabel("Activo")
-		else: self.laSt.SetLabel("Inactivo")
+		if self.user['estado']:
+			self.laSt.SetLabel("Activo")
+		else:
+			self.laSt.SetLabel("Inactivo")
 		self.pnlUs.Layout()
 		self.pnlUs.Show()
 		self.Layout()
@@ -246,8 +249,16 @@ class LoanBook(wx.Panel):
 			return
 
 	def Clean(self):
+		self.stIso.SetLabel('')
+		self.stTio.SetLabel('')
+		self.stAuo.SetLabel('')
+		self.stPto.SetLabel('')
 		self.tcBk.SetValue("")
 		self.tcUs.SetValue("")
+		self.laNm.SetLabel('')
+		self.laAp.SetLabel('')
+		self.laSt.SetLabel('')
+
 
 class DummyFrame(wx.Frame):
 	def __init__(self,parent):
