@@ -16,7 +16,7 @@ def query2dic(cursor, row):
 def save_new(userdata,type_,path2db = "../biblioteca/database/Main.db"):
 
 	if type_=='book':
-		query = "INSERT INTO libros ( isbn, autor, titulo, comentarios) VALUES ( ?, ?, ?, ?);"
+		query = "INSERT INTO libros ( isbn, titulo, autor, comentarios) VALUES ( ?, ?, ?, ?);"
 	elif type_=='user':
 		query = "INSERT INTO usuarios ( nombres, apellidos, rut, direccion, telefono, comentarios) VALUES ( ?, ?, ?, ?, ?, ?);"
 	else:
