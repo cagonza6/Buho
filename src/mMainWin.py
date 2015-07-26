@@ -5,7 +5,6 @@
 
 import wx
 import cfg
-import Main
 import mNewBook
 import mSearchWindows
 import mNewUser
@@ -16,7 +15,8 @@ import Tools.interface as Iface # mensajes por pantalla
 import wx.lib.mixins.listctrl as listmix
 
 
-class MainWin(wx.Frame):   
+class MainWin(wx.Frame):
+	
 	def __init__(self, parent):
 		super(MainWin, self).__init__(parent = parent ,style = wx.MAXIMIZE_BOX | wx.RESIZE_BORDER | wx.CAPTION | wx.MINIMIZE_BOX| wx.CLOSE_BOX)
 		self.InitUI()
@@ -31,10 +31,7 @@ class MainWin(wx.Frame):
 
 		#Acciones
 		fM = wx.Menu()
-		mitry = wx.MenuItem(fM, wx.ID_RETRY, '&TryTest\tCtrl+T')
 		mFqt = wx.MenuItem(fM, wx.ID_EXIT, 'Salir (&Q) \tCtrl+Q')
-
-		fM.AppendItem(mitry)
 		fM.AppendItem(mFqt)
 
 		#Libros
@@ -69,7 +66,6 @@ class MainWin(wx.Frame):
 		self.Bind(wx.EVT_MENU, self.OnSearchBook, mBse)
 		self.Bind(wx.EVT_MENU, self.OnNewUser, mUnw)
 		self.Bind(wx.EVT_MENU, self.OnSearchUser, mUse)
-		self.Bind(wx.EVT_MENU, self.OnTry, mitry)
 		self.Bind(wx.EVT_MENU, self.OnQuit, mFqt)
 
 		mb.Append(fM, '&Acciones')
@@ -81,23 +77,17 @@ class MainWin(wx.Frame):
 		self.SetSize((750, 500))
 		self.SetTitle('Biblioteca')
 
-	def OnTry(self, e):
-		pass
-		#aux = mLoanBook.LoanBook(self,self.GetSize())
-		#self.ChangePanel(aux)
-		#mDispUser.DispUser(self, 1)
-
-	def OnRetBook(self, e):
+	def OnRetBook(self, event):
 		self.ChangePanel(mRetBook.RetBook(self,self.GetSize()))
-	
-	def OnEditLoan(self, e):
+
+	def OnEditLoan(self, event):
 		print "No está hecho"
 		pass
-		
-	def OnLoanBook(self, e):
+
+	def OnLoanBook(self, event):
 		self.ChangePanel(mLoanBook.LoanBook(self,self.GetSize()) )
 
-	def OnNewBook(self, e):
+	def OnNewBook(self, event):
 		self.ChangePanel(mNewBook.NewBook(self,self.GetSize()))
 
 	def ChangePanel(self, Panel):
@@ -129,26 +119,7 @@ class MainWin(wx.Frame):
 			mDisplayinfo.DispUser(self, data)
 
 	def OnQuit(self, e):
-		Main.end_save()
 		self.Close(True)
 
 	def to_do(self,what):
-		wx.MessageBox(what+' no está implementado', 'Falla Temporal', wx.OK)
-
-	def getBook(self,book_id):
-		if book_id > len (self.BooksDB):
-			return False
-		return self.BooksDB[book_id]
-
-	def getUser(self,user_id):
-		if user_id > len (self.UsersDB):
-			return False
-		return self.UsersDB[user_id]
-
-if __name__ == '__main__':
-  
-	app = wx.App()
-	MainWin(None)
-	app.MainLoop()
-        
-#Achicar para display?
+		wx.MessageBox(what+' no está implementado', 'TO-DO', wx.OK)
