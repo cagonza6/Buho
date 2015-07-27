@@ -14,117 +14,123 @@ import Tools.interface as Iface # mensajes por pantall
 class LoanBook(wx.Panel):
 	def __init__(self, parent, size):
 		wx.Panel.__init__(self, parent = parent, size = size)
-		vbox = wx.BoxSizer(wx.VERTICAL)
+		verticalBox = wx.BoxSizer(wx.VERTICAL)                          # Main box of the App
 		fgs = wx.FlexGridSizer(2,2,7,15)
 
 		self.DBmanager = DatabaseManager()
-		self.user=False
-		self.book=False
+		self.user      = False
+		self.book      = False
+		#########
+		#Buttons#
+		#########
+		but_searchbook = wx.Button(self, label = "Buscar Libro")
+		but_searchuser = wx.Button(self, label = "Buscar Usuario")
 
-		#Botones
-		btBk = wx.Button(self, label = "Buscar Libro")
-		btUs = wx.Button(self, label = "Buscar Usuario")
-
-		self.tcBk = wx.TextCtrl(self)
-		self.tcUs = wx.TextCtrl(self)
-		fgs.AddMany([(btBk, 0), (self.tcBk, 1, wx.EXPAND),(btUs, 0), (self.tcUs, 1, wx.EXPAND)])
+		self.txtfield_bookId = wx.TextCtrl(self)
+		self.txtfield_userId = wx.TextCtrl(self)
+		fgs.AddMany([(but_searchbook, 0),
+                     (self.txtfield_bookId, 1, wx.EXPAND),
+                     (but_searchuser, 0),
+                     (self.txtfield_userId, 1, wx.EXPAND)])
 		fgs.AddGrowableCol(1)
 
-		#Paneles datos
-		bsDt = wx.BoxSizer(wx.HORIZONTAL)
-		
-		#Panel datos Usuario
-		self.pnlUs = wx.Panel(self, -1)
-		fgsUs   = wx.FlexGridSizer(3,2,7,15)
-		# Identificadores
-		stNm = wx.StaticText(self.pnlUs, label = "Nombre(s)")
-		stAp = wx.StaticText(self.pnlUs, label = "Apellido(s)")
-		stSt = wx.StaticText(self.pnlUs, label = "Estado")
-		# Campos
-		self.laNm = wx.StaticText(self.pnlUs)
-		self.laAp = wx.StaticText(self.pnlUs)
-		self.laSt = wx.StaticText(self.pnlUs)
+		#############
+		#Data Panels#
+		#############
+		bookDataZiser = wx.BoxSizer(wx.HORIZONTAL)
+			# User Panel
+		self.userPanel = wx.Panel(self, -1)
+		userDataSizer   = wx.FlexGridSizer(3,2,7,15)
+				# Labels
+		label_userName = wx.StaticText(self.userPanel,       label = "Nombre(s)")
+		label_userFamilyName = wx.StaticText(self.userPanel, label = "Apellido(s)")
+		label_userState = wx.StaticText(self.userPanel,      label = "Estado")
+				# Fields
+		self.txtValueUserName = wx.StaticText(self.userPanel)
+		self.txtValueUserFamilyName = wx.StaticText(self.userPanel)
+		self.txtValueUserStatus = wx.StaticText(self.userPanel)
 
-		fgsUs.AddMany([(stNm),(self.laNm, 0),
-		            (stAp),(self.laAp , 0),
-		            (stSt),(self.laSt , 0),
+		userDataSizer.AddMany([(label_userName),(self.txtValueUserName, 0),
+		               (label_userFamilyName),(self.txtValueUserFamilyName , 0),
+		               (label_userState),(self.txtValueUserStatus , 0),
 		            ]
 		)
 		
-		self.pnlUs.SetSizer(fgsUs, 0)
-		self.pnlUs.Hide()
+			#Book Panel
+		self.userPanel.SetSizer(userDataSizer, 0)
+		self.userPanel.Hide()
 		
-		#Datos Libro
-		self.pnlBk = wx.Panel(self, -1)
-		fgsBk = wx.FlexGridSizer(4,2,7,15)
-		# Identificadores
-		stIs  = wx.StaticText(self.pnlBk, label = "ISBN ")
-		stTi  = wx.StaticText(self.pnlBk, label = "Título ")
-		stAu  = wx.StaticText(self.pnlBk, label = "Autor ")
-		stPt  = wx.StaticText(self.pnlBk, label = "Prestado ")
-		# Campos
-		self.stIso = wx.StaticText(self.pnlBk, label =".")
-		self.stTio = wx.StaticText(self.pnlBk)
-		self.stAuo = wx.StaticText(self.pnlBk)
-		self.stPto = wx.StaticText(self.pnlBk)
-		fgsBk.AddMany([(stIs, 0),(self.stIso, 0),
-		             (stTi, 0),(self.stTio, 0),
-		             (stAu, 0),(self.stAuo, 0),
-		             (stPt, 0),(self.stPto, 0)])
-		self.pnlBk.SetSizer(fgsBk)
-		self.pnlBk.Hide()
-		
-		bsDt.AddMany([(self.pnlBk, 1), (wx.StaticLine(self, -1, style=wx.LI_VERTICAL),1,wx.ALIGN_CENTER_HORIZONTAL ),(self.pnlUs, 1)])
+				#Book Data
+		self.bookPanel = wx.Panel(self, -1)
+		bookDataSizer = wx.FlexGridSizer(4,2,7,15)
+				# Labels
+		label_ISBN  = wx.StaticText(self.bookPanel, label = "ISBN ")
+		txtValueTitle  = wx.StaticText(self.bookPanel, label = "Título ")
+		label_Author  = wx.StaticText(self.bookPanel, label = "Autor ")
+		label_BookStatus  = wx.StaticText(self.bookPanel, label = "Prestado ")
+				# Fields
+		self.txtValueISBN = wx.StaticText(self.bookPanel, label ='')
+		self.txtValueTitleo = wx.StaticText(self.bookPanel)
+		self.txtValueAuthor = wx.StaticText(self.bookPanel)
+		self.label_BookStatuso = wx.StaticText(self.bookPanel)
+		bookDataSizer.AddMany([(label_ISBN      , 0),(self.txtValueISBN      , 0),
+		               (txtValueTitle     , 0),(self.txtValueTitleo     , 0),
+		               (label_Author    , 0),(self.txtValueAuthor    , 0),
+		               (label_BookStatus, 0),(self.label_BookStatuso, 0)])
+		self.bookPanel.SetSizer(bookDataSizer)
+		self.bookPanel.Hide()
+
+		bookDataZiser.AddMany([(self.bookPanel, 1), (wx.StaticLine(self, -1, style=wx.LI_VERTICAL),1,wx.ALIGN_CENTER_HORIZONTAL ),(self.userPanel, 1)])
 
 		btPt = wx.Button(self, label = "Prestar")
-		
+
 		fgsCal = wx.FlexGridSizer(3,2,10,20)
-		
-		stTitHoy = wx.StaticText(self, label = "Fecha de Préstamo")
-		font = stTitHoy.GetFont()
+
+		label_LoanDate = wx.StaticText(self, label = "Fecha de Préstamo")
+		font = label_LoanDate.GetFont()
 		font.SetWeight(wx.BOLD)
-		stTitHoy.SetFont(font)
-		self.cal_hoy = cal.CalendarCtrl(self, -1, wx.DateTime.Today())
-		self.cal_hoy.EnableMonthChange(False)
-		self.cal_hoy.EnableHolidayDisplay()
-		
-		stTitFut = wx.StaticText(self, label = "Fecha de Entrega")
-		stTitFut.SetFont(font)
-		self.cal_fut = cal.CalendarCtrl(self, -1, wx.DateTime_Now(), style = cal.CAL_NO_YEAR_CHANGE)
-		self.cal_fut.EnableMonthChange(True)
-		self.cal_fut.EnableHolidayDisplay()
+		label_LoanDate.SetFont(font)
+		self.calendar_LoanDay = cal.CalendarCtrl(self, -1, wx.DateTime.Today())
+		self.calendar_LoanDay.EnableMonthChange(False)
+		self.calendar_LoanDay.EnableHolidayDisplay()
+
+		label_DueDate = wx.StaticText(self, label = "Fecha de Entrega")
+		label_DueDate.SetFont(font)
+		self.calendar_DueDate = cal.CalendarCtrl(self, -1, wx.DateTime_Now(), style = cal.CAL_NO_YEAR_CHANGE)
+		self.calendar_DueDate.EnableMonthChange(True)
+		self.calendar_DueDate.EnableHolidayDisplay()
 
 		default_loan_span = wx.DateSpan.Days(14)
 		today = wx.DateTime_Now()
 		default_return_date = today.AddDS(default_loan_span)		#modifica today
-		self.cal_fut.SetDate(default_return_date)
+		self.calendar_DueDate.SetDate(default_return_date)
 
-		fgsCal.AddMany([(stTitHoy, 1, wx.ALIGN_CENTER_HORIZONTAL), (stTitFut, 1, wx.ALIGN_CENTER_HORIZONTAL, 0),
-		               (self.cal_hoy, 1, wx.ALIGN_CENTER_HORIZONTAL), (self.cal_fut, 1, wx.ALIGN_CENTER_HORIZONTAL)])
+		fgsCal.AddMany([(label_LoanDate, 1, wx.ALIGN_CENTER_HORIZONTAL), (label_DueDate, 1, wx.ALIGN_CENTER_HORIZONTAL, 0),
+		               (self.calendar_LoanDay, 1, wx.ALIGN_CENTER_HORIZONTAL), (self.calendar_DueDate, 1, wx.ALIGN_CENTER_HORIZONTAL)])
 		fgsCal.AddGrowableCol(0)
 		fgsCal.AddGrowableCol(1)
 		fgsCal.AddGrowableRow(1)
 
-		btBk.Bind(wx.EVT_BUTTON, self.OnSelecBook)
-		btUs.Bind(wx.EVT_BUTTON, self.OnSelecUser)
+		but_searchbook.Bind(wx.EVT_BUTTON, self.OnSelecBook)
+		but_searchuser.Bind(wx.EVT_BUTTON, self.OnSelecUser)
 		btPt.Bind(wx.EVT_BUTTON, self.OnLoan)
 		#calendario dia actual: dia del prestamo
-		self.cal_hoy.Bind(cal.EVT_CALENDAR, self.OnHoyMove)						#Locking all possible movement of today's date.
-		self.cal_hoy.Bind(cal.EVT_CALENDAR_SEL_CHANGED, self.OnHoyMove)
-		self.cal_hoy.Bind(cal.EVT_CALENDAR_DAY, self.OnHoyMove)
+		self.calendar_LoanDay.Bind(cal.EVT_CALENDAR, self.OnHoyMove)						#Locking all possible movement of today's date.
+		self.calendar_LoanDay.Bind(cal.EVT_CALENDAR_SEL_CHANGED, self.OnHoyMove)
+		self.calendar_LoanDay.Bind(cal.EVT_CALENDAR_DAY, self.OnHoyMove)
 		#caledario dia retorno
-		self.cal_fut.Bind(cal.EVT_CALENDAR, self.OnFutMove)						#Locking all possible movement of today's date.
-		self.cal_fut.Bind(cal.EVT_CALENDAR_SEL_CHANGED, self.OnFutMove)
-		self.cal_fut.Bind(cal.EVT_CALENDAR_DAY, self.OnFutMove)
+		self.calendar_DueDate.Bind(cal.EVT_CALENDAR, self.OnFutMove)						#Locking all possible movement of today's date.
+		self.calendar_DueDate.Bind(cal.EVT_CALENDAR_SEL_CHANGED, self.OnFutMove)
+		self.calendar_DueDate.Bind(cal.EVT_CALENDAR_DAY, self.OnFutMove)
 		
-		vbox.Add(fgs, 0, wx.EXPAND)
-		vbox.Add(wx.StaticLine(self, size = (1000,10), style = wx.LI_HORIZONTAL), 0, wx.ALL, 10)
-		vbox.Add(bsDt, 0, wx.EXPAND)
-		vbox.Add(wx.StaticLine(self, size = (1000,10), style = wx.LI_HORIZONTAL), 0, wx.ALL, 10)
-		vbox.Add(fgsCal, 0, wx.EXPAND)
-		vbox.Add(wx.StaticLine(self, size = (1000,10), style = wx.LI_HORIZONTAL), 0, wx.ALL, 10)
-		vbox.Add(btPt, 0 , wx.EXPAND | wx.ALIGN_CENTER_VERTICAL)
-		self.SetSizer(vbox)
+		verticalBox.Add(fgs, 0, wx.EXPAND)
+		verticalBox.Add(wx.StaticLine(self, size = (1000,10), style = wx.LI_HORIZONTAL), 0, wx.ALL, 10)
+		verticalBox.Add(bookDataZiser, 0, wx.EXPAND)
+		verticalBox.Add(wx.StaticLine(self, size = (1000,10), style = wx.LI_HORIZONTAL), 0, wx.ALL, 10)
+		verticalBox.Add(fgsCal, 0, wx.EXPAND)
+		verticalBox.Add(wx.StaticLine(self, size = (1000,10), style = wx.LI_HORIZONTAL), 0, wx.ALL, 10)
+		verticalBox.Add(btPt, 0 , wx.EXPAND | wx.ALIGN_CENTER_VERTICAL)
+		self.SetSizer(verticalBox)
 		self.Hide()
 
 	def OnSelecBook(self, e):
@@ -138,53 +144,51 @@ class LoanBook(wx.Panel):
 	def RecieveIdn(self, data, tipo):
 
 		if tipo == 'book':
-			self.tcBk.SetValue('')
 			self.book = self.validarLibro(data)
 			if self.book:
-				self.tcBk.SetValue(self.book['titulo'])
+				self.txtfield_bookId.SetValue(str(self.book['id_libro']))
 				self.llenarDatosLibro()
 
 		elif tipo == 'user':
-			self.tcUs.SetValue('')
 			self.user = self.validarUser(data)
 			if self.user:
-				self.tcUs.SetValue(self.user['nombres']+" "+self.user['apellidos'])
+				self.txtfield_userId.SetValue(str(self.user['id_usuario']))
 				self.llenarDatosUsuario()
 
 	def llenarDatosLibro(self):
 
-		self.stIso.SetLabel(self.book['isbn'])
-		self.stTio.SetLabel(self.book['titulo'])
-		self.stAuo.SetLabel(self.book['autor'])
+		self.txtValueISBN.SetLabel(self.book['isbn'])
+		self.txtValueTitleo.SetLabel(self.book['titulo'])
+		self.txtValueAuthor.SetLabel(self.book['autor'])
 		if self.book['estado']:
-			self.stPto.SetLabel(label = "Si")
-		else: self.stPto.SetLabel("No")
-		self.pnlBk.Layout()
-		self.pnlBk.Show()
+			self.label_BookStatuso.SetLabel(label = "Si")
+		else: self.label_BookStatuso.SetLabel("No")
+		self.bookPanel.Layout()
+		self.bookPanel.Show()
 		self.Layout()
 		
 	def	llenarDatosUsuario(self):
-		self.laNm.SetLabel(self.user['nombres'])
-		self.laAp.SetLabel(self.user['apellidos'])
+		self.txtValueUserName.SetLabel(self.user['nombres'])
+		self.txtValueUserFamilyName.SetLabel(self.user['apellidos'])
 		if self.user['estado']:
-			self.laSt.SetLabel("Activo")
+			self.txtValueUserStatus.SetLabel("Activo")
 		else:
-			self.laSt.SetLabel("Inactivo")
-		self.pnlUs.Layout()
-		self.pnlUs.Show()
+			self.txtValueUserStatus.SetLabel("Inactivo")
+		self.userPanel.Layout()
+		self.userPanel.Show()
 		self.Layout()
 
 	def OnHoyMove(self, e):
-		#Todos los posibles cambios de fecha en cal_hoy están bloqueados.
-		self.cal_hoy.SetDate(wx.DateTime_Now())
+		#Todos los posibles cambios de fecha en calendar_LoanDay están bloqueados.
+		self.calendar_LoanDay.SetDate(wx.DateTime_Now())
 		
 	def OnFutMove(self, e):
 		un_dia = wx.DateSpan.Days(1)
 		today = wx.DateTime_Now()
 		manana = today.AddDS(un_dia)		#modifica today
 		
-		if (self.cal_fut.GetDate().IsEarlierThan(manana)):		#Si la fecha es anterior a mañana, automáticamente se corre a mañana. 
-			self.cal_fut.SetDate(manana)
+		if (self.calendar_DueDate.GetDate().IsEarlierThan(manana)):		#Si la fecha es anterior a mañana, automáticamente se corre a mañana. 
+			self.calendar_DueDate.SetDate(manana)
 
 	def validarUser(self, user):
 		if user:
@@ -210,7 +214,7 @@ class LoanBook(wx.Panel):
 			return False
 		if not self.validarLibro(self.book):
 			return False
-		if not self.checkdate(self.cal_hoy.PyGetDate(),self.cal_fut.PyGetDate()):
+		if not self.checkdate(self.calendar_LoanDay.PyGetDate(),self.calendar_DueDate.PyGetDate()):
 			return False
 
 		return [self.book['id_libro'],self.user['id_usuario'],self.desde,self.hasta]
@@ -250,25 +254,23 @@ class LoanBook(wx.Panel):
 			return
 
 	def Clean(self):
-		self.stIso.SetLabel('')
-		self.stTio.SetLabel('')
-		self.stAuo.SetLabel('')
-		self.stPto.SetLabel('')
-		self.tcBk.SetValue('')
-		self.tcUs.SetValue('')
-		self.laNm.SetLabel('')
-		self.laAp.SetLabel('')
-		self.laSt.SetLabel('')
-
+		self.txtfield_bookId.SetValue('')
+		self.txtfield_userId.SetValue('')
+		self.txtValueUserName.SetLabel('')
+		self.txtValueUserFamilyName.SetLabel('')
+		self.txtValueUserStatus.SetLabel('')
+		self.txtValueISBN.SetLabel('')
+		self.txtValueTitleo.SetLabel('')
+		self.txtValueAuthor.SetLabel('')
 
 class DummyFrame(wx.Frame):
 	def __init__(self,parent):
 		super(DummyFrame, self).__init__(parent = parent, size=(700, 500)) 
-		vbox = wx.BoxSizer(wx.VERTICAL)
+		verticalBox = wx.BoxSizer(wx.VERTICAL)
 		panel = LoanBook(self, self.GetSize())
-		vbox.Add(panel, 2, wx.EXPAND)
+		verticalBox.Add(panel, 2, wx.EXPAND)
 		panel.Show()
-		self.SetSizer(vbox)
+		self.SetSizer(verticalBox)
 		self.Centre()
 		self.Show()
 
