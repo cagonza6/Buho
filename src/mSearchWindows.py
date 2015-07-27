@@ -218,8 +218,6 @@ class SearchUser(wx.Frame):
 		self.GetParent().RecieveIdn(user, 'user')
 		self.Close()
 
-
-#All Glory for this goes to the people at http://code.activestate.com/recipes/426407-columnsortermixin-with-a-virtual-wxlistctrl/
 class TempSortedListPanelBook(wx.ListCtrl, listmix.ListCtrlAutoWidthMixin, listmix.ColumnSorterMixin):
 	def __init__(self, parent):
 		wx.ListCtrl.__init__( self, parent, -1, style = wx.LC_REPORT | wx.LC_HRULES | wx.LC_VIRTUAL)
@@ -439,6 +437,5 @@ if __name__ == '__main__':
 	ddic2={'id_usuario':2,'nombres':'Nombre 2','apellidos': 'Apellido2 ','rut':'223456789','comentarios': 'no hay 2','direccion':'Direccion 2','estado':0, 'telefono':'222-corriente'}
 	ddic3={'id_usuario':3,'nombres':'Nombre 3','apellidos': 'Apellido3 ','rut':'323456789','comentarios': 'no hay 3','direccion':'Direccion 3','estado':1, 'telefono':'333-corriente'}
 	users=[ddic1,ddic2,ddic3]
-	ex = wx.App()
 	SearchUser(None,users)
 	ex.MainLoop()

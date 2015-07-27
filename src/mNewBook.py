@@ -78,6 +78,7 @@ class NewBook(wx.Panel):
 			Iface.showmessage(error_str,"Error!")
 			return False
 		return [isbn,ti,au,comentarios]
+
 	def OnSave(self,e):
 		newBookData = self.isValid()
 		if newBookData:

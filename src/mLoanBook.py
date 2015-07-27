@@ -203,6 +203,7 @@ class LoanBook(wx.Panel):
 			return libro
 		Iface.showmessage('Libro no valido.',"Error")
 		return False
+
 	def validateLoan(self):
 
 		if not self.validarUser(self.user):
@@ -253,8 +254,8 @@ class LoanBook(wx.Panel):
 		self.stTio.SetLabel('')
 		self.stAuo.SetLabel('')
 		self.stPto.SetLabel('')
-		self.tcBk.SetValue("")
-		self.tcUs.SetValue("")
+		self.tcBk.SetValue('')
+		self.tcUs.SetValue('')
 		self.laNm.SetLabel('')
 		self.laAp.SetLabel('')
 		self.laSt.SetLabel('')
