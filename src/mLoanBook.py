@@ -7,9 +7,14 @@ import wx
 import cfg
 import mSearchWindows
 import wx.calendar as cal
-from Tools.sqlite import DatabaseManager
-from Tools.calendar import date2int,isweekend
-import Tools.interface as Iface # mensajes por pantall
+from Tools.sqlite import DatabaseManager                                # Database functions
+from Tools.calendar import date2int,isweekend                           # Calendar tools
+import Tools.interface as Iface                                         # Screen Dialogs
+
+
+MIN_LOAN_SPAN = 0
+LOAN_SPAN     = 14
+MAX_LOAN_SPAN = 20
 
 class LoanBook(wx.Panel):
 	def __init__(self, parent, size):
@@ -25,13 +30,14 @@ class LoanBook(wx.Panel):
 		#########
 		but_searchbook = wx.Button(self, label = "Buscar Libro")
 		but_searchuser = wx.Button(self, label = "Buscar Usuario")
+		but_Loan = wx.Button(self, label       = "Prestar")
 
-		self.txtfield_bookId = wx.TextCtrl(self)
-		self.txtfield_userId = wx.TextCtrl(self)
+		self.inputField_bookId = wx.TextCtrl(self)
+		self.inputField_userId = wx.TextCtrl(self)
 		fgs.AddMany([(but_searchbook, 0),
-                     (self.txtfield_bookId, 1, wx.EXPAND),
+                     (self.inputField_bookId, 1, wx.EXPAND),
                      (but_searchuser, 0),
-                     (self.txtfield_userId, 1, wx.EXPAND)])
+                     (self.inputField_userId, 1, wx.EXPAND)])
 		fgs.AddGrowableCol(1)
 
 		#############
@@ -64,9 +70,9 @@ class LoanBook(wx.Panel):
 		self.bookPanel = wx.Panel(self, -1)
 		bookDataSizer = wx.FlexGridSizer(4,2,7,15)
 				# Labels
-		label_ISBN  = wx.StaticText(self.bookPanel, label = "ISBN ")
-		txtValueTitle  = wx.StaticText(self.bookPanel, label = "Título ")
-		label_Author  = wx.StaticText(self.bookPanel, label = "Autor ")
+		label_ISBN    = wx.StaticText(self.bookPanel,     label = "ISBN ")
+		txtValueTitle = wx.StaticText(self.bookPanel,     label = "Título ")
+		label_Author  = wx.StaticText(self.bookPanel,     label = "Autor ")
 		label_BookStatus  = wx.StaticText(self.bookPanel, label = "Prestado ")
 				# Fields
 		self.txtValueISBN = wx.StaticText(self.bookPanel, label ='')
@@ -80,11 +86,11 @@ class LoanBook(wx.Panel):
 		self.bookPanel.SetSizer(bookDataSizer)
 		self.bookPanel.Hide()
 
-		bookDataZiser.AddMany([(self.bookPanel, 1), (wx.StaticLine(self, -1, style=wx.LI_VERTICAL),1,wx.ALIGN_CENTER_HORIZONTAL ),(self.userPanel, 1)])
+		bookDataZiser.AddMany([(self.bookPanel, 1), 
+                               (wx.StaticLine(self, -1, style=wx.LI_VERTICAL),1,wx.ALIGN_CENTER_HORIZONTAL ), # separator
+                               (self.userPanel, 1)])
 
-		btPt = wx.Button(self, label = "Prestar")
-
-		fgsCal = wx.FlexGridSizer(3,2,10,20)
+		calendarsSizer = wx.FlexGridSizer(3,2,10,20)
 
 		label_LoanDate = wx.StaticText(self, label = "Fecha de Préstamo")
 		font = label_LoanDate.GetFont()
@@ -94,32 +100,35 @@ class LoanBook(wx.Panel):
 		self.calendar_LoanDay.EnableMonthChange(False)
 		self.calendar_LoanDay.EnableHolidayDisplay()
 
+
 		label_DueDate = wx.StaticText(self, label = "Fecha de Entrega")
 		label_DueDate.SetFont(font)
 		self.calendar_DueDate = cal.CalendarCtrl(self, -1, wx.DateTime_Now(), style = cal.CAL_NO_YEAR_CHANGE)
 		self.calendar_DueDate.EnableMonthChange(True)
 		self.calendar_DueDate.EnableHolidayDisplay()
 
-		default_loan_span = wx.DateSpan.Days(14)
-		today = wx.DateTime_Now()
-		default_return_date = today.AddDS(default_loan_span)		#modifica today
-		self.calendar_DueDate.SetDate(default_return_date)
+		today               = wx.DateTime_Now()
+		default_loan_span   = wx.DateSpan.Days(LOAN_SPAN)
+		default_return_date = today.AddDS(default_loan_span)            # doday + Loan periode
+		self.calendar_DueDate.SetDate(default_return_date)              # updates Loan date to the calculated day
 
-		fgsCal.AddMany([(label_LoanDate, 1, wx.ALIGN_CENTER_HORIZONTAL), (label_DueDate, 1, wx.ALIGN_CENTER_HORIZONTAL, 0),
+		calendarsSizer.AddMany([(label_LoanDate, 1, wx.ALIGN_CENTER_HORIZONTAL), (label_DueDate, 1, wx.ALIGN_CENTER_HORIZONTAL, 0),
 		               (self.calendar_LoanDay, 1, wx.ALIGN_CENTER_HORIZONTAL), (self.calendar_DueDate, 1, wx.ALIGN_CENTER_HORIZONTAL)])
-		fgsCal.AddGrowableCol(0)
-		fgsCal.AddGrowableCol(1)
-		fgsCal.AddGrowableRow(1)
+		calendarsSizer.AddGrowableCol(0)
+		calendarsSizer.AddGrowableCol(1)
+		calendarsSizer.AddGrowableRow(1)
 
+		# Button Events
 		but_searchbook.Bind(wx.EVT_BUTTON, self.OnSelecBook)
 		but_searchuser.Bind(wx.EVT_BUTTON, self.OnSelecUser)
-		btPt.Bind(wx.EVT_BUTTON, self.OnLoan)
-		#calendario dia actual: dia del prestamo
-		self.calendar_LoanDay.Bind(cal.EVT_CALENDAR, self.OnHoyMove)						#Locking all possible movement of today's date.
-		self.calendar_LoanDay.Bind(cal.EVT_CALENDAR_SEL_CHANGED, self.OnHoyMove)
-		self.calendar_LoanDay.Bind(cal.EVT_CALENDAR_DAY, self.OnHoyMove)
-		#caledario dia retorno
-		self.calendar_DueDate.Bind(cal.EVT_CALENDAR, self.OnFutMove)						#Locking all possible movement of today's date.
+		but_Loan.Bind(wx.EVT_BUTTON, self.OnLoan)
+
+		# calendar: Loan Day - Events
+		self.calendar_LoanDay.Bind(cal.EVT_CALENDAR, self.OnLoandayCalendarChange)                # locks every date modification: fix calendar
+		self.calendar_LoanDay.Bind(cal.EVT_CALENDAR_SEL_CHANGED, self.OnLoandayCalendarChange)
+		self.calendar_LoanDay.Bind(cal.EVT_CALENDAR_DAY, self.OnLoandayCalendarChange)
+		# calendar: Due Day - Events
+		self.calendar_DueDate.Bind(cal.EVT_CALENDAR, self.OnFutMove)
 		self.calendar_DueDate.Bind(cal.EVT_CALENDAR_SEL_CHANGED, self.OnFutMove)
 		self.calendar_DueDate.Bind(cal.EVT_CALENDAR_DAY, self.OnFutMove)
 		
@@ -127,32 +136,32 @@ class LoanBook(wx.Panel):
 		verticalBox.Add(wx.StaticLine(self, size = (1000,10), style = wx.LI_HORIZONTAL), 0, wx.ALL, 10)
 		verticalBox.Add(bookDataZiser, 0, wx.EXPAND)
 		verticalBox.Add(wx.StaticLine(self, size = (1000,10), style = wx.LI_HORIZONTAL), 0, wx.ALL, 10)
-		verticalBox.Add(fgsCal, 0, wx.EXPAND)
+		verticalBox.Add(calendarsSizer, 0, wx.EXPAND)
 		verticalBox.Add(wx.StaticLine(self, size = (1000,10), style = wx.LI_HORIZONTAL), 0, wx.ALL, 10)
-		verticalBox.Add(btPt, 0 , wx.EXPAND | wx.ALIGN_CENTER_VERTICAL)
+		verticalBox.Add(but_Loan, 0 , wx.EXPAND | wx.ALIGN_CENTER_VERTICAL)
 		self.SetSizer(verticalBox)
 		self.Hide()
 
 	def OnSelecBook(self, e):
 		self.books     = self.DBmanager.load_table('libros')
-		mSearchWindows.SearchBook(self, 2,self.books)	#2: Mostrar solo libros disponibles
+		mSearchWindows.SearchBook(self, 2,self.books)	#2: Sow just available items
 
 	def OnSelecUser(self, e):
 		self.users     = self.DBmanager.load_table('usuarios')
-		mSearchWindows.SearchUser(self, 1,self.users)	#1: Mostrar solo usuarios activos.
+		mSearchWindows.SearchUser(self, 1,self.users)	#1: Show just active users
 
 	def RecieveIdn(self, data, tipo):
 
 		if tipo == 'book':
 			self.book = self.validarLibro(data)
 			if self.book:
-				self.txtfield_bookId.SetValue(str(self.book['id_libro']))
+				self.inputField_bookId.SetValue(str(self.book['id_libro']))
 				self.llenarDatosLibro()
 
 		elif tipo == 'user':
 			self.user = self.validarUser(data)
 			if self.user:
-				self.txtfield_userId.SetValue(str(self.user['id_usuario']))
+				self.inputField_userId.SetValue(str(self.user['id_usuario']))
 				self.llenarDatosUsuario()
 
 	def llenarDatosLibro(self):
@@ -178,17 +187,19 @@ class LoanBook(wx.Panel):
 		self.userPanel.Show()
 		self.Layout()
 
-	def OnHoyMove(self, e):
-		#Todos los posibles cambios de fecha en calendar_LoanDay están bloqueados.
+	def OnLoandayCalendarChange(self, e):
+		# Every date changes are blocked, the calendar returns to the date of "today"
 		self.calendar_LoanDay.SetDate(wx.DateTime_Now())
 		
 	def OnFutMove(self, e):
-		un_dia = wx.DateSpan.Days(1)
-		today = wx.DateTime_Now()
-		manana = today.AddDS(un_dia)		#modifica today
-		
-		if (self.calendar_DueDate.GetDate().IsEarlierThan(manana)):		#Si la fecha es anterior a mañana, automáticamente se corre a mañana. 
-			self.calendar_DueDate.SetDate(manana)
+		today    = wx.DateTime_Now()
+		oneDay   = wx.DateSpan.Days(MIN_LOAN_SPAN)
+		tomorrow = today.AddDS(oneDay)		#modifica today
+
+		#If the due date is set before the date of loan, it bring the next possible day
+		# or same day if due day is the loan day (min loan span =0)
+		if ( self.calendar_DueDate.GetDate().IsEarlierThan(tomorrow) ):
+			self.calendar_DueDate.SetDate(tomorrow)
 
 	def validarUser(self, user):
 		if user:
@@ -199,12 +210,12 @@ class LoanBook(wx.Panel):
 		Iface.showmessage('Usuario no valido.',"Error")
 		return False
 
-	def validarLibro(self, libro):
-		if libro:
-			if not ('estado' in libro.keys()) or libro['estado']:
+	def validarLibro(self, book):
+		if book:
+			if not ('estado' in book.keys()) or book['estado']:
 				Iface.showmessage('El Libro que seleccionado ya se encuentra prestado.',"Prestado")
 				return False
-			return libro
+			return book
 		Iface.showmessage('Libro no valido.',"Error")
 		return False
 
@@ -234,8 +245,8 @@ class LoanBook(wx.Panel):
 		return True
 
 	def OnLoan(self, e):
-		#segunda validacion de los parametros de usuario y libro,
-		#tambien obtiene los parametros para prestar
+		# second validation of the parameters: user and book
+		# Obtains the parameters to generate the loan
 		self.data_loan = self.validateLoan()
 
 		if not self.data_loan:
@@ -246,7 +257,7 @@ class LoanBook(wx.Panel):
 		if not self.saving:
 			Iface.showmessage('Error al registrar el préstamo.',"Database")
 		if self.saving:
-			#actualiza los valores despues de prestar un libro para no prestarlo otra vez
+			# Update the values of book and labels in order to clean the data and not loan the books twice
 			self.book=False
 			self.user=False
 			self.Clean()
@@ -254,8 +265,8 @@ class LoanBook(wx.Panel):
 			return
 
 	def Clean(self):
-		self.txtfield_bookId.SetValue('')
-		self.txtfield_userId.SetValue('')
+		self.inputField_bookId.SetValue('')
+		self.inputField_userId.SetValue('')
 		self.txtValueUserName.SetLabel('')
 		self.txtValueUserFamilyName.SetLabel('')
 		self.txtValueUserStatus.SetLabel('')
@@ -283,4 +294,4 @@ if __name__ == '__main__':
 
 	ex = wx.App()
 	DummyFrame(None)
-	ex.MainLoop()    
+	ex.MainLoop()
