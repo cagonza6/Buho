@@ -233,7 +233,7 @@ class LoanBook(wx.Panel):
 		if not self.isBookValid(self.book):
 			return False
 
-		return [self.book['id_libro'],self.user['id_usuario'],self.LoanDate,self.dueDate]
+		return [self.book['id_libro'],self.user['id_usuario'],date2int(self.LoanDate),date2int(self.dueDate)]
 
 
 	# This method is ment to skipe the Weekends (and holidays, not yet implemented)
