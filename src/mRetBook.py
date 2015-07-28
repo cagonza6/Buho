@@ -8,9 +8,8 @@ import cfg
 import mSearchWindows
 import wx.calendar as cal
 from Tools.sqlite import DatabaseManager
-from Tools.calendar import int2date,date2int
+from Tools.calendar import int2date,date2int,daysbetween
 import Tools.interface as Iface # mensajes por pantalla
-
 
 class RetBook(wx.Panel):
 	def __init__(self, parent, size,books=False):
@@ -127,6 +126,8 @@ class RetBook(wx.Panel):
 		vbox.Add(btRt, 0 , wx.EXPAND | wx.ALIGN_CENTER_VERTICAL)
 		self.SetSizer(vbox)
 		self.Hide()
+		# Todays datr
+		self.retorno = date2int(self.cal_hoy.PyGetDate())
 
 	def OnSelecBook(self, e):
 		self.books     = self.DBmanager.load_table('libros')
@@ -141,6 +142,7 @@ class RetBook(wx.Panel):
 				self.tcBk.SetValue(self.book['titulo'])
 				self.prestamo = self.DBmanager.load_loan_data(self.book['id_prestamo'])
 				self.user     = self.DBmanager.load_user(self.prestamo['id_usuario'])
+				self.isdelayed() # informs about the delay
 			if self.user:
 				self.llenarDatos()
 
@@ -189,16 +191,15 @@ class RetBook(wx.Panel):
 		return libro
 
 	def isdelayed(self):
-		self.delay=self.prestamo['hasta'] - self.retorno;
-		if self.delay<0:
-			Iface.showmessage(u'El libro se está entregando con ['+str(self.delay)+'] Dias de atraso.',"Atraso")
-			return self.delay
+		delay = daysbetween(int2date(self.retorno),int2date(self.prestamo['hasta']))
+		if delay<0:
+			Iface.showmessage(u'El libro se está entregando con ['+str(delay)+'] Dias de atraso.',"Atraso")
+			return delay
 		return 0
 
 	def validateReturn(self):
 		if not self.validateLibro(self.book):
 			return False
-		self.retorno = date2int(self.cal_hoy.PyGetDate())
 		return [self.book['id_prestamo'],self.retorno]
 
 
@@ -215,7 +216,6 @@ class RetBook(wx.Panel):
 		if not self.saving:
 			Iface.showmessage('Error al registrar el retorno.',"Database")
 		if self.saving:
-			self.isdelayed()
 			#self.multar()
 			self.book     = False
 			self.user     = False
@@ -225,8 +225,14 @@ class RetBook(wx.Panel):
 			return
 
 	def Clean(self):
-		self.tcBk.SetValue("")
-
+		self.tcBk.SetValue ('')
+		self.stIso.SetLabel('')
+		self.stTio.SetLabel('')
+		self.stAuo.SetLabel('')
+		self.stPto.SetLabel('')
+		self.laNm.SetLabel ('')
+		self.laAp.SetLabel ('')
+		self.laSt.SetLabel ('')
 
 class DummyFrame(wx.Frame):
 	def __init__(self,parent):
