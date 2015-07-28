@@ -155,7 +155,7 @@ class DatabaseManager(object):
 		query += "     usuarios.estado as user_status "
 		query += "FROM libros "
 		query += "INNER JOIN prestamos     ON libros.id_libro    = prestamos.id_libro "
-		query += "LEFT  JOIN usuarios       ON prestamos.id_libro = usuarios.id_usuario "
+		query += "LEFT  JOIN usuarios      ON prestamos.id_usuario = usuarios.id_usuario "
 		query += "WHERE prestamos.hasta>= ? "
 		query += "GROUP BY libros.id_libro;"
 
