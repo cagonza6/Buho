@@ -18,6 +18,7 @@ LOAN_SPAN         = 14
 MAX_LOAN_SPAN     = 28
 LOANS_ALERT       = 2
 MAX_LOANS_ALLOWED = 4
+
 class LoanBook(wx.Panel):
 	def __init__(self, parent, size):
 		wx.Panel.__init__(self, parent = parent, size = size)
@@ -168,7 +169,9 @@ class LoanBook(wx.Panel):
 			self.user = self.isUserValid(data)
 			if self.user:
 				self.inputField_userId.SetValue(str(self.user['id_usuario']))
+				self.alertLoanNumber(data)
 				self.fillUserData()
+
 
 	def fillBookData(self):
 
@@ -207,17 +210,19 @@ class LoanBook(wx.Panel):
 		if ( self.calendar_DueDate.GetDate().IsEarlierThan(tomorrow) ):
 			self.calendar_DueDate.SetDate(tomorrow)
 
+	def alertLoanNumber(self, user):
+		if LOANS_ALERT and user['number_loans']>=LOANS_ALERT:
+			Iface.showmessage('El Lector seleccionado ya posee ['+str(user['number_loans'])+u'] libros\n de un máximo de ['+str(MAX_LOANS_ALLOWED)+'] permitidos.',u"Atención")
+
 	def isUserValid(self, user):
 		if user:
 			if not ( 'estado' in user.keys()) or not user['estado']:
 				Iface.showmessage('El usuario seleccionado no puede recibir libros ya que se encuentra bloqueado.',"Bloqueado")
 				return False
+
 			if user['number_loans']>=MAX_LOANS_ALLOWED:
 				Iface.showmessage(u'Máximo número de prestmaos alcanzado ['+str(MAX_LOANS_ALLOWED)+']. \n Prestamo cancelado.',"Bloqueado")
 				return False
-			elif user['number_loans']>=LOANS_ALERT:
-				Iface.showmessage('El Lector seleccionado ya posee ['+str(user['number_loans'])+u'] libros\n de un máximo de ['+str(MAX_LOANS_ALLOWED)+'] permitidos.',u"Atención")
-
 			return user
 
 		Iface.showmessage('Usuario no valido.',"Error")

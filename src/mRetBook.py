@@ -184,7 +184,8 @@ class RetBook(wx.Panel):
 			self.cal_ent.PySetDate(int2date(self.prestamo['hasta']))
 
 	def validateLibro(self, libro):
-
+		if not libro:
+			return False
 		if not ('estado' in libro.keys()) or not libro['estado']:
 			Iface.showmessage('El Libro que seleccionado no se encuentra prestado.',"No Prestado")
 			return False
@@ -209,7 +210,7 @@ class RetBook(wx.Panel):
 		self.data_return = self.validateReturn()
 
 		if not self.data_return:
-			Iface.showmessage('Se encontro un problema al prestar libros.\nPrestamo cancelado.',"Prestamo")
+			Iface.showmessage('Libro no valido.',"Retorno")
 			return
 
 		self.saving = self.DBmanager.returnbook(*self.data_return)
