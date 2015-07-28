@@ -8,13 +8,14 @@ import cfg
 import mSearchWindows
 import wx.calendar as cal
 from Tools.sqlite import DatabaseManager                                # Database functions
-from Tools.calendar import date2int,isweekend                           # Calendar tools
+from Tools.calendar import date2int, isweekend, int2date, daysbetween   # Calendar tools
+from Tools.calendar import oneDay, date2DMY                             # Calendar tools
 import Tools.interface as Iface                                         # Screen Dialogs
 
 
 MIN_LOAN_SPAN = 0
 LOAN_SPAN     = 14
-MAX_LOAN_SPAN = 20
+MAX_LOAN_SPAN = 28
 
 class LoanBook(wx.Panel):
 	def __init__(self, parent, size):
@@ -107,10 +108,7 @@ class LoanBook(wx.Panel):
 		self.calendar_DueDate.EnableMonthChange(True)
 		self.calendar_DueDate.EnableHolidayDisplay()
 
-		today               = wx.DateTime_Now()
-		default_loan_span   = wx.DateSpan.Days(LOAN_SPAN)
-		default_return_date = today.AddDS(default_loan_span)            # doday + Loan periode
-		self.calendar_DueDate.SetDate(default_return_date)              # updates Loan date to the calculated day
+		self.dueDateReset()
 
 		calendarsSizer.AddMany([(label_LoanDate, 1, wx.ALIGN_CENTER_HORIZONTAL), (label_DueDate, 1, wx.ALIGN_CENTER_HORIZONTAL, 0),
 		               (self.calendar_LoanDay, 1, wx.ALIGN_CENTER_HORIZONTAL), (self.calendar_DueDate, 1, wx.ALIGN_CENTER_HORIZONTAL)])
@@ -128,9 +126,9 @@ class LoanBook(wx.Panel):
 		self.calendar_LoanDay.Bind(cal.EVT_CALENDAR_SEL_CHANGED, self.OnLoandayCalendarChange)
 		self.calendar_LoanDay.Bind(cal.EVT_CALENDAR_DAY, self.OnLoandayCalendarChange)
 		# calendar: Due Day - Events
-		self.calendar_DueDate.Bind(cal.EVT_CALENDAR, self.OnFutMove)
-		self.calendar_DueDate.Bind(cal.EVT_CALENDAR_SEL_CHANGED, self.OnFutMove)
-		self.calendar_DueDate.Bind(cal.EVT_CALENDAR_DAY, self.OnFutMove)
+		self.calendar_DueDate.Bind(cal.EVT_CALENDAR, self.OnDueCalendarChange)
+		self.calendar_DueDate.Bind(cal.EVT_CALENDAR_SEL_CHANGED, self.OnDueCalendarChange)
+		self.calendar_DueDate.Bind(cal.EVT_CALENDAR_DAY, self.OnDueCalendarChange)
 		
 		verticalBox.Add(fgs, 0, wx.EXPAND)
 		verticalBox.Add(wx.StaticLine(self, size = (1000,10), style = wx.LI_HORIZONTAL), 0, wx.ALL, 10)
@@ -141,6 +139,13 @@ class LoanBook(wx.Panel):
 		verticalBox.Add(but_Loan, 0 , wx.EXPAND | wx.ALIGN_CENTER_VERTICAL)
 		self.SetSizer(verticalBox)
 		self.Hide()
+
+	# sets the calendar to the LOAN_SPAN from "today"
+	def dueDateReset(self):
+		today               = wx.DateTime_Now()
+		default_loan_span   = wx.DateSpan.Days(LOAN_SPAN)
+		self.default_return_date = today.AddDS(default_loan_span)            # doday + Loan periode
+		self.calendar_DueDate.SetDate(self.default_return_date)              # updates Loan date to the calculated day
 
 	def OnSelecBook(self, e):
 		self.books     = self.DBmanager.load_table('libros')
@@ -153,18 +158,18 @@ class LoanBook(wx.Panel):
 	def RecieveIdn(self, data, tipo):
 
 		if tipo == 'book':
-			self.book = self.validarLibro(data)
+			self.book = self.isBookValid(data)
 			if self.book:
 				self.inputField_bookId.SetValue(str(self.book['id_libro']))
-				self.llenarDatosLibro()
+				self.fillBookData()
 
 		elif tipo == 'user':
-			self.user = self.validarUser(data)
+			self.user = self.isUserValid(data)
 			if self.user:
 				self.inputField_userId.SetValue(str(self.user['id_usuario']))
-				self.llenarDatosUsuario()
+				self.fillUserData()
 
-	def llenarDatosLibro(self):
+	def fillBookData(self):
 
 		self.txtValueISBN.SetLabel(self.book['isbn'])
 		self.txtValueTitleo.SetLabel(self.book['titulo'])
@@ -176,7 +181,7 @@ class LoanBook(wx.Panel):
 		self.bookPanel.Show()
 		self.Layout()
 		
-	def	llenarDatosUsuario(self):
+	def	fillUserData(self):
 		self.txtValueUserName.SetLabel(self.user['nombres'])
 		self.txtValueUserFamilyName.SetLabel(self.user['apellidos'])
 		if self.user['estado']:
@@ -190,18 +195,18 @@ class LoanBook(wx.Panel):
 	def OnLoandayCalendarChange(self, e):
 		# Every date changes are blocked, the calendar returns to the date of "today"
 		self.calendar_LoanDay.SetDate(wx.DateTime_Now())
-		
-	def OnFutMove(self, e):
+
+	def OnDueCalendarChange(self, e):
 		today    = wx.DateTime_Now()
-		oneDay   = wx.DateSpan.Days(MIN_LOAN_SPAN)
-		tomorrow = today.AddDS(oneDay)		#modifica today
+		minSpan   = wx.DateSpan.Days(MIN_LOAN_SPAN)
+		tomorrow = today.AddDS(minSpan)		#modifica today
 
 		#If the due date is set before the date of loan, it bring the next possible day
 		# or same day if due day is the loan day (min loan span =0)
 		if ( self.calendar_DueDate.GetDate().IsEarlierThan(tomorrow) ):
 			self.calendar_DueDate.SetDate(tomorrow)
 
-	def validarUser(self, user):
+	def isUserValid(self, user):
 		if user:
 			if not ( 'estado' in user.keys()) or not user['estado']:
 				Iface.showmessage('El usuario seleccionado no puede recibir libros ya que se encuentra bloqueado.',"Bloqueado")
@@ -210,7 +215,7 @@ class LoanBook(wx.Panel):
 		Iface.showmessage('Usuario no valido.',"Error")
 		return False
 
-	def validarLibro(self, book):
+	def isBookValid(self, book):
 		if book:
 			if not ('estado' in book.keys()) or book['estado']:
 				Iface.showmessage('El Libro que seleccionado ya se encuentra prestado.',"Prestado")
@@ -219,26 +224,49 @@ class LoanBook(wx.Panel):
 		Iface.showmessage('Libro no valido.',"Error")
 		return False
 
-	def validateLoan(self):
+	def isLoanValid(self):
 
-		if not self.validarUser(self.user):
+		if not self.validateDueDate():
 			return False
-		if not self.validarLibro(self.book):
+		if not self.isUserValid(self.user):
 			return False
-		if not self.checkdate(self.calendar_LoanDay.PyGetDate(),self.calendar_DueDate.PyGetDate()):
-			return False
-
-		return [self.book['id_libro'],self.user['id_usuario'],self.desde,self.hasta]
-
-	def checkdate(self,desde,hasta):
-		self.desde = date2int(desde)
-		self.hasta = date2int(hasta)
-
-		if isweekend(hasta):
-			Iface.showmessage('El dia de retorno no puede ser Fin de semana','Período Invalido')
+		if not self.isBookValid(self.book):
 			return False
 
-		if self.desde>self.hasta:
+		return [self.book['id_libro'],self.user['id_usuario'],self.LoanDate,self.dueDate]
+
+
+	# This method is ment to skipe the Weekends (and holidays, not yet implemented)
+	# it starts from the already defined LOAN_SPAN days
+	def searchDueDate(self):
+		date0  = int2date(date2int(self.calendar_DueDate.PyGetDate()))
+		while isweekend(date0):
+			date0 +=oneDay()
+		dmy = date2DMY(date0)
+		wxdate=wx.DateTimeFromDMY(*dmy)
+
+		return wxdate
+
+	# This method cares about the validity of the day: not weekend
+	# also alidates how long the Loan gets
+	def validateDueDate(self):
+		self.LoanDate = self.calendar_LoanDay.PyGetDate()
+		self.dueDate  = self.calendar_DueDate.PyGetDate()
+
+		if isweekend(self.dueDate):
+			if not  Iface.cnt(u'El dia de retorno no puede ser Fin de semana', u'¿Desea cambiarlo al dia hábil siguiente?','Advertencia'):
+				return False
+		self.calendar_DueDate.SetDate(self.searchDueDate())
+
+		diff = daysbetween(self.LoanDate,self.dueDate)
+		if MAX_LOAN_SPAN and diff > MAX_LOAN_SPAN :
+			Iface.showmessage(u'Prestamo de ['+str(diff)+'] dias.\n Prestamo no puede superar ['+str(MAX_LOAN_SPAN)+'] Dias.','Período Invalido')
+			return False
+		if diff > LOAN_SPAN :
+			if not Iface.cnt('Prestamo de ['+str(diff)+'] dias.\n Superior a los estandar ['+str(LOAN_SPAN)+'] Dias.'):
+				return False
+
+		if self.LoanDate>self.dueDate:
 			Iface.showmessage('El dia de retorno debe ser posterior al dia de prestamo.','Período Invalido')
 			return False
 
@@ -247,10 +275,9 @@ class LoanBook(wx.Panel):
 	def OnLoan(self, e):
 		# second validation of the parameters: user and book
 		# Obtains the parameters to generate the loan
-		self.data_loan = self.validateLoan()
+		self.data_loan = self.isLoanValid()
 
 		if not self.data_loan:
-			Iface.showmessage('Se encontró un problema al prestar libros.\nPrestamo cancelado.',"Prestamo")
 			return
 
 		self.saving = self.DBmanager.loanbook(*self.data_loan)
@@ -260,6 +287,7 @@ class LoanBook(wx.Panel):
 			# Update the values of book and labels in order to clean the data and not loan the books twice
 			self.book=False
 			self.user=False
+			self.dueDateReset()
 			self.Clean()
 			Iface.showmessage('Prestamo realizado con éxito.','Préstamos')
 			return
@@ -273,6 +301,7 @@ class LoanBook(wx.Panel):
 		self.txtValueISBN.SetLabel('')
 		self.txtValueTitleo.SetLabel('')
 		self.txtValueAuthor.SetLabel('')
+
 
 class DummyFrame(wx.Frame):
 	def __init__(self,parent):
