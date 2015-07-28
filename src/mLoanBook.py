@@ -77,11 +77,11 @@ class LoanBook(wx.Panel):
 		label_BookStatus  = wx.StaticText(self.bookPanel, label = "Prestado ")
 				# Fields
 		self.txtValueISBN = wx.StaticText(self.bookPanel, label ='')
-		self.txtValueTitleo = wx.StaticText(self.bookPanel)
+		self.txtValueTitle = wx.StaticText(self.bookPanel)
 		self.txtValueAuthor = wx.StaticText(self.bookPanel)
 		self.label_BookStatuso = wx.StaticText(self.bookPanel)
 		bookDataSizer.AddMany([(label_ISBN      , 0),(self.txtValueISBN      , 0),
-		               (txtValueTitle     , 0),(self.txtValueTitleo     , 0),
+		               (txtValueTitle     , 0),(self.txtValueTitle     , 0),
 		               (label_Author    , 0),(self.txtValueAuthor    , 0),
 		               (label_BookStatus, 0),(self.label_BookStatuso, 0)])
 		self.bookPanel.SetSizer(bookDataSizer)
@@ -172,7 +172,7 @@ class LoanBook(wx.Panel):
 	def fillBookData(self):
 
 		self.txtValueISBN.SetLabel(self.book['isbn'])
-		self.txtValueTitleo.SetLabel(self.book['titulo'])
+		self.txtValueTitle.SetLabel(self.book['titulo'])
 		self.txtValueAuthor.SetLabel(self.book['autor'])
 		if self.book['estado']:
 			self.label_BookStatuso.SetLabel(label = "Si")
@@ -257,6 +257,7 @@ class LoanBook(wx.Panel):
 			if not  Iface.cnt(u'El dia de retorno no puede ser Fin de semana', u'¿Desea cambiarlo al dia hábil siguiente?','Advertencia'):
 				return False
 		self.calendar_DueDate.SetDate(self.searchDueDate())
+		self.dueDate  = self.calendar_DueDate.PyGetDate()
 
 		diff = daysbetween(self.LoanDate,self.dueDate)
 		if MAX_LOAN_SPAN and diff > MAX_LOAN_SPAN :
@@ -299,7 +300,7 @@ class LoanBook(wx.Panel):
 		self.txtValueUserFamilyName.SetLabel('')
 		self.txtValueUserStatus.SetLabel('')
 		self.txtValueISBN.SetLabel('')
-		self.txtValueTitleo.SetLabel('')
+		self.txtValueTitle.SetLabel('')
 		self.txtValueAuthor.SetLabel('')
 
 
