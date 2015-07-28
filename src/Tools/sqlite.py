@@ -145,6 +145,28 @@ class DatabaseManager(object):
 		self.conn.commit()
 		return True
 
+	def delayedbooks(self,date_):
+		# Selects all the loand with a due date >= to the given one
+		query  = "SELECT "
+		query += "      libros.id_libro, libros.isbn, libros.autor, libros.titulo, "
+		query += "     usuarios.id_usuario , usuarios.nombres , usuarios.apellidos , usuarios.rut , "
+		query += "usuarios.direccion , usuarios.telefono , usuarios.grade , "
+		query += "     prestamos.desde,prestamos.hasta, "
+		query += "     usuarios.estado as user_status "
+		query += "FROM libros "
+		query += "INNER JOIN prestamos     ON libros.id_libro    = prestamos.id_libro "
+		query += "LEFT  JOIN usuarios       ON prestamos.id_libro = usuarios.id_usuario "
+		query += "WHERE prestamos.hasta>= ? "
+		query += "GROUP BY libros.id_libro;"
+
+		try:
+			self.cur.execute(query,[date_,])
+		except sqlite3.Error as e:
+			return False
+
+		self.Result = self.cur.fetchall()
+		return self.Result
+
 	#Not implemented yet
 	'''
 	def loadprestamo(idlibro,idusuario):
