@@ -4,6 +4,7 @@ UPDATE usuarios SET direccion= 'Direccion- ' ||id_usuario where 1;
 UPDATE usuarios SET rut= 'Rut- ' ||id_usuario where 1;
 UPDATE usuarios SET apellidos= 'Apellido- ' ||id_usuario where 1;
 UPDATE usuarios SET nombres= 'Nombre- ' ||id_usuario where 1;
+UPDATE usuarios SET email= 'a@a.com' where 1;
 
 
 UPDATE libros SET isbn   = 'isbn- '||(abs(random()) % 100+id_libro) where 1;

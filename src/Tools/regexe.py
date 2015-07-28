@@ -6,93 +6,108 @@ from  isbnlib import clean as isbnclean,is_isbn10,is_isbn13,canonical
 
 
 
-def validar_comentario(comentario):
-	comentario = comentario.strip()
-	if comentario == '' :
-		return "Sin comentarios"
+def validate_comments(comments):
+	comments = comments.strip()
+	if comments == '' :
+		return "Sin commentss"
 	return False
 
-def validar_autor(autor):
-	autor = autor.strip()
-	if autor != '':
-		return autor.title()
+def validate_author(author):
+	author = author.strip()
+	if author != '':
+		return author.title()
 	return False
 
-def validar_titulo(titulo):
-	titulo = titulo.strip()
-	if titulo != '':
-		return titulo.title()
+def validate_title(title):
+	title = title.strip()
+	if title != '':
+		return title.title()
 	return False
 
-def validar_isbn(isbnlike):
+def validate_isbn(isbnlike):
 
-	isbn = isbnclean(isbnlike)
+	isbnlike = isbnclean(isbnlike)
 	if is_isbn10(isbnlike):
-		isbn = to_isbn13(isbnlike)
-	elif is_isbn13(isbnlike):
+		isbnlike = to_isbn13(isbnlike)
+	if is_isbn13(isbnlike):
 		return canonical(isbnlike)
 	return False
 
-def validar_nombre(texto,patron="^([A-Z]{0,1}[a-zñáéíóú]+[\s]*)+$"):
-	patron = re.compile(patron)
+def validate_name(texto,regex):
 	texto  = texto.strip()
-	#texto=texto.title()
+
 	if texto == '':
 		return False
-	if 'nombre' in texto.lower():
+	if 'name' in texto.lower():
 		return False
 	if 'apellido' in texto.lower():
 		return False
 
-	if patron.match(texto):
-		return texto
-	return False
+	texto=texto.title()
+	return texto
 
-def validar_rut(rut,patron="^\d{6,}-[K|k|0-9]{1}$"):
+
+def validate_rut(rut,regex="^\d{6,}-[K|k|0-9]{1}$"):
 	rut  = str(rut.strip())
-	patron = re.compile(patron)
+	regex = re.compile(regex)
 
-	if patron.match(rut):
+	if regex.match(rut):
 		return rut
 
 	return False
 
-def validar(tipo,valor):
+def validate_email(email,regex="^\d{6,}-[K|k|0-9]{1}$"):
+	email  = str(email.strip())
+	regex = re.compile(regex)
+
+	if regex.match(email):
+		return email
+		print email
+	return False
+
+
+def validate(tipo,valor):
 	tipo=tipo.strip()
 	valor=valor.strip()
 	if 'isbn' in tipo:
-		return validar_isbn(valor)
+		return validate_isbn(valor)
 	elif 'rut' in tipo:
-		patron="^\d{6,}-[K|k|0-9]{1}$"
-		return validar_rut(valor,patron)
+		regex="^\d{6,}-[K|k|0-9]{1}$"
+		return validate_rut(valor,regex)
 	elif 'name' in tipo.lower():
-		patron = "^([A-Z]{0,1}[a-zñáéíóú]+[\s]*)+$"
-		return validar_nombre(valor,patron)
-	elif 'titulo' in tipo.lower():
-		return validar_titulo(valor)
-	elif 'comentario' in tipo.lower():
-		return validar_comentario(valor)
-	elif 'autor' in tipo.lower():
-		return validar_autor(valor)
+		regex = "^([A-Z]{0,1}[a-zÑÁñáÉéÍíÓóÚú]+[\s]*)+$"
+		return validate_name(valor,regex)
+	elif 'title' in tipo.lower():
+		return validate_title(valor)
+	elif 'comments' in tipo.lower():
+		return validate_comments(valor)
+	elif 'author' in tipo.lower():
+		return validate_author(valor)
+	elif 'email' in tipo.lower():
+		regex=r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)"
+		return validate_email(valor,regex)
 
 	return False
 
 if __name__ == '__main__':
 
-	print validar('name','Naño')
-	print validar('name','Pancho')
-	print validar('name','Juan Psr ico')
-	print validar('rut','111a1111-7')
-	print validar('rut','7-7')
-	print validar('rut','7999877-7')
+	print validate('name','ñaño')
+	print validate('name','Pancho')
+	print validate('name','Juan Psr ico')
+	print validate('rut','111a1111-7')
+	print validate('rut','7-7')
+	print validate('rut','7999877-7')
 	print "\n ISBN \n"
 	print "1) real "
-	print validar('isbn','978-1-4454-9331-2')
-	print validar('isbn','9781445493312')
+	print validate('isbn','978-1-4454-9331-2')
+	print validate('isbn','9781445493312')
 	print "2) missing last digit "
-	print validar('isbn','978-1-4454-9331')
+	print validate('isbn','978-1-4454-9331')
 	print "3) flase last digit "
-	print validar('isbn','978-1-4454-9331-1') # digito verificador cambiado
+	print validate('isbn','978-1-4454-9331-1') # digito verificador cambiado
 	print "4) no dash"
-	print validar('isbn','9781445493312') # digito verificador cambiado
-
+	print validate('isbn','9781445493312') # digito verificador cambiado
+	print validate('email','lala@lala.com') # digito verificador cambiado
+	print validate('email','lala@la@la.com') # digito verificador cambiado
+	print validate('email','lala@l.a.l.a.c') # digito verificador cambiado
+	print validate('email','l.a.l.a@lala.') # digito verificador cambiado

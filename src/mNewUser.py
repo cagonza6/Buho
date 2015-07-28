@@ -21,26 +21,32 @@ class NewUser(wx.Panel):
 
 		self.DBmanager = DatabaseManager()
 
-		fgs = wx.FlexGridSizer(7,2,7,15)
+		fgs = wx.FlexGridSizer(9,2,7,15)
 		#Cannons for mosquitoes? Totally. Need it for later
 		ste       = wx.StaticText(self,label = "")
 		self.stNm = wx.StaticText(self, label = "Nombre(s)  :")
 		self.stAp = wx.StaticText(self, label = "Apellido(s):")
 		self.stRu = wx.StaticText(self, label = "Rut        :")
+		self.stEm = wx.StaticText(self, label = "Email      :")
 		self.stDi = wx.StaticText(self, label = "Direccion  :")
 		self.stTe = wx.StaticText(self, label = "Telefono   :")
+		self.stCu = wx.StaticText(self, label = "Curso      :")
 		self.stCm = wx.StaticText(self, label = "Comentarios:")
 		self.tcNm = wx.TextCtrl(self)
 		self.tcAp = wx.TextCtrl(self)
 		self.tcRu = wx.TextCtrl(self)
+		self.tcEm = wx.TextCtrl(self)
 		self.tcDi = wx.TextCtrl(self)
 		self.tcTe = wx.TextCtrl(self)
+		self.tcCu = wx.TextCtrl(self)
 		self.tcCm = wx.TextCtrl(self,style=wx.TE_MULTILINE)
 		fgs.AddMany([(self.stNm),(self.tcNm, 1, wx.EXPAND),
 		             (self.stAp),(self.tcAp, 1, wx.EXPAND),
 		             (self.stRu),(self.tcRu, 1, wx.EXPAND),
+		             (self.stEm),(self.tcEm, 1, wx.EXPAND),
 		             (self.stDi),(self.tcDi, 1, wx.EXPAND),
 		             (self.stTe),(self.tcTe, 1, wx.EXPAND),
+		             (self.stCu),(self.tcCu, 1, wx.EXPAND),
 		             (self.stCm),(self.tcCm, 2, wx.EXPAND)])
 		fgs.AddGrowableCol(1, 0)	#me asegura que crezcan como deben
 	
@@ -58,8 +64,10 @@ class NewUser(wx.Panel):
 		self.tcNm.SetValue("")
 		self.tcAp.SetValue("")
 		self.tcRu.SetValue("")
+		self.tcEm.SetValue("")
 		self.tcDi.SetValue("")
 		self.tcTe.SetValue("")
+		self.tcCu.SetValue("")
 		self.tcCm.SetValue("")
 
 	def isValid(self):
@@ -68,12 +76,12 @@ class NewUser(wx.Panel):
 		error_str=''
 
 		name = self.tcNm.GetValue()
-		name = validar('name',name)
+		name = validate('name',name)
 		if not name: 
 			error = True
 			error_str="Nombre No valido.\n"
 
-		apellido = validar('name',self.tcAp.GetValue())
+		apellido = validate('name',self.tcAp.GetValue())
 		if not apellido: 
 			error = True
 			error_str+="Apellido no valido.\n"
@@ -81,16 +89,24 @@ class NewUser(wx.Panel):
 		if cfg.reqRut and not rut:
 			error_str+="Rut no valido \n"
 			error = True
+		email = validate('email',self.tcEm.GetValue())
+		if not email:
+			error_str+="Email no valido \n"
+			error = True
 
 		direccion   = str(self.tcDi.GetValue()).strip()
 		telefono    = str(self.tcTe.GetValue()).strip()
+		grade       = self.tcCu.GetValue()
 		comentarios = self.tcCm.GetValue()
+
 
 		if (error):
 			Iface.showmessage(error_str,"Error!")
 			return False
-		return [name, apellido, rut,direccion,telefono,comentarios]
+		return [name, apellido, rut,email,direccion,telefono,grade,comentarios]
 		#Saving Actual User Data:
+
+
 
 	def OnSave(self,e):
 		newUserData = self.isValid()

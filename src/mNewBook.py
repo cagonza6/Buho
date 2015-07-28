@@ -56,17 +56,17 @@ class NewBook(wx.Panel):
 		error = False
 		error_str=''
 
-		isbn = validar('isbn',self.tcIs.GetValue())
+		isbn = validate('isbn',self.tcIs.GetValue())
 		if not isbn:
 			error      = True
 			error_str += "ISBN no valido\n"
 
-		ti = validar('titulo',self.tcTi.GetValue())
+		ti = validate('title',self.tcTi.GetValue())
 		if not ti:
 			error      = True
 			error_str += "Titulo no valido.\n"
 
-		au = validar('autor',self.tcAu.GetValue())
+		au = validate('author',self.tcAu.GetValue())
 		if not au:
 			if Iface.cnt(u'El campo Autor está en blanco, desea llenarlo con: "Anonimo"'):
 				au = "Anonimo"

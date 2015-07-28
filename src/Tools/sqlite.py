@@ -21,7 +21,7 @@ class DatabaseManager(object):
 		self.conn.close()
 
 	#
-	#		   Insert New Data
+	#       Insert New Data
 	#
 
 	def save_new(self,userdata,type_):
@@ -29,10 +29,9 @@ class DatabaseManager(object):
 		if type_=='book':
 			query = "INSERT INTO libros ( isbn, titulo, autor, comentarios) VALUES ( ?, ?, ?, ?);"
 		elif type_=='user':
-			query = "INSERT INTO usuarios ( nombres, apellidos, rut, direccion, telefono, comentarios) VALUES ( ?, ?, ?, ?, ?, ?);"
+			query = "INSERT INTO usuarios ( nombres, apellidos, rut, email, direccion, telefono, grade, comentarios) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?);"
 		else:
 			return False
-
 		try:
 			self.cur.execute(query,userdata)
 		except sqlite3.Error as e:
@@ -127,12 +126,13 @@ class DatabaseManager(object):
 		self.conn.commit()
 		return True
 
-	def returnbook(self,idprestamo,retorno, path2db = "../biblioteca/database/Main.db"):
+	def returnbook(self,idprestamo,retorno):
 
-	#	Elimina de los prestamos activos el libro en cuestion
+		#Erease the Loan from the active loans (table)
 		self.data1 =  [idprestamo,]
 		self.query1 = "DELETE FROM prestamos WHERE id_prestamo= ?;"
 
+		# updates the status of the loan in the history table.
 		self.data2  =  [retorno,idprestamo]
 		self.query2 = "UPDATE historial set estado = 0, retorno = ? WHERE id_prestamo= ? ; "
 
@@ -145,9 +145,9 @@ class DatabaseManager(object):
 		self.conn.commit()
 		return True
 
-	#aun no usado ni implementado
+	#Not implemented yet
 	'''
-	def loadprestamo(idlibro,idusuario, path2db = "../biblioteca/database/Main.db"):
+	def loadprestamo(idlibro,idusuario):
 
 		data =  [idlibro,idusuario,desde_,hasta_]
 

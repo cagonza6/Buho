@@ -136,7 +136,7 @@ class RetBook(wx.Panel):
 
 		if tipo == 'book':
 			self.tcBk.SetValue('')
-			self.book = self.validarLibro(data)
+			self.book = self.validateLibro(data)
 			if self.book:
 				self.tcBk.SetValue(self.book['titulo'])
 				self.prestamo = self.DBmanager.load_loan_data(self.book['id_prestamo'])
@@ -181,7 +181,7 @@ class RetBook(wx.Panel):
 		if self.user:
 			self.cal_ent.PySetDate(int2date(self.prestamo['hasta']))
 
-	def validarLibro(self, libro):
+	def validateLibro(self, libro):
 
 		if not ('estado' in libro.keys()) or not libro['estado']:
 			Iface.showmessage('El Libro que seleccionado no se encuentra prestado.',"No Prestado")
@@ -196,7 +196,7 @@ class RetBook(wx.Panel):
 		return 0
 
 	def validateReturn(self):
-		if not self.validarLibro(self.book):
+		if not self.validateLibro(self.book):
 			return False
 		self.retorno = date2int(self.cal_hoy.PyGetDate())
 		return [self.book['id_prestamo'],self.retorno]

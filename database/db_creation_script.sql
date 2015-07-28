@@ -19,8 +19,10 @@ CREATE TABLE "main"."usuarios" (
     "nombres" TEXT NOT NULL DEFAULT ('Nombre'),
     "apellidos" TEXT NOT NULL DEFAULT ('Apellidos'),
     "rut" TEXT NOT NULL DEFAULT ('-'),
+    "email" TEXT NOT NULL DEFAULT ('a@a.com'),
     "direccion" TEXT NOT NULL DEFAULT ('-'),
     "telefono" TEXT NOT NULL DEFAULT ('-'),
+    "grade" INTEGER DEFAULT (1),
     "estado" INTEGER DEFAULT (1),
     "comentarios" TEXT
 );
