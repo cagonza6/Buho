@@ -44,20 +44,22 @@ class DatabaseManager(object):
 
 		if table   =='libros':
 			query  = "SELECT "
-			query += "		libros.id_libro, libros.isbn, libros.autor, libros.titulo, libros.comentarios, prestamos.id_prestamo, "
-			query += "		sum(prestamos.estado) as estado "
+			query += "      libros.id_libro, libros.isbn, libros.autor, libros.titulo, libros.comentarios,  "
+			query += "      IFNULL(prestamos.id_prestamo,0) as id_prestamo, count(prestamos.id_prestamo) as estado "
 			query += "FROM libros "
 			query += "LEFT OUTER JOIN prestamos "
-			query += "		ON libros.id_libro = prestamos.id_libro "
-			query += "group by libros.id_libro;"
+			query += "      ON libros.id_libro = prestamos.id_libro "
+			query += "GROUP BY libros.id_libro;"
 
 		elif table =='usuarios':
 
 			query  = "SELECT "
-			query += "usuarios.id_usuario , usuarios.nombres , usuarios.apellidos , usuarios.rut , usuarios.direccion , usuarios.telefono , usuarios.estado , usuarios.comentarios,	count(prestamos.estado) as prestamos "
+			query += "       usuarios.id_usuario , usuarios.nombres , usuarios.apellidos , usuarios.rut , "
+			query += "       usuarios.direccion , usuarios.telefono , usuarios.estado , usuarios.comentarios, "
+			query += "       count(prestamos.estado) as Nprestamos "
 			query += "FROM usuarios "
-			query += "LEFT OUTER JOIN prestamos ON usuarios.id_usuario = prestamos.id_usuario and prestamos.estado>0 "
-			query += "group by usuarios.id_usuario; "
+			query += "LEFT JOIN prestamos ON usuarios.id_usuario = prestamos.id_usuario "
+			query += "GROUP BY usuarios.id_usuario;"
 
 		else:
 			return False

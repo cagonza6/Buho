@@ -392,10 +392,15 @@ class SearchBook(wx.Frame):
 
 	def ListaFiltrada(self,partial_autor,partial_title):
 		new_list = []
-		if self.rbMostrar.GetSelection() == 0: new_list = self.books
+		if self.rbMostrar.GetSelection() == 0:
+			new_list = self.books
 		else:
-			if self.rbMostrar.GetSelection() == 1: prestado = True
-			else: prestado = None									#I hate it with the fiery heat of a thousand suns, but it works.
+		#There was a problem with the DBquery, the value of estado must be 0 or 1 but not True or False
+		#this part could be improved
+			if self.rbMostrar.GetSelection() == 1:
+				prestado = 1
+			else:
+				prestado = 0									#I hate it with the fiery heat of a thousand suns, but it works.
 			for book in self.books:
 				if book['estado'] == prestado: 
 					new_list.append(book)
