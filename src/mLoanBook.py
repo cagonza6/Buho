@@ -13,10 +13,11 @@ from Tools.calendar import oneDay, date2DMY                             # Calend
 import Tools.interface as Iface                                         # Screen Dialogs
 
 
-MIN_LOAN_SPAN = 0
-LOAN_SPAN     = 14
-MAX_LOAN_SPAN = 28
-
+MIN_LOAN_SPAN     = 0
+LOAN_SPAN         = 14
+MAX_LOAN_SPAN     = 28
+LOANS_ALERT       = 2
+MAX_LOANS_ALLOWED = 4
 class LoanBook(wx.Panel):
 	def __init__(self, parent, size):
 		wx.Panel.__init__(self, parent = parent, size = size)
@@ -211,7 +212,14 @@ class LoanBook(wx.Panel):
 			if not ( 'estado' in user.keys()) or not user['estado']:
 				Iface.showmessage('El usuario seleccionado no puede recibir libros ya que se encuentra bloqueado.',"Bloqueado")
 				return False
+			if user['number_loans']>=MAX_LOANS_ALLOWED:
+				Iface.showmessage(u'Máximo número de prestmaos alcanzado ['+str(MAX_LOANS_ALLOWED)+']. \n Prestamo cancelado.',"Bloqueado")
+				return False
+			elif user['number_loans']>=LOANS_ALERT:
+				Iface.showmessage('El Lector seleccionado ya posee ['+str(user['number_loans'])+u'] libros\n de un máximo de ['+str(MAX_LOANS_ALLOWED)+'] permitidos.',u"Atención")
+
 			return user
+
 		Iface.showmessage('Usuario no valido.',"Error")
 		return False
 

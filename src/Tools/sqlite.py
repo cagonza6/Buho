@@ -55,7 +55,7 @@ class DatabaseManager(object):
 			query  = "SELECT "
 			query += "       usuarios.id_usuario , usuarios.nombres , usuarios.apellidos , usuarios.rut , "
 			query += "       usuarios.direccion , usuarios.telefono , usuarios.estado , usuarios.comentarios, "
-			query += "       count(prestamos.estado) as Nprestamos "
+			query += "       count(prestamos.estado) as number_loans "
 			query += "FROM usuarios "
 			query += "LEFT JOIN prestamos ON usuarios.id_usuario = prestamos.id_usuario "
 			query += "GROUP BY usuarios.id_usuario;"
@@ -75,7 +75,7 @@ class DatabaseManager(object):
 	def load_user(self,id_):
 		query  = "SELECT "
 		query += "        usuarios.id_usuario , usuarios.nombres , usuarios.apellidos , usuarios.rut , usuarios.direccion , usuarios.telefono , "
-		query += "        usuarios.estado , usuarios.comentarios, count(prestamos.estado) as prestamos "
+		query += "        usuarios.estado , usuarios.comentarios, count(prestamos.estado) as number_loans "
 		query += "FROM usuarios "
 		query += "LEFT JOIN prestamos ON usuarios.id_usuario = prestamos.id_usuario "
 		query += "WHERE  "
