@@ -214,6 +214,12 @@ class LoanBook(wx.Panel):
 		if LOANS_ALERT and user['number_loans']>=LOANS_ALERT:
 			Iface.showmessage('El Lector seleccionado ya posee ['+str(user['number_loans'])+u'] libros\n de un máximo de ['+str(MAX_LOANS_ALLOWED)+'] permitidos.',u"Atención")
 
+	def isdelayed(self,user):
+		date    = date2int(self.calendar_LoanDay.PyGetDate())
+		user_id = user['id_usuario']
+		count = len(self.DBmanager.userDelayedBooks(user_id,date))
+		return count
+
 	def isUserValid(self, user):
 		if user:
 			if not ( 'estado' in user.keys()) or not user['estado']:
@@ -222,6 +228,11 @@ class LoanBook(wx.Panel):
 
 			if user['number_loans']>=MAX_LOANS_ALLOWED:
 				Iface.showmessage(u'Máximo número de prestmaos alcanzado ['+str(MAX_LOANS_ALLOWED)+']. \n Prestamo cancelado.',"Bloqueado")
+				return False
+
+			retrasos = self.isdelayed(user)
+			if retrasos:
+				Iface.showmessage(u'Usuario presenta retraso en ['+str(retrasos)+'] prestamos. \n Prestamo Cancelado',"Retrasos")
 				return False
 			return user
 
@@ -241,9 +252,11 @@ class LoanBook(wx.Panel):
 
 		if not self.validateDueDate():
 			return False
-		if not self.isUserValid(self.user):
+		if not self.user:
+			Iface.showmessage('Usuario Invalido.',"Error")
 			return False
-		if not self.isBookValid(self.book):
+		if not self.book:
+			Iface.showmessage('Libro Invalido.',"Error")
 			return False
 
 		return [self.book['id_libro'],self.user['id_usuario'],date2int(self.LoanDate),date2int(self.dueDate)]

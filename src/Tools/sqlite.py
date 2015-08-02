@@ -167,6 +167,23 @@ class DatabaseManager(object):
 		self.Result = self.cur.fetchall()
 		return self.Result
 
+	def userDelayedBooks(self,user_id,todaydate):
+		# Selects all the loand with a due date >= to the given one
+		query  = "SELECT "
+		query += "      prestamos.id_prestamo, prestamos.id_usuario,prestamos.desde,prestamos.hasta,"
+		query += "      libros.id_libro, libros.isbn, libros.autor, libros.titulo "
+		query += "FROM prestamos "
+		query += "INNER JOIN libros ON libros.id_libro    = prestamos.id_libro "
+		query += "where prestamos.id_usuario = ? and prestamos.hasta<? ; "
+
+		try:
+			self.cur.execute(query,[user_id,todaydate])
+		except sqlite3.Error as e:
+			return False
+
+		self.Result = self.cur.fetchall()
+		return self.Result
+
 	#Not implemented yet
 	'''
 	def loadprestamo(idlibro,idusuario):
