@@ -1,3 +1,10 @@
+#log of SQL error
+sqliteLog.txt
+#ignores geany project file
+*.geany
+
+#compiles Gui files
+/src/Gui/*.py
 #Ignore output folder
 /temp/*
 #Custom entries (rest is from gitignore template):

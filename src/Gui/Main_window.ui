@@ -1,0 +1,345 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <author>Maite Barros  &amp; Cristian González</author>
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>900</width>
+    <height>600</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>900</width>
+    <height>600</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>5000</width>
+    <height>5000</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>BiblioteK</string>
+  </property>
+  <property name="locale">
+   <locale language="Spanish" country="Chile"/>
+  </property>
+  <property name="windowFilePath">
+   <string>.</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+   <layout class="QHBoxLayout" name="horizontalLayout"/>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>900</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="defaultUp">
+    <bool>false</bool>
+   </property>
+   <property name="nativeMenuBar">
+    <bool>true</bool>
+   </property>
+   <widget class="QMenu" name="menuBook">
+    <property name="title">
+     <string extracomment="Here you can manage your books.">Books</string>
+    </property>
+    <addaction name="actionNewItem"/>
+    <addaction name="actionEditItem"/>
+    <addaction name="actionSearchItems"/>
+   </widget>
+   <widget class="QMenu" name="menuReaders">
+    <property name="title">
+     <string>Readers</string>
+    </property>
+    <addaction name="actionNewReader"/>
+    <addaction name="actionEditReader"/>
+    <addaction name="actionSearchReader"/>
+    <addaction name="separator"/>
+    <addaction name="actionGenerate_Card"/>
+   </widget>
+   <widget class="QMenu" name="menuLoans">
+    <property name="title">
+     <string>Loans</string>
+    </property>
+    <addaction name="actionLoan_Item"/>
+    <addaction name="actionReturn_Item"/>
+    <addaction name="actionRenew_Loan"/>
+    <addaction name="separator"/>
+    <addaction name="actionEdit_Loan"/>
+   </widget>
+   <widget class="QMenu" name="menuReports">
+    <property name="title">
+     <string>Reports</string>
+    </property>
+    <addaction name="actionLoanedItems"/>
+    <addaction name="actionDuedItems"/>
+   </widget>
+   <widget class="QMenu" name="menuSalir">
+    <property name="title">
+     <string>Quit</string>
+    </property>
+    <addaction name="action_Quit"/>
+   </widget>
+   <addaction name="menuBook"/>
+   <addaction name="menuReaders"/>
+   <addaction name="menuLoans"/>
+   <addaction name="menuReports"/>
+   <addaction name="menuSalir"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <widget class="QToolBar" name="toolBar">
+   <property name="windowTitle">
+    <string>Tool Bar</string>
+   </property>
+   <property name="layoutDirection">
+    <enum>Qt::LeftToRight</enum>
+   </property>
+   <property name="autoFillBackground">
+    <bool>false</bool>
+   </property>
+   <property name="movable">
+    <bool>true</bool>
+   </property>
+   <property name="iconSize">
+    <size>
+     <width>32</width>
+     <height>32</height>
+    </size>
+   </property>
+   <property name="toolButtonStyle">
+    <enum>Qt::ToolButtonTextUnderIcon</enum>
+   </property>
+   <property name="floatable">
+    <bool>false</bool>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>LeftToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="actionHome"/>
+   <addaction name="separator"/>
+   <addaction name="actionLoan_Item"/>
+   <addaction name="actionReturn_Item"/>
+   <addaction name="actionRenew_Loan"/>
+   <addaction name="actionLoanedItems"/>
+   <addaction name="separator"/>
+   <addaction name="actionSearchReader"/>
+   <addaction name="actionSearchItems"/>
+  </widget>
+  <action name="actionNewItem">
+   <property name="icon">
+    <iconset resource="myicons.qrc">
+     <normaloff>:/Big/res/icons/big/address-book-new-3.png</normaloff>:/Big/res/icons/big/address-book-new-3.png</iconset>
+   </property>
+   <property name="text">
+    <string>New Item</string>
+   </property>
+   <property name="iconText">
+    <string>New Item</string>
+   </property>
+   <property name="toolTip">
+    <string>New Item</string>
+   </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
+   </property>
+  </action>
+  <action name="actionEditItem">
+   <property name="icon">
+    <iconset resource="myicons.qrc">
+     <normaloff>:/Big/res/icons/big/edit-book.png</normaloff>:/Big/res/icons/big/edit-book.png</iconset>
+   </property>
+   <property name="text">
+    <string>Eit Item</string>
+   </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
+   </property>
+  </action>
+  <action name="actionNewReader">
+   <property name="checkable">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="myicons.qrc">
+     <normaloff>:/Big/res/icons/big/user-group-new-2.png</normaloff>:/Big/res/icons/big/user-group-new-2.png</iconset>
+   </property>
+   <property name="text">
+    <string>New Reader</string>
+   </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
+   </property>
+  </action>
+  <action name="actionEditReader">
+   <property name="icon">
+    <iconset resource="myicons.qrc">
+     <normaloff>:/Big/res/icons/big/user-group-properties.png</normaloff>:/Big/res/icons/big/user-group-properties.png</iconset>
+   </property>
+   <property name="text">
+    <string>Edit Reader</string>
+   </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
+   </property>
+  </action>
+  <action name="actionLoan_Item">
+   <property name="icon">
+    <iconset resource="myicons.qrc">
+     <normaloff>:/Big/res/icons/big/view-calendar.png</normaloff>:/Big/res/icons/big/view-calendar.png</iconset>
+   </property>
+   <property name="text">
+    <string>Loan Item</string>
+   </property>
+   <property name="toolTip">
+    <string>Loan Item</string>
+   </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
+   </property>
+  </action>
+  <action name="actionReturn_Item">
+   <property name="icon">
+    <iconset resource="myicons.qrc">
+     <normaloff>:/Big/res/icons/big/ret-book.png</normaloff>:/Big/res/icons/big/ret-book.png</iconset>
+   </property>
+   <property name="text">
+    <string>Return Item</string>
+   </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
+   </property>
+  </action>
+  <action name="actionEdit_Loan">
+   <property name="icon">
+    <iconset resource="myicons.qrc">
+     <normaloff>:/Big/res/icons/big/edit.png</normaloff>:/Big/res/icons/big/edit.png</iconset>
+   </property>
+   <property name="text">
+    <string>Edit Loan</string>
+   </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
+   </property>
+  </action>
+  <action name="actionLoanedItems">
+   <property name="icon">
+    <iconset resource="myicons.qrc">
+     <normaloff>:/Big/res/icons/big/loaned_books.png</normaloff>:/Big/res/icons/big/loaned_books.png</iconset>
+   </property>
+   <property name="text">
+    <string>Loaned Items</string>
+   </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
+   </property>
+  </action>
+  <action name="actionDuedItems">
+   <property name="icon">
+    <iconset resource="myicons.qrc">
+     <normaloff>:/Big/res/icons/big/appointment-reminder.png</normaloff>:/Big/res/icons/big/appointment-reminder.png</iconset>
+   </property>
+   <property name="text">
+    <string>Dued Items</string>
+   </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
+   </property>
+  </action>
+  <action name="action_Quit">
+   <property name="icon">
+    <iconset resource="myicons.qrc">
+     <normaloff>:/Big/res/icons/big/application-exit-3.png</normaloff>:/Big/res/icons/big/application-exit-3.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Quit</string>
+   </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
+   </property>
+  </action>
+  <action name="actionGenerate_Card">
+   <property name="icon">
+    <iconset resource="myicons.qrc">
+     <normaloff>:/Big/res/icons/big/contact-new-3.png</normaloff>:/Big/res/icons/big/contact-new-3.png</iconset>
+   </property>
+   <property name="text">
+    <string>Generate Card</string>
+   </property>
+   <property name="toolTip">
+    <string>Generate Card</string>
+   </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
+   </property>
+  </action>
+  <action name="actionSearchReader">
+   <property name="icon">
+    <iconset resource="myicons.qrc">
+     <normaloff>:/Big/res/icons/big/edit-find-user.png</normaloff>:/Big/res/icons/big/edit-find-user.png</iconset>
+   </property>
+   <property name="text">
+    <string>Readers</string>
+   </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
+   </property>
+  </action>
+  <action name="actionSearchItems">
+   <property name="icon">
+    <iconset resource="myicons.qrc">
+     <normaloff>:/Big/res/icons/big/search-book.png</normaloff>:/Big/res/icons/big/search-book.png</iconset>
+   </property>
+   <property name="text">
+    <string>Items</string>
+   </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
+   </property>
+  </action>
+  <action name="actionRenew_Loan">
+   <property name="icon">
+    <iconset resource="myicons.qrc">
+     <normaloff>:/Big/res/icons/big/renew-book.png</normaloff>:/Big/res/icons/big/renew-book.png</iconset>
+   </property>
+   <property name="text">
+    <string>Renew Loan</string>
+   </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
+   </property>
+  </action>
+  <action name="actionHome">
+   <property name="icon">
+    <iconset resource="myicons.qrc">
+     <normaloff>:/Big/res/icons/big/home.png</normaloff>:/Big/res/icons/big/home.png</iconset>
+   </property>
+   <property name="text">
+    <string>Home</string>
+   </property>
+  </action>
+ </widget>
+ <resources>
+  <include location="myicons.qrc"/>
+ </resources>
+ <connections/>
+</ui>

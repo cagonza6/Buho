@@ -1,0 +1,31 @@
+<RCC>
+  <qresource prefix="Big">
+    <file>res/icons/big/renew-book.png</file>
+    <file>res/icons/big/home.png</file>
+    <file>res/icons/big/edit-book.png</file>
+    <file>res/icons/big/loaned_books.png</file>
+    <file>res/icons/big/appointment-reminder.png</file>
+    <file>res/icons/big/loan_book.png</file>
+    <file>res/icons/big/address-book-new-3.png</file>
+    <file>res/icons/big/user-group-new-2.png</file>
+    <file>res/icons/big/user-group-properties.png</file>
+    <file>res/icons/big/view-calendar.png</file>
+    <file>res/icons/big/address-book-new-3.png</file>
+    <file>res/icons/big/contact-new-3.png</file>
+    <file>res/icons/big/edit-find-user.png</file>
+    <file>res/icons/big/ret-book.png</file>
+    <file>res/icons/big/application-exit-3.png</file>
+    <file>res/icons/big/edit.png</file>
+    <file>res/icons/big/search-book.png</file>
+  </qresource>
+  <qresource prefix="small">
+    <file>res/icons/small/address-book-new-3.png</file>
+    <file>res/icons/small/book_edit.png</file>
+    <file>res/icons/small/book_open.png</file>
+    <file>res/icons/small/question.png</file>
+    <file>res/icons/small/warning.png</file>
+    <file>res/icons/small/ok.png</file>
+    <file>res/icons/small/information.png</file>
+    <file>res/icons/small/no.png</file>
+  </qresource>
+</RCC>
