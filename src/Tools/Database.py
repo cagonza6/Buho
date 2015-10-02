@@ -98,7 +98,7 @@ class DatabaseManager(object):
 # creation and modifications
 	def save_new(self, type_, data_):
 		if type_ == Constants.TYPE_ITEM:
-			query = "INSERT INTO items ( format,  ISBN,  title,  author,  publisher,  year,  lang,  location, comement) "
+			query = "INSERT INTO items ( format,  ISBN,  title,  author,  publisher,  year,  lang,  location, comments) "
 			query += "VALUES           (   ?   ,   ?  ,    ?  ,    ?   ,     ?     ,    ? ,    ? ,     ?    ,    ?    );"
 		elif type_ == Constants.TYPE_USER:
 			query = "INSERT INTO users (  role,  name,  familyname,  IDN,  email,  address,  phone,  cellphone,  grade,  comments ) "
@@ -119,7 +119,7 @@ class DatabaseManager(object):
 
 	def edit_itemUser(self, type_, data_):
 		if type_ == Constants.TYPE_ITEM:
-			query = "UPDATE items SET format = ?,  ISBN = ? ,  title = ?,  author = ?,  publisher = ?,  year = ?,  lang = ?,  location = ?, comement = ? WHERE itemID = ?"
+			query = "UPDATE items SET format = ?,  ISBN = ? ,  title = ?,  author = ?,  publisher = ?,  year = ?,  lang = ?,  location = ?, comments = ? WHERE itemID = ?"
 
 		elif type_ == Constants.TYPE_USER:
 			query = "UPDATE users SET role = ?,  name = ?,  familyname = ?,  IDN = ?,  email = ?,  address = ?,  phone = ?,  cellphone = ?,  grade = ?,  comments = ? WHERE userID = ?"
@@ -209,7 +209,7 @@ class DatabaseManager(object):
 	def searchItems(self, sStatus, column, keys, format_):
 		querrydata = []
 		query = "SELECT "
-		query += "       items.itemID,  items.format,  items.ISBN,  items.title,  items.author,  items.publisher,  items.year,  items.location, items.comement,  "
+		query += "       items.itemID,  items.format,  items.ISBN,  items.title,  items.author,  items.publisher,  items.year,  items.location, items.comments,  "
 		query += "       item_formats.formatName,  languages.Ref_Name AS language,  "
 		query += "       count (loans.itemID) AS loaned,  loans.renewals "
 		query += "FROM "
@@ -264,7 +264,7 @@ class DatabaseManager(object):
 
 		query = "SELECT "
 		query += "       items.itemID,  items.format,  items.ISBN,  items.title,  items.author, "
-		query += "       items.publisher,  items.year,  items.location, items.comement,  "
+		query += "       items.publisher,  items.year,  items.location, items.comments,  "
 		query += "       item_formats.formatName,  item_formats.formatID,  languages.langIsoID, "
 		query += " languages.Ref_Name AS language, "
 		query += "       count (loans.itemID) AS loaned,  renewals "

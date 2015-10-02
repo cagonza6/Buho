@@ -47,9 +47,9 @@ CELPHONE  = 11
 COMMENTS  = 12
 
 # ######## Icons ####################
-ICON_VALID   = ":/small/res/icons/small/ok.png"
-ICON_INVALID = ":/small/res/icons/small/no.png"
-ICON_WARNING = ":/small/res/icons/small/warning.png"
+ICON_VALID   = ":/status/resources/pixmap/icons/status/status-ok.png"
+ICON_INVALID = ":/status/resources/pixmap/icons/status/status-no.png"
+ICON_WARNING = ":/status/resources/pixmap/icons/status/status-warning.png"
 
 
 # ####### Loan constants ##############
