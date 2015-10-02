@@ -12,7 +12,7 @@ CREATE TABLE items (
     year INTEGER NOT NULL DEFAULT (1980),
     lang TEXT NOT NULL DEFAULT ('spa') REFERENCES languages (langIsoID) ON UPDATE CASCADE,
     location TEXT,
-    comements TEXT
+    comments TEXT
 );
 
 
