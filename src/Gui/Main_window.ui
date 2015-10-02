@@ -148,7 +148,7 @@
   <action name="actionNewItem">
    <property name="icon">
     <iconset resource="myicons.qrc">
-     <normaloff>:/Big/res/icons/big/address-book-new-3.png</normaloff>:/Big/res/icons/big/address-book-new-3.png</iconset>
+     <normaloff>:/menu/resources/pixmap/icons/menu-icons/book-new.png</normaloff>:/menu/resources/pixmap/icons/menu-icons/book-new.png</iconset>
    </property>
    <property name="text">
     <string>New Item</string>
@@ -166,7 +166,7 @@
   <action name="actionEditItem">
    <property name="icon">
     <iconset resource="myicons.qrc">
-     <normaloff>:/Big/res/icons/big/edit-book.png</normaloff>:/Big/res/icons/big/edit-book.png</iconset>
+     <normaloff>:/menu/resources/pixmap/icons/menu-icons/book-edit.png</normaloff>:/menu/resources/pixmap/icons/menu-icons/book-edit.png</iconset>
    </property>
    <property name="text">
     <string>Eit Item</string>
@@ -181,7 +181,7 @@
    </property>
    <property name="icon">
     <iconset resource="myicons.qrc">
-     <normaloff>:/Big/res/icons/big/user-group-new-2.png</normaloff>:/Big/res/icons/big/user-group-new-2.png</iconset>
+     <normaloff>:/menu/resources/pixmap/icons/menu-icons/user-new.png</normaloff>:/menu/resources/pixmap/icons/menu-icons/user-new.png</iconset>
    </property>
    <property name="text">
     <string>New Reader</string>
@@ -193,7 +193,7 @@
   <action name="actionEditReader">
    <property name="icon">
     <iconset resource="myicons.qrc">
-     <normaloff>:/Big/res/icons/big/user-group-properties.png</normaloff>:/Big/res/icons/big/user-group-properties.png</iconset>
+     <normaloff>:/menu/resources/pixmap/icons/menu-icons/user-edit.png</normaloff>:/menu/resources/pixmap/icons/menu-icons/user-edit.png</iconset>
    </property>
    <property name="text">
     <string>Edit Reader</string>
@@ -205,7 +205,7 @@
   <action name="actionLoan_Item">
    <property name="icon">
     <iconset resource="myicons.qrc">
-     <normaloff>:/Big/res/icons/big/view-calendar.png</normaloff>:/Big/res/icons/big/view-calendar.png</iconset>
+     <normaloff>:/toolbar/resources/pixmap/icons/toolbar/item-loan.png</normaloff>:/toolbar/resources/pixmap/icons/toolbar/item-loan.png</iconset>
    </property>
    <property name="text">
     <string>Loan Item</string>
@@ -220,7 +220,7 @@
   <action name="actionReturn_Item">
    <property name="icon">
     <iconset resource="myicons.qrc">
-     <normaloff>:/Big/res/icons/big/ret-book.png</normaloff>:/Big/res/icons/big/ret-book.png</iconset>
+     <normaloff>:/toolbar/resources/pixmap/icons/toolbar/item-retrieve.png</normaloff>:/toolbar/resources/pixmap/icons/toolbar/item-retrieve.png</iconset>
    </property>
    <property name="text">
     <string>Return Item</string>
@@ -232,7 +232,7 @@
   <action name="actionEdit_Loan">
    <property name="icon">
     <iconset resource="myicons.qrc">
-     <normaloff>:/Big/res/icons/big/edit.png</normaloff>:/Big/res/icons/big/edit.png</iconset>
+     <normaloff>:/menu/resources/pixmap/icons/menu-icons/edit-find-replace.png</normaloff>:/menu/resources/pixmap/icons/menu-icons/edit-find-replace.png</iconset>
    </property>
    <property name="text">
     <string>Edit Loan</string>
@@ -244,7 +244,7 @@
   <action name="actionLoanedItems">
    <property name="icon">
     <iconset resource="myicons.qrc">
-     <normaloff>:/Big/res/icons/big/loaned_books.png</normaloff>:/Big/res/icons/big/loaned_books.png</iconset>
+     <normaloff>:/toolbar/resources/pixmap/icons/toolbar/item-loaned.png</normaloff>:/toolbar/resources/pixmap/icons/toolbar/item-loaned.png</iconset>
    </property>
    <property name="text">
     <string>Loaned Items</string>
@@ -256,7 +256,7 @@
   <action name="actionDuedItems">
    <property name="icon">
     <iconset resource="myicons.qrc">
-     <normaloff>:/Big/res/icons/big/appointment-reminder.png</normaloff>:/Big/res/icons/big/appointment-reminder.png</iconset>
+     <normaloff>:/toolbar/resources/pixmap/icons/toolbar/item-dued.png</normaloff>:/toolbar/resources/pixmap/icons/toolbar/item-dued.png</iconset>
    </property>
    <property name="text">
     <string>Dued Items</string>
@@ -268,7 +268,7 @@
   <action name="action_Quit">
    <property name="icon">
     <iconset resource="myicons.qrc">
-     <normaloff>:/Big/res/icons/big/application-exit-3.png</normaloff>:/Big/res/icons/big/application-exit-3.png</iconset>
+     <normaloff>:/toolbar/resources/pixmap/icons/toolbar/system-log-out.png</normaloff>:/toolbar/resources/pixmap/icons/toolbar/system-log-out.png</iconset>
    </property>
    <property name="text">
     <string>&amp;Quit</string>
@@ -280,7 +280,7 @@
   <action name="actionGenerate_Card">
    <property name="icon">
     <iconset resource="myicons.qrc">
-     <normaloff>:/Big/res/icons/big/contact-new-3.png</normaloff>:/Big/res/icons/big/contact-new-3.png</iconset>
+     <normaloff>:/menu/resources/pixmap/icons/menu-icons/card-new.png</normaloff>:/menu/resources/pixmap/icons/menu-icons/card-new.png</iconset>
    </property>
    <property name="text">
     <string>Generate Card</string>
@@ -295,7 +295,7 @@
   <action name="actionSearchReader">
    <property name="icon">
     <iconset resource="myicons.qrc">
-     <normaloff>:/Big/res/icons/big/edit-find-user.png</normaloff>:/Big/res/icons/big/edit-find-user.png</iconset>
+     <normaloff>:/menu/resources/pixmap/icons/menu-icons/user-search.png</normaloff>:/menu/resources/pixmap/icons/menu-icons/user-search.png</iconset>
    </property>
    <property name="text">
     <string>Readers</string>
@@ -307,7 +307,7 @@
   <action name="actionSearchItems">
    <property name="icon">
     <iconset resource="myicons.qrc">
-     <normaloff>:/Big/res/icons/big/search-book.png</normaloff>:/Big/res/icons/big/search-book.png</iconset>
+     <normaloff>:/toolbar/resources/pixmap/icons/toolbar/item-search.png</normaloff>:/toolbar/resources/pixmap/icons/toolbar/item-search.png</iconset>
    </property>
    <property name="text">
     <string>Items</string>
@@ -319,7 +319,7 @@
   <action name="actionRenew_Loan">
    <property name="icon">
     <iconset resource="myicons.qrc">
-     <normaloff>:/Big/res/icons/big/renew-book.png</normaloff>:/Big/res/icons/big/renew-book.png</iconset>
+     <normaloff>:/toolbar/resources/pixmap/icons/toolbar/item-renew.png</normaloff>:/toolbar/resources/pixmap/icons/toolbar/item-renew.png</iconset>
    </property>
    <property name="text">
     <string>Renew Loan</string>
@@ -331,7 +331,7 @@
   <action name="actionHome">
    <property name="icon">
     <iconset resource="myicons.qrc">
-     <normaloff>:/Big/res/icons/big/home.png</normaloff>:/Big/res/icons/big/home.png</iconset>
+     <normaloff>:/toolbar/resources/pixmap/icons/toolbar/home.png</normaloff>:/toolbar/resources/pixmap/icons/toolbar/home.png</iconset>
    </property>
    <property name="text">
     <string>Home</string>

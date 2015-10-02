@@ -1,31 +1,36 @@
 <RCC>
-  <qresource prefix="Big">
-    <file>res/icons/big/renew-book.png</file>
-    <file>res/icons/big/home.png</file>
-    <file>res/icons/big/edit-book.png</file>
-    <file>res/icons/big/loaned_books.png</file>
-    <file>res/icons/big/appointment-reminder.png</file>
-    <file>res/icons/big/loan_book.png</file>
-    <file>res/icons/big/address-book-new-3.png</file>
-    <file>res/icons/big/user-group-new-2.png</file>
-    <file>res/icons/big/user-group-properties.png</file>
-    <file>res/icons/big/view-calendar.png</file>
-    <file>res/icons/big/address-book-new-3.png</file>
-    <file>res/icons/big/contact-new-3.png</file>
-    <file>res/icons/big/edit-find-user.png</file>
-    <file>res/icons/big/ret-book.png</file>
-    <file>res/icons/big/application-exit-3.png</file>
-    <file>res/icons/big/edit.png</file>
-    <file>res/icons/big/search-book.png</file>
+  <qresource prefix="toolbar">
+    <file>resources/pixmap/icons/toolbar/home.png</file>
+    <file>resources/pixmap/icons/toolbar/item-dued.png</file>
+    <file>resources/pixmap/icons/toolbar/item-loaned.png</file>
+    <file>resources/pixmap/icons/toolbar/item-renew.png</file>
+    <file>resources/pixmap/icons/toolbar/item-retrieve.png</file>
+    <file>resources/pixmap/icons/toolbar/item-return.png</file>
+    <file>resources/pixmap/icons/toolbar/item-search.png</file>
+    <file>resources/pixmap/icons/toolbar/system-log-out.png</file>
+    <file>resources/pixmap/icons/toolbar/item-loan.png</file>
   </qresource>
-  <qresource prefix="small">
-    <file>res/icons/small/address-book-new-3.png</file>
-    <file>res/icons/small/book_edit.png</file>
-    <file>res/icons/small/book_open.png</file>
-    <file>res/icons/small/question.png</file>
-    <file>res/icons/small/warning.png</file>
-    <file>res/icons/small/ok.png</file>
-    <file>res/icons/small/information.png</file>
-    <file>res/icons/small/no.png</file>
+  <qresource prefix="extras">
+    <file>resources/pixmap/icons/gui_use/help.png</file>
+    <file>resources/pixmap/icons/gui_use/info.png</file>
+    <file>resources/pixmap/icons/miniatures/boy.png</file>
+    <file>resources/pixmap/icons/miniatures/girl.png</file>
+    <file>resources/pixmap/icons/miniatures/mail.png</file>
+    <file>resources/pixmap/icons/miniatures/mobile.png</file>
+    <file>resources/pixmap/icons/miniatures/phone.png</file>
+  </qresource>
+  <qresource prefix="status">
+    <file>resources/pixmap/icons/status/status-warning.png</file>
+    <file>resources/pixmap/icons/status/status-no.png</file>
+    <file>resources/pixmap/icons/status/status-ok.png</file>
+  </qresource>
+  <qresource prefix="menu">
+    <file>resources/pixmap/icons/menu-icons/book-edit.png</file>
+    <file>resources/pixmap/icons/menu-icons/book-new.png</file>
+    <file>resources/pixmap/icons/menu-icons/card-new.png</file>
+    <file>resources/pixmap/icons/menu-icons/edit-find-replace.png</file>
+    <file>resources/pixmap/icons/menu-icons/user-edit.png</file>
+    <file>resources/pixmap/icons/menu-icons/user-new.png</file>
+    <file>resources/pixmap/icons/menu-icons/user-search.png</file>
   </qresource>
 </RCC>

@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>600</width>
+    <width>598</width>
     <height>500</height>
    </rect>
   </property>
@@ -127,7 +127,7 @@
            <string/>
           </property>
           <property name="pixmap">
-           <pixmap resource="myicons.qrc">:/small/res/icons/small/no.png</pixmap>
+           <pixmap resource="myicons.qrc">:/status/resources/pixmap/icons/status/status-no.png</pixmap>
           </property>
          </widget>
         </item>
@@ -153,6 +153,81 @@
         <layout class="QVBoxLayout" name="verticalLayout">
          <item>
           <layout class="QGridLayout" name="gridLayout">
+           <item row="5" column="3">
+            <widget class="QLineEdit" name="field_address"/>
+           </item>
+           <item row="6" column="1">
+            <widget class="QLabel" name="label_colon_7">
+             <property name="text">
+              <string>:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="4">
+            <widget class="QLabel" name="label_familyName_check">
+             <property name="text">
+              <string/>
+             </property>
+             <property name="pixmap">
+              <pixmap resource="myicons.qrc">:/status/resources/pixmap/icons/status/status-no.png</pixmap>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="label_familyname">
+             <property name="text">
+              <string>Familyname</string>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="4">
+            <widget class="QLabel" name="check_address">
+             <property name="text">
+              <string/>
+             </property>
+             <property name="pixmap">
+              <pixmap resource="myicons.qrc">:/status/resources/pixmap/icons/status/status-no.png</pixmap>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="4">
+            <widget class="QLabel" name="check_email">
+             <property name="text">
+              <string/>
+             </property>
+             <property name="pixmap">
+              <pixmap resource="myicons.qrc">:/status/resources/pixmap/icons/status/status-no.png</pixmap>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QLabel" name="label_colon_11">
+             <property name="text">
+              <string>:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="0">
+            <widget class="QLabel" name="label_IDN">
+             <property name="text">
+              <string>IDN</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QLabel" name="label_colon_3">
+             <property name="text">
+              <string>:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="7" column="0">
+            <widget class="QLabel" name="label_comments">
+             <property name="text">
+              <string>Comments</string>
+             </property>
+            </widget>
+           </item>
            <item row="0" column="3">
             <widget class="QLineEdit" name="field_name"/>
            </item>
@@ -190,7 +265,28 @@
               <string/>
              </property>
              <property name="pixmap">
-              <pixmap resource="myicons.qrc">:/small/res/icons/small/no.png</pixmap>
+              <pixmap resource="myicons.qrc">:/status/resources/pixmap/icons/status/status-no.png</pixmap>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="1">
+            <widget class="QLabel" name="label_colon_4">
+             <property name="text">
+              <string>:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="7" column="1">
+            <widget class="QLabel" name="label_colon_9">
+             <property name="text">
+              <string>:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="0">
+            <widget class="QLabel" name="label_email">
+             <property name="text">
+              <string>email</string>
              </property>
             </widget>
            </item>
@@ -203,7 +299,14 @@
               <string/>
              </property>
              <property name="pixmap">
-              <pixmap resource="myicons.qrc">:/small/res/icons/small/no.png</pixmap>
+              <pixmap resource="myicons.qrc">:/status/resources/pixmap/icons/status/status-no.png</pixmap>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="0">
+            <widget class="QLabel" name="label_name">
+             <property name="text">
+              <string>Name</string>
              </property>
             </widget>
            </item>
@@ -216,63 +319,6 @@
               <string>Address</string>
              </property>
             </widget>
-           </item>
-           <item row="3" column="3">
-            <widget class="QLineEdit" name="field_IDN"/>
-           </item>
-           <item row="2" column="4">
-            <widget class="QLabel" name="label_grade_check">
-             <property name="text">
-              <string/>
-             </property>
-             <property name="pixmap">
-              <pixmap resource="myicons.qrc">:/small/res/icons/small/no.png</pixmap>
-             </property>
-            </widget>
-           </item>
-           <item row="6" column="0">
-            <widget class="QLabel" name="label_telephone">
-             <property name="text">
-              <string>Telephone</string>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="4">
-            <widget class="QLabel" name="label_name_check">
-             <property name="text">
-              <string/>
-             </property>
-             <property name="pixmap">
-              <pixmap resource="myicons.qrc">:/small/res/icons/small/no.png</pixmap>
-             </property>
-            </widget>
-           </item>
-           <item row="6" column="3">
-            <layout class="QHBoxLayout" name="horizontalLayout_5">
-             <item>
-              <widget class="QLineEdit" name="field_telephone"/>
-             </item>
-             <item>
-              <widget class="QLabel" name="check_telephone">
-               <property name="text">
-                <string/>
-               </property>
-               <property name="pixmap">
-                <pixmap resource="myicons.qrc">:/small/res/icons/small/no.png</pixmap>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLabel" name="label_cellphone">
-               <property name="text">
-                <string>Cellphone</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLineEdit" name="field_cellphone"/>
-             </item>
-            </layout>
            </item>
            <item row="2" column="3">
             <layout class="QHBoxLayout" name="horizontalLayout_2">
@@ -291,7 +337,7 @@
                 <string/>
                </property>
                <property name="pixmap">
-                <pixmap resource="myicons.qrc">:/small/res/icons/small/no.png</pixmap>
+                <pixmap resource="myicons.qrc">:/status/resources/pixmap/icons/status/status-no.png</pixmap>
                </property>
               </widget>
              </item>
@@ -320,111 +366,99 @@
              </item>
             </layout>
            </item>
-           <item row="3" column="1">
-            <widget class="QLabel" name="label_colon_4">
+           <item row="6" column="3">
+            <layout class="QHBoxLayout" name="horizontalLayout_5">
+             <item>
+              <widget class="QLabel" name="label_3">
+               <property name="text">
+                <string/>
+               </property>
+               <property name="pixmap">
+                <pixmap resource="myicons.qrc">:/extras/resources/pixmap/icons/miniatures/phone.png</pixmap>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLineEdit" name="field_telephone"/>
+             </item>
+             <item>
+              <widget class="QLabel" name="check_telephone">
+               <property name="text">
+                <string/>
+               </property>
+               <property name="pixmap">
+                <pixmap resource="myicons.qrc">:/status/resources/pixmap/icons/status/status-no.png</pixmap>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="label_cellphone">
+               <property name="text">
+                <string>Cellphone</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="label_cell">
+               <property name="text">
+                <string/>
+               </property>
+               <property name="pixmap">
+                <pixmap resource="myicons.qrc">:/extras/resources/pixmap/icons/miniatures/mobile.png</pixmap>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLineEdit" name="field_cellphone"/>
+             </item>
+            </layout>
+           </item>
+           <item row="3" column="3">
+            <widget class="QLineEdit" name="field_IDN"/>
+           </item>
+           <item row="2" column="4">
+            <widget class="QLabel" name="label_grade_check">
              <property name="text">
-              <string>:</string>
+              <string/>
+             </property>
+             <property name="pixmap">
+              <pixmap resource="myicons.qrc">:/status/resources/pixmap/icons/status/status-no.png</pixmap>
              </property>
             </widget>
            </item>
-           <item row="7" column="1">
-            <widget class="QLabel" name="label_colon_9">
+           <item row="6" column="0">
+            <widget class="QLabel" name="label_telephone">
              <property name="text">
-              <string>:</string>
+              <string>Telephone</string>
              </property>
             </widget>
            </item>
-           <item row="4" column="0">
-            <widget class="QLabel" name="label_email">
+           <item row="0" column="4">
+            <widget class="QLabel" name="label_name_check">
              <property name="text">
-              <string>email</string>
+              <string/>
+             </property>
+             <property name="pixmap">
+              <pixmap resource="myicons.qrc">:/status/resources/pixmap/icons/status/status-no.png</pixmap>
              </property>
             </widget>
            </item>
            <item row="4" column="3">
-            <widget class="QLineEdit" name="field_email"/>
-           </item>
-           <item row="5" column="3">
-            <widget class="QLineEdit" name="field_address"/>
-           </item>
-           <item row="6" column="1">
-            <widget class="QLabel" name="label_colon_7">
-             <property name="text">
-              <string>:</string>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="0">
-            <widget class="QLabel" name="label_name">
-             <property name="text">
-              <string>Name</string>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="4">
-            <widget class="QLabel" name="label_familyName_check">
-             <property name="text">
-              <string/>
-             </property>
-             <property name="pixmap">
-              <pixmap resource="myicons.qrc">:/small/res/icons/small/no.png</pixmap>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="0">
-            <widget class="QLabel" name="label_familyname">
-             <property name="text">
-              <string>Familyname</string>
-             </property>
-            </widget>
-           </item>
-           <item row="5" column="4">
-            <widget class="QLabel" name="check_address">
-             <property name="text">
-              <string/>
-             </property>
-             <property name="pixmap">
-              <pixmap resource="myicons.qrc">:/small/res/icons/small/no.png</pixmap>
-             </property>
-            </widget>
-           </item>
-           <item row="4" column="4">
-            <widget class="QLabel" name="check_email">
-             <property name="text">
-              <string/>
-             </property>
-             <property name="pixmap">
-              <pixmap resource="myicons.qrc">:/small/res/icons/small/no.png</pixmap>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="1">
-            <widget class="QLabel" name="label_colon_11">
-             <property name="text">
-              <string>:</string>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="0">
-            <widget class="QLabel" name="label_IDN">
-             <property name="text">
-              <string>IDN</string>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="1">
-            <widget class="QLabel" name="label_colon_3">
-             <property name="text">
-              <string>:</string>
-             </property>
-            </widget>
-           </item>
-           <item row="7" column="0">
-            <widget class="QLabel" name="label_comments">
-             <property name="text">
-              <string>Comments</string>
-             </property>
-            </widget>
+            <layout class="QHBoxLayout" name="horizontalLayout_8">
+             <item>
+              <widget class="QLabel" name="label_4">
+               <property name="text">
+                <string/>
+               </property>
+               <property name="pixmap">
+                <pixmap resource="myicons.qrc">:/extras/resources/pixmap/icons/miniatures/mail.png</pixmap>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLineEdit" name="field_email"/>
+             </item>
+            </layout>
            </item>
           </layout>
          </item>
@@ -492,7 +526,6 @@
   <tabstop>list_roles</tabstop>
   <tabstop>list_grades</tabstop>
   <tabstop>field_IDN</tabstop>
-  <tabstop>field_email</tabstop>
   <tabstop>field_address</tabstop>
   <tabstop>field_telephone</tabstop>
   <tabstop>field_cellphone</tabstop>
