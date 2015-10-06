@@ -6,14 +6,14 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
-    <height>231</height>
+    <width>900</width>
+    <height>450</height>
    </rect>
   </property>
   <property name="maximumSize">
    <size>
-    <width>800</width>
-    <height>525</height>
+    <width>1024</width>
+    <height>600</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -305,6 +305,18 @@
     </widget>
    </item>
    <item>
+    <widget class="QGroupBox" name="groupBox_2">
+     <property name="title">
+      <string>Item History</string>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout_3">
+      <item>
+       <widget class="QTreeView" name="treeHistory"/>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
     <layout class="QHBoxLayout" name="horizontalLayout_3">
      <item>
       <spacer name="horizontalSpacer">
@@ -344,6 +356,7 @@
   </layout>
   <zorder>groupBox</zorder>
   <zorder>verticalSpacer</zorder>
+  <zorder>groupBox_2</zorder>
  </widget>
  <resources>
   <include location="myicons.qrc"/>

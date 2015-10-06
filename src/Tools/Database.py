@@ -404,6 +404,33 @@ class DatabaseManager(object):
 
 # asociated to users, items and loans
 
+	def itemHistory(self, itemID):
+
+		if not itemID:
+			return False
+		query = "SELECT "
+		query += "       history.renewals, history.returnDate, "
+		query += "       history.loanId, history.dueDate, history.loanDate, "
+		query += "       users.name, users.familyname, users.userID, users.role,"
+		query += "       grades.gradeName "
+		query += "FROM "
+		query += "    history "
+		query += "    LEFT  JOIN items        ON items.itemID = history.itemID "
+		query += "    LEFT  JOIN users        ON history.userID = users.userID "
+		query += "    LEFT  JOIN grades        ON users.grade = grades.gradeID "
+		query += "WHERE history.itemID = ?"
+		query += "GROUP BY history.loanId;"
+
+		try:
+			self.cur.execute(query, [itemID, ])
+		except sqlite3.Error as e:
+			self.saveToLog("load_items:" + str(e))
+			return False
+
+		Result = self.cur.fetchall()
+
+		return Result
+
 	def userHystory(self, userID):
 
 		if not userID:
