@@ -3,7 +3,7 @@
 import re
 from isbnlib import clean as isbnclean, is_isbn10, is_isbn13, to_isbn13, canonical, mask
 from datetime import date
-from config.GlobalConstants import *
+import config.GlobalConstants as Constants
 
 
 # Removes breacklines and empty spaces at the end and begining of the string
@@ -97,32 +97,32 @@ def validate_email(email, regex):
 
 
 def validate(field, value, var1=False):
-	if ISBN == field:
+	if Constants.ISBN == field:
 		return validate_isbn(value)
-	elif IDN == field:
+	elif Constants.IDN == field:
 		regex = "^\d{6,}-[K|k|0-9]{1}$"
 		return validate_idn(value, regex)
-	elif NAME == field:
+	elif Constants.NAME == field:
 		regex = "^([A-Z]{0,1}[a-zÑÁñáÉéÍíÓóÚú]+[\s]*)+$"
 		return validate_name(value, regex)
-	elif TITLE == field:
+	elif Constants.TITLE == field:
 		return validate_title(value)
-	elif COMMENTS == field:
+	elif Constants.COMMENTS == field:
 		return validate_comments(value)
-	elif AUTHOR == field or PUBLISHER == field:
+	elif Constants.AUTHOR == field or Constants.PUBLISHER == field:
 		return validate_author(value)
-	elif EMAIL == field:
+	elif Constants.EMAIL == field:
 		regex = r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)"
 		return validate_email(value, regex)
-	elif YEAR == field:
+	elif Constants.YEAR == field:
 		return validate_year(value)
-	elif CELPHONE == field:
+	elif Constants.CELPHONE == field:
 		regex = "^0{0,1}[6|7|8|9][0-9]{7}$"
 		return validate_cellphone(value, regex)
-	elif PHONE == field:
+	elif Constants.PHONE == field:
 		regex = "^([0-9]{5,8})$"
 		return validate_cellphone(value, regex)
-	elif IDS == field:
+	elif Constants.IDS == field:
 		regex = "^([\w^\d]{2})(\d{5,})$"
 		return validate_IDs(value, regex, var1)
 
@@ -143,8 +143,7 @@ def cleanKeywords(keys):
 
 if __name__ == '__main__':
 	print "validations for different data types"
-	print validate(NAME, 'ñaño')
-	print validate(IDN, '111a1111-7')
-	print validate(ISBN, '978-1-4454-9331-2')
-	print validate(EMAIL, 'lala@lala.com')
-
+	print validate(Constants.NAME, 'ñaño')
+	print validate(Constants.IDN, '111a1111-7')
+	print validate(Constants.ISBN, '978-1-4454-9331-2')
+	print validate(Constants.EMAIL, 'lala@lala.com')

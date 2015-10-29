@@ -4,6 +4,7 @@ import sqlite3
 import config.GlobalConstants as Constants
 from Tools.timeFunctions import todaysDate
 
+
 def query2dic(cursor, row):
 	dictionary = {}
 	for idx, col in enumerate(cursor.description):
@@ -205,7 +206,6 @@ class DatabaseManager(object):
 		Result = self.cur.fetchall()
 		return Result
 
-
 	def searchItems(self, sStatus, column, keys, format_):
 		querrydata = []
 		query = "SELECT "
@@ -326,12 +326,12 @@ class DatabaseManager(object):
 
 	def loan_data(self, type_, id_):
 
-		if type_ not in (Constants.TYPE_ITEM , Constants.TYPE_LOAN):
+		if type_ not in (Constants.TYPE_ITEM, Constants.TYPE_LOAN):
 			return False
 		query = "SELECT  "
 		query += "loanID, itemID, userID, loanDate, dueDate, renewals "
 		query += "FROM loans "
-		if type_ == Constants.TYPE_ITEM: 
+		if type_ == Constants.TYPE_ITEM:
 			query += "WHERE itemID = ? "
 		elif type_ == Constants.TYPE_LOAN:
 			query += "WHERE loanID = ? "
@@ -577,6 +577,26 @@ class DatabaseManager(object):
 			self.cur.execute(query, [date, ])
 		except sqlite3.Error as e:
 			self.saveToLog("duetoday - Error :" + str(e))
+			return False
+		self.Result = self.cur.fetchall()
+		return self.Result
+
+	def duedItems(self):
+		query = "SELECT "
+		query += "      loans.loanID, loans.itemID, loans.userID, loans.loanDate, loans.dueDate, loans.renewals, "
+		query += "      items.author, items.format, items.publisher, items.title, items.year, items.lang AS language, "
+		query += "      users.name, users.familyname, users.userID, users.role, "
+		query += "      grades.gradeName "
+		query += "FROM loans "
+		query += "INNER JOIN users ON users.userID = loans.userID  "
+		query += "INNER JOIN items ON loans.itemID = items.itemID "
+		query += "LEFT JOIN grades ON users.grade = grades.gradeID "
+		query += "WHERE dueDate < ? "
+
+		try:
+			self.cur.execute(query, [todaysDate(), ])
+		except sqlite3.Error as e:
+			self.saveToLog("duedItems - Error :" + str(e))
 			return False
 		self.Result = self.cur.fetchall()
 		return self.Result
