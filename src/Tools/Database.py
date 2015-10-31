@@ -395,7 +395,7 @@ class DatabaseManager(object):
 			self.cur.execute(query1, [loanID, ])
 			self.cur.execute(query2, data2)
 		except sqlite3.Error as e:
-			self.saveToLog("Returnbook - Error :" + str(e))
+			self.saveToLog("returnItem - Error :" + str(e))
 			error = True
 			return False
 		if not error:
@@ -424,7 +424,7 @@ class DatabaseManager(object):
 		try:
 			self.cur.execute(query, [itemID, ])
 		except sqlite3.Error as e:
-			self.saveToLog("load_items:" + str(e))
+			self.saveToLog("itemHistory:" + str(e))
 			return False
 
 		Result = self.cur.fetchall()
@@ -439,19 +439,19 @@ class DatabaseManager(object):
 		query += "       items.itemID, items.title,  items.author, "
 		query += "       items.publisher,  items.year, "
 		query += "       item_formats.formatID, languages.Ref_Name AS language, "
-		query += "       history.renewals, history.returnDate "
+		query += "       history.renewals, history.dueDate, history.returnDate "
 		query += "FROM "
 		query += "    'items' "
 		query += "    INNER JOIN item_formats ON items.format = item_formats.formatID "
 		query += "    left JOIN languages    ON items.lang  = languages.langIsoID "
 		query += "    left  JOIN history        ON items.itemID = history.itemID "
-		query += "WHERE history.userID = ? and history.returnDate > 20140000 "
+		query += "WHERE history.userID = ? and history.returnDate > 1 "
 		query += "    GROUP BY items.itemID; "
 
 		try:
 			self.cur.execute(query, [userID, ])
 		except sqlite3.Error as e:
-			self.saveToLog("load_items:" + str(e))
+			self.saveToLog("userHystory:" + str(e))
 			return False
 
 		Result = self.cur.fetchall()
@@ -478,7 +478,7 @@ class DatabaseManager(object):
 		try:
 			self.cur.execute(query, [userID, ])
 		except sqlite3.Error as e:
-			self.saveToLog("load_items:" + str(e))
+			self.saveToLog("userLoans:" + str(e))
 			return False
 
 		Result = self.cur.fetchall()
@@ -505,7 +505,7 @@ class DatabaseManager(object):
 		try:
 			self.cur.execute(query, [userID, todaysDate()])
 		except sqlite3.Error as e:
-			self.saveToLog("load_items:" + str(e))
+			self.saveToLog("userDuedItems:" + str(e))
 			return False
 
 		Result = self.cur.fetchall()
@@ -653,7 +653,7 @@ class DatabaseManager(object):
 		try:
 			self.cur.execute(query)
 		except sqlite3.Error as e:
-			self.saveToLog("load_items:" + str(e))
+			self.saveToLog("itemsInCategory:" + str(e))
 			return False
 		Result = self.cur.fetchall()
 		return Result
