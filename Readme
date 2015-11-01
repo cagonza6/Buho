@@ -1,0 +1,14 @@
+# This is a list of the commands needed to use the program on any linux system.
+# you need python >=2.7 and the library: isbnlib for the automated ISBN search.
+
+##############    Ubuntu:    ##############
+sudo apt-get install pyqt4-dev-tools
+
+# Python:
+sudo apt-get install python-pip
+sudo pip install --upgrade pip 
+pip install isbnlib
+
+
+#For Developers:
+sudo apt-get install qt4-designer
