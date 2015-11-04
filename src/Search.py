@@ -305,7 +305,7 @@ class DuedItemWin(SearchMaster):
 		self.connect(self.button_search, QtCore.SIGNAL("clicked()"), self.btnSearch)
 
 		# set the status combo box
-		statuses = [['Can be loaned', Constants.AVAILABLE_ITEMS], ['Loaned', Constants.LOANED_ITEMS], ['Dued', Constants.DUED_ITEMS], ['All', Constants.ALL_ITEMS], ]
+		statuses = [['Dued Items', Constants.DUED_ITEMS] ]
 		for i in range(0, len(statuses)):
 			status_ = statuses[i]
 			self.combo_status.addItem(*status_)  # text to show in the combobox

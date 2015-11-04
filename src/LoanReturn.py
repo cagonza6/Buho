@@ -435,7 +435,7 @@ class RenewItem(LoanReturnMaster):
 
 	def checkReader(self, reader):
 		result = reader
-		# self.label_field_userStatus.setText("Can not Loan")
+		self.label_field_userStatus.setText("Can not renew")
 		if reader:
 			if reader.loans() >= Constants.ST_MAX_LOANS:
 				flagStatus(self.check_loans, Constants.STATUS_WARNING)
@@ -445,6 +445,8 @@ class RenewItem(LoanReturnMaster):
 				flagStatus(self.check_delay, Constants.STATUS_WARNING)
 		flag(self.check_user, result)
 		self.reader = result
+		if result:
+			self.label_field_userStatus.setText("Can Renew")
 
 	def loadReader(self, id_):
 		if not id_:
@@ -455,32 +457,31 @@ class RenewItem(LoanReturnMaster):
 
 	def checkItem(self, item=False):
 		result = item
+		self.label_field_itemStatus.setText("Can be renewed.")
 		self.label_field_itemStatus.setText('')
 		if item:
 			if not item.loaned():
 				QtGui.QMessageBox.critical(self, 'warning', 'Item is not loaned.', QtGui.QMessageBox.No)
-				self.label_field_itemStatus.setText("Can not be retrieved.")
 				result = False
 			else:
 				self.label_field_itemStatus.setText("Can be retrieved")
 			if item.renewals() >= Constants.RENEWAL_LIMIT:
 				QtGui.QMessageBox.critical(self, 'warning', 'Limit of Renewals reached.', QtGui.QMessageBox.No)
-				self.label_field_itemStatus.setText("Can not be renewed.")
 				result = False
-		if result:
+
 			self.loadLoan(False, Constants.TYPE_ITEM, item.ID())
 			# the call to load user is done from loadLoan
 
 			if self.loan.dueDate() > self.getDueDate():
 				QtGui.QMessageBox.critical(self, 'warning', 'Renewal Date must be after than the actual due date. To modify the Date use Edit loan.', QtGui.QMessageBox.No)
-				self.label_field_itemStatus.setText("Can not be renewed.")
 				result = False
-
+		if not result:
+			self.label_field_itemStatus.setText("Can not be renewed.")
 		flag(self.check_item, result)
 		self.item = result
 
 	def handleButton(self):
-		if not self.loan or not self.reader:
+		if not self.item or not self.reader:
 			returnData = [False, False]
 		else:
 			returnData = [
