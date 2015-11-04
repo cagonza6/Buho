@@ -169,7 +169,7 @@
      <normaloff>:/menu/resources/pixmap/icons/menu-icons/book-edit.png</normaloff>:/menu/resources/pixmap/icons/menu-icons/book-edit.png</iconset>
    </property>
    <property name="text">
-    <string>Eit Item</string>
+    <string>Edit Item</string>
    </property>
    <property name="iconVisibleInMenu">
     <bool>true</bool>

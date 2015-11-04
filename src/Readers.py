@@ -37,6 +37,7 @@ class NewReader(QtGui.QWidget, Ui_NewReader):
 
 		self.reset()
 		self.cheackall()
+		self.defaults()
 
 	def fillGrades(self):
 		if Session.GRADES_INFO:
@@ -84,6 +85,19 @@ class NewReader(QtGui.QWidget, Ui_NewReader):
 		self.field_address.setText('')
 		self.field_telephone.setText('')
 		self.field_cellphone.setText('')
+		self.field_comments.setPlainText('')
+
+	def defaults(self):
+		self.field_name.setText('Jhon')
+		self.field_familyname.setText('Doe')
+		self.list_grades.setCurrentIndex(0)
+		self.list_roles.setCurrentIndex(0)
+		self.list_grades.setCurrentIndex(0)
+		self.field_IDN.setText('11111111-1')
+		self.field_email.setText('a@a.com')
+		self.field_address.setText('')
+		self.field_telephone.setText('000000')
+		self.field_cellphone.setText('90000000')
 		self.field_comments.setPlainText('')
 
 	def reset(self):
@@ -193,6 +207,7 @@ class EditReader(NewReader, QtGui.QDialog):
 		self.connect(self.field_readerID, QtCore.SIGNAL("textChanged(QString)"), self.changeID)
 
 	def changeID(self):
+		self.checkID()
 		self.cleanall()
 
 	def searchReader(self):

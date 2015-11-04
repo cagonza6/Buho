@@ -42,6 +42,7 @@ class NewItem(QtGui.QWidget, Ui_NewItem):
 		self.fillFormats()
 		self.fillLanguages()
 		self.cheackall()
+		self.defaults()
 
 	def showISBNfield(self, show):
 		if self.check_needIsbn.isChecked():
@@ -68,7 +69,6 @@ class NewItem(QtGui.QWidget, Ui_NewItem):
 				self.field_language.addItem(lang['Ref_Name'], lang['langIsoID'])  # text to show in the combobox
 
 	def isbnChanged(self):
-		self.cleanall()
 		self.getISBN()
 
 	def getlangtype(self, langIso):
@@ -129,7 +129,16 @@ class NewItem(QtGui.QWidget, Ui_NewItem):
 		self.field_year.setValue(1400)
 
 	def cleanall(self):
+		self.field_title.setText(' ')
+		self.field_ISBN.setText(' ')
+		self.field_author.setText(' ')
+		self.field_publisher.setText(' ')
+		self.field_location.setText(' ')
+		self.field_comments.setPlainText(' ')
+
+	def defaults(self):
 		self.field_title.setText('untitled')
+		self.field_ISBN.setText(' ')
 		self.field_author.setText('unknown')
 		self.field_publisher.setText('unknown')
 		self.field_location.setText('')
