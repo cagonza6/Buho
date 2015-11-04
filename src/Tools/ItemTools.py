@@ -1,6 +1,4 @@
-#!/usr/bin/python
 # -*- coding: utf-8 -*-
-
 
 def formatID(category, id_number):
 	idStr = str(id_number)

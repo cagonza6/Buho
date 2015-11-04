@@ -1,19 +1,18 @@
 # -*- coding: utf-8 -*-
+import textwrap
+
 from PyQt4 import QtGui
+
 from Gui.mReaderInfo import Ui_ReaderInfo
 from Gui.mItemInfo import Ui_ItemInfo
 from Gui.mLoanInfo import Ui_LoanInfo
-import textwrap
-
 from Classes import Reader, Item
 from Tools import validations
 import config.GlobalConstants as Constants
 import session.Session as Session
-
 from Tools.ItemTools import formatID
 from Tools.treeFunctions import TreeWiews
 from common import flagStatus, flag
-
 from Tools.timeFunctions import int2date, todaysDate
 
 

@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
 from PyQt4 import QtCore, QtGui
-from Gui.mSearch import Ui_SearchItemWindow
 
+from Gui.mSearch import Ui_SearchItemWindow
 from Tools.ItemTools import formatID
 from Tools.Database import DBManager as DataBase
 from Tools.regexe import cleanKeywords
 from Tools.treeFunctions import TreeWiews
 from Tools.timeFunctions import int2date
-
 import config.GlobalConstants as Constants
 from common import _translate, statusIcon
 import session.Session as Session

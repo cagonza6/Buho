@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
 from PyQt4 import QtGui, QtCore
+
 from Gui.mMainPage import Ui_MainPage
 from Tools.Database import DBManager as DataBase
 from Tools.timeFunctions import todaysDate
 from Tools.treeFunctions import TreeWiews
-
 import config.GlobalConstants as Constants
-
 from InfoWindows import LoanInfo
 from Classes import Reader, Item, Loan
 

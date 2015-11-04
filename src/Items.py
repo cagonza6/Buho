@@ -1,14 +1,13 @@
 # -*- coding: utf-8 -*-
 from PyQt4 import QtGui, QtCore
-from Gui.mNewItem import Ui_NewItem
 from isbnlib import meta as isbnmetadata
 
+from Gui.mNewItem import Ui_NewItem
 from Tools import validations
 from Tools.Database import DBManager as DataBase
 from Search import SearchItemWin
 import config.GlobalConstants as Constants
 from common import flag, _translate
-
 from Classes import Item
 import session.Session as Session
 

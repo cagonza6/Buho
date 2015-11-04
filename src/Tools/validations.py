@@ -1,8 +1,9 @@
-#!/usr/bin/python
 # -*- coding: utf-8 -*-
 import re
-from isbnlib import clean as isbnclean, is_isbn10, is_isbn13, to_isbn13, canonical, mask
 from datetime import date
+
+from isbnlib import clean as isbnclean, is_isbn10, is_isbn13, to_isbn13, canonical, mask
+
 import config.GlobalConstants as Constants
 
 

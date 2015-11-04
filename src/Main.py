@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
+import sip
+
 import config.GlobalConstants as GlobalConstants
 import session.Session as Session
-
-import sip
 
 sip.setapi('QVariant', 2)
 

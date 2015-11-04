@@ -1,6 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 import sqlite3
+
 import config.GlobalConstants as Constants
 from Tools.timeFunctions import todaysDate
 

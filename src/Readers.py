@@ -1,16 +1,14 @@
 # -*- coding: utf-8 -*-
 
 from PyQt4 import QtGui, QtCore
-from Gui.mNewReader import Ui_NewReader
 
+from Gui.mNewReader import Ui_NewReader
 from Tools import validations
 from Tools.Database import DBManager as DataBase
 from common import flag
 import config.GlobalConstants as Constants
-
 from Classes import Reader
 import session.Session as Session
-
 from Search import SearchUserWin
 
 

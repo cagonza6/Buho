@@ -1,7 +1,4 @@
-#!/usr/bin/python
 # -*- coding: utf-8 -*-
-
-# Time and date Functions
 import datetime
 
 

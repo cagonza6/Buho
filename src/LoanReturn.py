@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
-from PyQt4 import QtGui, QtCore
-from Gui.mLoanReturnBook import Ui_LoanReturn
 import datetime
 
+from PyQt4 import QtGui, QtCore
+
+from Gui.mLoanReturnBook import Ui_LoanReturn
 from common import flag, flagStatus
 from Search import SearchItemWin, SearchUserWin
 from Tools import validations
@@ -12,7 +13,6 @@ import config.GlobalConstants as Constants
 import session.Session as Session
 from Classes import Reader, Item, Loan
 from InfoWindows import ShowInfo
-
 from common import _translate
 
 
