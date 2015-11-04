@@ -233,6 +233,9 @@ class LoanItem(LoanReturnMaster):
 			if reader.status() == Constants.STATUS_INVALID:
 				QtGui.QMessageBox.critical(self, 'Error', 'Reader status is Blocked.', QtGui.QMessageBox.No)
 				result = False
+			if reader.status() == Constants.BANED_USER:
+				QtGui.QMessageBox.critical(self, 'Error', 'Reader status is Banned.', QtGui.QMessageBox.No)
+				result = False
 
 			if reader.loans() >= Constants.ST_MAX_LOANS:
 				QtGui.QMessageBox.critical(self, 'Error', 'Reader can not loan more than ' + str(Constants.ST_MAX_LOANS) + ' items.', QtGui.QMessageBox.No)
@@ -437,6 +440,14 @@ class RenewItem(LoanReturnMaster):
 		result = reader
 		self.label_field_userStatus.setText("Can not renew")
 		if reader:
+
+			if reader.status() == Constants.STATUS_INVALID:
+				QtGui.QMessageBox.critical(self, 'Error', 'Reader status is Blocked.', QtGui.QMessageBox.No)
+				result = False
+			if reader.status() == Constants.BANED_USER:
+				QtGui.QMessageBox.critical(self, 'Error', 'Reader status is Banned.', QtGui.QMessageBox.No)
+				result = False
+
 			if reader.loans() >= Constants.ST_MAX_LOANS:
 				flagStatus(self.check_loans, Constants.STATUS_WARNING)
 			if reader.delays():

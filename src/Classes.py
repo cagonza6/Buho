@@ -82,13 +82,7 @@ class Reader(BaseElement):
 	def status(self):
 		if not self.check():
 			return False
-		if self.Data['status']:
-			status = Constants.STATUS_VALID
-		else:
-			status = Constants.STATUS_INVALID
-		if self.delays():
-			status = Constants.STATUS_WARNING
-		return status
+		return self.Data['status']
 
 	def fullName(self):
 		if not self.check():
