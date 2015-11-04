@@ -67,14 +67,21 @@
     </layout>
    </item>
    <item>
-    <widget class="QFrame" name="frameEditItem">
-     <property name="frameShape">
-      <enum>QFrame::StyledPanel</enum>
-     </property>
-     <property name="frameShadow">
-      <enum>QFrame::Raised</enum>
+    <widget class="QGroupBox" name="frameEditItem">
+     <property name="title">
+      <string>Load Item</string>
      </property>
      <layout class="QHBoxLayout" name="horizontalLayout_6">
+      <item>
+       <widget class="QLabel" name="check_itemID">
+        <property name="text">
+         <string/>
+        </property>
+        <property name="pixmap">
+         <pixmap resource="myicons.qrc">:/status/resources/pixmap/icons/status/status-no.png</pixmap>
+        </property>
+       </widget>
+      </item>
       <item>
        <widget class="QLabel" name="_ItemID">
         <property name="text">
@@ -121,8 +128,313 @@
           </property>
          </widget>
         </item>
-        <item>
-         <widget class="QLabel" name="check_itemID">
+       </layout>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="groupBox">
+     <property name="title">
+      <string>Item Information</string>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout">
+      <item>
+       <layout class="QGridLayout" name="gridLayout">
+        <item row="5" column="3">
+         <widget class="QLabel" name="label_publisher_check">
+          <property name="text">
+           <string/>
+          </property>
+          <property name="pixmap">
+           <pixmap resource="myicons.qrc">:/status/resources/pixmap/icons/status/status-no.png</pixmap>
+          </property>
+         </widget>
+        </item>
+        <item row="8" column="0">
+         <widget class="QLabel" name="label_comments">
+          <property name="text">
+           <string>Comments</string>
+          </property>
+         </widget>
+        </item>
+        <item row="6" column="2">
+         <layout class="QHBoxLayout" name="horizontalLayout_3">
+          <item>
+           <widget class="QSpinBox" name="field_year">
+            <property name="locale">
+             <locale language="Spanish" country="Chile"/>
+            </property>
+            <property name="minimum">
+             <number>1</number>
+            </property>
+            <property name="maximum">
+             <number>3000</number>
+            </property>
+            <property name="value">
+             <number>1980</number>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="horizontalSpacer_3">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_language">
+            <property name="text">
+             <string>Language</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_colon_8">
+            <property name="text">
+             <string>:</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QComboBox" name="field_language">
+            <item>
+             <property name="text">
+              <string>Select</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item row="4" column="1">
+         <widget class="QLabel" name="label_colon_5">
+          <property name="text">
+           <string>:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="0">
+         <widget class="QLabel" name="label_title">
+          <property name="text">
+           <string>Tittle</string>
+          </property>
+         </widget>
+        </item>
+        <item row="5" column="0">
+         <widget class="QLabel" name="label_publisher">
+          <property name="text">
+           <string>Publisher</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="1">
+         <widget class="QLabel" name="label_colon_4">
+          <property name="text">
+           <string>:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="6" column="1">
+         <widget class="QLabel" name="label_colon_7">
+          <property name="text">
+           <string>:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="QLabel" name="label_colon_3">
+          <property name="text">
+           <string>:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QLabel" name="label_colon_2">
+          <property name="text">
+           <string>:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="2">
+         <widget class="QLineEdit" name="field_title">
+          <property name="text">
+           <string>untitled</string>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="0">
+         <widget class="QLabel" name="label_author">
+          <property name="text">
+           <string>Author</string>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="2">
+         <widget class="QLineEdit" name="field_author">
+          <property name="text">
+           <string>unknown</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="label_format">
+          <property name="text">
+           <string>Category</string>
+          </property>
+         </widget>
+        </item>
+        <item row="5" column="2">
+         <widget class="QLineEdit" name="field_publisher">
+          <property name="text">
+           <string>unknown</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="3">
+         <widget class="QLabel" name="label_ISBN_check">
+          <property name="text">
+           <string/>
+          </property>
+          <property name="pixmap">
+           <pixmap resource="myicons.qrc">:/status/resources/pixmap/icons/status/status-no.png</pixmap>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="3">
+         <widget class="QLabel" name="label_title_check">
+          <property name="text">
+           <string/>
+          </property>
+          <property name="pixmap">
+           <pixmap resource="myicons.qrc">:/status/resources/pixmap/icons/status/status-no.png</pixmap>
+          </property>
+         </widget>
+        </item>
+        <item row="5" column="1">
+         <widget class="QLabel" name="label_colon_6">
+          <property name="text">
+           <string>:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="7" column="0">
+         <widget class="QLabel" name="label_location">
+          <property name="text">
+           <string>Location</string>
+          </property>
+         </widget>
+        </item>
+        <item row="8" column="1">
+         <widget class="QLabel" name="label_colon_10">
+          <property name="text">
+           <string>:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="7" column="1">
+         <widget class="QLabel" name="label_colon_9">
+          <property name="text">
+           <string>:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="0">
+         <widget class="QLabel" name="lablel_ISBN">
+          <property name="text">
+           <string>ISBN</string>
+          </property>
+         </widget>
+        </item>
+        <item row="6" column="3">
+         <widget class="QLabel" name="label_language_check">
+          <property name="text">
+           <string/>
+          </property>
+          <property name="pixmap">
+           <pixmap resource="myicons.qrc">:/status/resources/pixmap/icons/status/status-no.png</pixmap>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="2">
+         <layout class="QHBoxLayout" name="horizontalLayout">
+          <item>
+           <widget class="QLineEdit" name="field_ISBN"/>
+          </item>
+          <item>
+           <widget class="QPushButton" name="buttonIsbnSearch">
+            <property name="text">
+             <string>Search</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="horizontalSpacer_2">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="check_needIsbn">
+            <property name="text">
+             <string>No Isbn</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item row="4" column="3">
+         <widget class="QLabel" name="label_author_check">
+          <property name="text">
+           <string/>
+          </property>
+          <property name="pixmap">
+           <pixmap resource="myicons.qrc">:/status/resources/pixmap/icons/status/status-no.png</pixmap>
+          </property>
+         </widget>
+        </item>
+        <item row="6" column="0">
+         <widget class="QLabel" name="label_year">
+          <property name="text">
+           <string>Year</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="2">
+         <widget class="QComboBox" name="field_format">
+          <item>
+           <property name="text">
+            <string>Select a category</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item row="8" column="2">
+         <widget class="QPlainTextEdit" name="field_comments"/>
+        </item>
+        <item row="7" column="2">
+         <layout class="QHBoxLayout" name="horizontalLayout_2">
+          <item>
+           <widget class="QLineEdit" name="field_location"/>
+          </item>
+         </layout>
+        </item>
+        <item row="1" column="3">
+         <widget class="QLabel" name="label_category_check">
           <property name="text">
            <string/>
           </property>
@@ -133,333 +445,22 @@
         </item>
        </layout>
       </item>
-     </layout>
-    </widget>
-   </item>
-   <item>
-    <widget class="QFrame" name="frame_2">
-     <property name="frameShape">
-      <enum>QFrame::StyledPanel</enum>
-     </property>
-     <property name="frameShadow">
-      <enum>QFrame::Raised</enum>
-     </property>
-     <layout class="QVBoxLayout" name="verticalLayout_3">
       <item>
-       <widget class="QGroupBox" name="groupBox">
-        <property name="title">
-         <string>Item Information</string>
+       <spacer name="verticalSpacer_2">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
         </property>
-        <layout class="QVBoxLayout" name="verticalLayout">
-         <item>
-          <layout class="QGridLayout" name="gridLayout">
-           <item row="5" column="3">
-            <widget class="QLabel" name="label_publisher_check">
-             <property name="text">
-              <string/>
-             </property>
-             <property name="pixmap">
-              <pixmap resource="myicons.qrc">:/status/resources/pixmap/icons/status/status-no.png</pixmap>
-             </property>
-            </widget>
-           </item>
-           <item row="8" column="0">
-            <widget class="QLabel" name="label_comments">
-             <property name="text">
-              <string>Comments</string>
-             </property>
-            </widget>
-           </item>
-           <item row="6" column="2">
-            <layout class="QHBoxLayout" name="horizontalLayout_3">
-             <item>
-              <widget class="QSpinBox" name="field_year">
-               <property name="locale">
-                <locale language="Spanish" country="Chile"/>
-               </property>
-               <property name="minimum">
-                <number>1</number>
-               </property>
-               <property name="maximum">
-                <number>3000</number>
-               </property>
-               <property name="value">
-                <number>1980</number>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLabel" name="label_year_check">
-               <property name="text">
-                <string/>
-               </property>
-               <property name="pixmap">
-                <pixmap resource="myicons.qrc">:/status/resources/pixmap/icons/status/status-no.png</pixmap>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <spacer name="horizontalSpacer_3">
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>40</width>
-                 <height>20</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
-             <item>
-              <widget class="QLabel" name="label_language">
-               <property name="text">
-                <string>Language</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLabel" name="label_colon_8">
-               <property name="text">
-                <string>:</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QComboBox" name="field_language">
-               <item>
-                <property name="text">
-                 <string>Select</string>
-                </property>
-               </item>
-              </widget>
-             </item>
-            </layout>
-           </item>
-           <item row="4" column="1">
-            <widget class="QLabel" name="label_colon_5">
-             <property name="text">
-              <string>:</string>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="0">
-            <widget class="QLabel" name="label_title">
-             <property name="text">
-              <string>Tittle</string>
-             </property>
-            </widget>
-           </item>
-           <item row="5" column="0">
-            <widget class="QLabel" name="label_publisher">
-             <property name="text">
-              <string>Publisher</string>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="1">
-            <widget class="QLabel" name="label_colon_4">
-             <property name="text">
-              <string>:</string>
-             </property>
-            </widget>
-           </item>
-           <item row="6" column="1">
-            <widget class="QLabel" name="label_colon_7">
-             <property name="text">
-              <string>:</string>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="1">
-            <widget class="QLabel" name="label_colon_3">
-             <property name="text">
-              <string>:</string>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="1">
-            <widget class="QLabel" name="label_colon_2">
-             <property name="text">
-              <string>:</string>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="2">
-            <widget class="QLineEdit" name="field_title"/>
-           </item>
-           <item row="4" column="0">
-            <widget class="QLabel" name="label_author">
-             <property name="text">
-              <string>Author</string>
-             </property>
-            </widget>
-           </item>
-           <item row="4" column="2">
-            <widget class="QLineEdit" name="field_author"/>
-           </item>
-           <item row="1" column="0">
-            <widget class="QLabel" name="label_format">
-             <property name="text">
-              <string>Category</string>
-             </property>
-            </widget>
-           </item>
-           <item row="5" column="2">
-            <widget class="QLineEdit" name="field_publisher"/>
-           </item>
-           <item row="2" column="3">
-            <widget class="QLabel" name="label_ISBN_check">
-             <property name="text">
-              <string/>
-             </property>
-             <property name="pixmap">
-              <pixmap resource="myicons.qrc">:/status/resources/pixmap/icons/status/status-no.png</pixmap>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="3">
-            <widget class="QLabel" name="label_title_check">
-             <property name="text">
-              <string/>
-             </property>
-             <property name="pixmap">
-              <pixmap resource="myicons.qrc">:/status/resources/pixmap/icons/status/status-no.png</pixmap>
-             </property>
-            </widget>
-           </item>
-           <item row="5" column="1">
-            <widget class="QLabel" name="label_colon_6">
-             <property name="text">
-              <string>:</string>
-             </property>
-            </widget>
-           </item>
-           <item row="7" column="0">
-            <widget class="QLabel" name="label_location">
-             <property name="text">
-              <string>Location</string>
-             </property>
-            </widget>
-           </item>
-           <item row="8" column="1">
-            <widget class="QLabel" name="label_colon_10">
-             <property name="text">
-              <string>:</string>
-             </property>
-            </widget>
-           </item>
-           <item row="7" column="1">
-            <widget class="QLabel" name="label_colon_9">
-             <property name="text">
-              <string>:</string>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="0">
-            <widget class="QLabel" name="lablel_ISBN">
-             <property name="text">
-              <string>ISBN</string>
-             </property>
-            </widget>
-           </item>
-           <item row="6" column="3">
-            <widget class="QLabel" name="label_language_check">
-             <property name="text">
-              <string/>
-             </property>
-             <property name="pixmap">
-              <pixmap resource="myicons.qrc">:/status/resources/pixmap/icons/status/status-no.png</pixmap>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="2">
-            <layout class="QHBoxLayout" name="horizontalLayout">
-             <item>
-              <widget class="QLineEdit" name="field_ISBN"/>
-             </item>
-             <item>
-              <widget class="QPushButton" name="buttonIsbnSearch">
-               <property name="text">
-                <string>Search</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <spacer name="horizontalSpacer_2">
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>40</width>
-                 <height>20</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
-             <item>
-              <widget class="QCheckBox" name="check_needIsbn">
-               <property name="text">
-                <string>No Isbn</string>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </item>
-           <item row="4" column="3">
-            <widget class="QLabel" name="label_author_check">
-             <property name="text">
-              <string/>
-             </property>
-             <property name="pixmap">
-              <pixmap resource="myicons.qrc">:/status/resources/pixmap/icons/status/status-no.png</pixmap>
-             </property>
-            </widget>
-           </item>
-           <item row="6" column="0">
-            <widget class="QLabel" name="label_year">
-             <property name="text">
-              <string>Year</string>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="2">
-            <widget class="QComboBox" name="field_format">
-             <item>
-              <property name="text">
-               <string>Select a category</string>
-              </property>
-             </item>
-            </widget>
-           </item>
-           <item row="8" column="2">
-            <widget class="QPlainTextEdit" name="field_comments"/>
-           </item>
-           <item row="7" column="2">
-            <layout class="QHBoxLayout" name="horizontalLayout_2">
-             <item>
-              <widget class="QLineEdit" name="field_location"/>
-             </item>
-            </layout>
-           </item>
-           <item row="1" column="3">
-            <widget class="QLabel" name="label_category_check">
-             <property name="text">
-              <string/>
-             </property>
-             <property name="pixmap">
-              <pixmap resource="myicons.qrc">:/status/resources/pixmap/icons/status/status-no.png</pixmap>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-        </layout>
-        <zorder></zorder>
-       </widget>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>20</width>
+          <height>40</height>
+         </size>
+        </property>
+       </spacer>
       </item>
      </layout>
+     <zorder></zorder>
+     <zorder>verticalSpacer_2</zorder>
     </widget>
    </item>
    <item>
@@ -535,22 +536,6 @@
   <include location="myicons.qrc"/>
  </resources>
  <connections>
-  <connection>
-   <sender>field_itemID</sender>
-   <signal>returnPressed()</signal>
-   <receiver>buttonLoadID</receiver>
-   <slot>click()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>300</x>
-     <y>74</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>376</x>
-     <y>68</y>
-    </hint>
-   </hints>
-  </connection>
   <connection>
    <sender>field_ISBN</sender>
    <signal>returnPressed()</signal>

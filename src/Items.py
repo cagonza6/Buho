@@ -126,12 +126,12 @@ class NewItem(QtGui.QWidget, Ui_NewItem):
 		self.needsISBN = False
 		self.cleanall()
 		self.field_format.setCurrentIndex(0)
-		self.field_year.setValue(0)
+		self.field_year.setValue(1400)
 
 	def cleanall(self):
-		self.field_title.setText('')
-		self.field_author.setText('')
-		self.field_publisher.setText('')
+		self.field_title.setText('untitled')
+		self.field_author.setText('unknown')
+		self.field_publisher.setText('unknown')
 		self.field_location.setText('')
 		self.field_comments.setPlainText('')
 
@@ -219,7 +219,6 @@ class NewItem(QtGui.QWidget, Ui_NewItem):
 	def getYear(self):
 		inputyear = int(self.field_year.value())
 		year = validations.validate(Constants.YEAR, inputyear)
-		flag(self.label_year_check, year)
 		return year
 
 	def getLanguage(self):
@@ -261,6 +260,7 @@ class EditItem(NewItem, QtGui.QDialog):
 		self.connect(self.field_itemID, QtCore.SIGNAL("textChanged(QString)"), self.changeID)
 
 	def changeID(self):
+		self.checkID()
 		self.cleanall()
 
 	def searchItem(self):
