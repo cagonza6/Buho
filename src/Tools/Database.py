@@ -212,7 +212,7 @@ class DatabaseManager(object):
 		query = "SELECT "
 		query += "       items.itemID,  items.format,  items.ISBN,  items.title,  items.author,  items.publisher,  items.year,  items.location, items.comments,  "
 		query += "       item_formats.formatName,  languages.Ref_Name AS language,  "
-		query += "       count (loans.itemID) AS loaned,  loans.renewals "
+		query += "       count (loans.itemID) AS loaned, loans.dueDate, loans.loanDate, loans.renewals "
 		query += "FROM "
 		query += "    'items' "
 		query += "    INNER JOIN item_formats ON items.format = item_formats.formatID "

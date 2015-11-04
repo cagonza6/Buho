@@ -6,7 +6,8 @@ from Tools.ItemTools import formatID
 from Tools.Database import DBManager as DataBase
 from Tools.regexe import cleanKeywords
 from Tools.treeFunctions import TreeWiews
-from Tools.timeFunctions import int2date
+from Tools.timeFunctions import int2date, todaysDate
+
 import config.GlobalConstants as Constants
 from common import _translate, statusIcon
 import session.Session as Session
@@ -115,7 +116,12 @@ class SearchItemWin(SearchMaster):
 		self.connect(self.button_search, QtCore.SIGNAL("clicked()"), self.btnSearch)
 
 		# set the status combo box
-		statuses = [['Can be loaned', Constants.AVAILABLE_ITEMS], ['Loaned', Constants.LOANED_ITEMS], ['Dued', Constants.DUED_ITEMS], ['All', Constants.ALL_ITEMS], ]
+		statuses = [
+			['Can be loaned', Constants.AVAILABLE_ITEMS],
+			['Loaned Items', Constants.LOANED_ITEMS],
+			['Dued Items', Constants.DUED_ITEMS],
+			['All Items', Constants.ALL_ITEMS]
+		]
 		for i in range(0, len(statuses)):
 			status_ = statuses[i]
 			self.combo_status.addItem(*status_)  # text to show in the combobox
@@ -172,10 +178,12 @@ class SearchItemWin(SearchMaster):
 
 		for i in range(0, len(elements)):
 			element = elements[i]
-			statusicon = Constants.STATUS_INVALID
+
 			if element['loaned']:
+				statusicon = Constants.STATUS_WARNING
+			if element['dueDate'] < todaysDate():  # dued item
 				statusicon = Constants.STATUS_INVALID
-			else:
+			if not element['loaned']:
 				statusicon = Constants.STATUS_VALID
 
 			cols = [
