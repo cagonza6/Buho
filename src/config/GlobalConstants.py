@@ -16,10 +16,10 @@ ALL_ITEMS       = 2
 DUED_ITEMS      = 3
 
 # ######## Items Constants #########
-BLOCKED_USERS       = 0
-AVAILABLE_USERS     = 1
-ALL_USERS           = 2
-USER_HAS_DUED_ITEMS = 3
+BLOCKED_USERS   = 0
+AVAILABLE_USERS = 1
+BANED_USER      = 2
+ALL_USERS       = 3
 
 # ###### Stuff type definition ######
 TYPE_ITEM = 1

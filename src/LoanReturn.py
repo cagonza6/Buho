@@ -394,7 +394,7 @@ class ReturnItem(LoanReturnMaster):
 
 	def retranslateUi2(self):
 		self.groupCalendarLoanDate.setTitle(_translate("LoanReturn", "Loan Date", None))
-		self.buttonAction.setText(_translate("LoanReturn", "Retrieve", None))
+		self.buttonAction.setText(_translate("LoanReturn", "Return", None))
 		self.label_MainTitle.setText(_translate("LoanReturn", "Return Item", None))
 
 

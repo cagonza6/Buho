@@ -158,10 +158,12 @@ class DatabaseManager(object):
 
 		if sStatus == Constants.ALL_USERS:
 			query += "users.status >= 0 "
-		if sStatus == Constants.AVAILABLE_USERS:
-			query += "users.status = 1 "
 		if sStatus == Constants.BLOCKED_USERS:
 			query += "users.status = 0 "
+		if sStatus == Constants.AVAILABLE_USERS:
+			query += "users.status > 0 "
+		if sStatus == Constants.BANED_USER:
+			query += "users.status = 2 "
 
 		if role:
 			role = str(role)

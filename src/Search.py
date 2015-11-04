@@ -213,7 +213,11 @@ class SearchUserWin(SearchMaster):
 		self.connect(self.button_search, QtCore.SIGNAL("clicked()"), self.search)
 
 		# set the status combo box
-		statuses = [['Active', Constants.AVAILABLE_USERS], ['Inactive', Constants.BLOCKED_USERS], ['All', Constants.ALL_USERS], ]
+		statuses = [
+			['Active', Constants.AVAILABLE_USERS],
+			['Inactive', Constants.BLOCKED_USERS],
+			['Baned', Constants.BANED_USER],
+			['All', Constants.ALL_USERS], ]
 		for i in range(0, len(statuses)):
 			status_ = statuses[i]
 			self.combo_status.addItem(*status_)  # text to show in the combobox
@@ -236,6 +240,7 @@ class SearchUserWin(SearchMaster):
 			self.combo_grades.addItem(grade['gradeName'], grade['gradeID'])
 
 		self.headers = ['', "ID", "Name", "Family Name", "Class"]
+		self.retranslateUi_2()
 
 	def search(self):
 		column, keys, role, grade = self.getSearchParams()
@@ -268,11 +273,12 @@ class SearchUserWin(SearchMaster):
 
 		for i in range(0, len(elements)):
 			element = elements[i]
-			statusicon = Constants.STATUS_INVALID
-			if element['status']:
-				statusicon = Constants.STATUS_VALID
-			elif not element['status']:
+			if element['status'] == Constants.BLOCKED_USERS:
 				statusicon = Constants.STATUS_INVALID
+			if element['status'] == Constants.AVAILABLE_USERS:
+				statusicon = Constants.STATUS_VALID
+			if element['status'] == Constants.BANED_USER:
+				statusicon = Constants.STATUS_WARNING
 
 			cols = [
 				statusicon,
@@ -284,6 +290,8 @@ class SearchUserWin(SearchMaster):
 			self.addElement(model, cols)
 		return model
 
+	def retranslateUi_2(self):
+		self.label_title.setText(_translate("SearchItemWindow", "Search Readers", None))
 
 class DuedItemWin(SearchMaster):
 	def __init__(self, closable, status, parent=None):
@@ -368,7 +376,8 @@ class DuedItemWin(SearchMaster):
 		return model
 
 	def retranslateUi_2(self):
-		self.label_functions.setText(_translate("SearchItemWindow", "Category", None))
+		self.label_functions.setText(_translate("DuedItemWin", "Category", None))
+		self.label_title.setText(_translate("DuedItemWin", "Reports: Dued Items", None))
 
 if __name__ == "__main__":
 	pass

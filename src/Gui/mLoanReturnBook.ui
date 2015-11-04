@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>800</width>
-    <height>518</height>
+    <height>532</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -40,12 +40,9 @@
     </widget>
    </item>
    <item>
-    <widget class="QFrame" name="frame_4">
-     <property name="frameShape">
-      <enum>QFrame::StyledPanel</enum>
-     </property>
-     <property name="frameShadow">
-      <enum>QFrame::Raised</enum>
+    <widget class="QGroupBox" name="groupBox_4">
+     <property name="title">
+      <string>Load</string>
      </property>
      <layout class="QGridLayout" name="gridLayout">
       <item row="0" column="1">
@@ -146,433 +143,400 @@
     </widget>
    </item>
    <item>
-    <widget class="QFrame" name="frame">
-     <property name="frameShape">
-      <enum>QFrame::StyledPanel</enum>
-     </property>
-     <property name="frameShadow">
-      <enum>QFrame::Raised</enum>
-     </property>
-     <layout class="QVBoxLayout" name="verticalLayout_2">
-      <item>
-       <layout class="QGridLayout" name="gridLayout_2">
-        <item row="1" column="1">
-         <widget class="QGroupBox" name="groupReaderData">
-          <property name="title">
-           <string>Reader Data</string>
+    <layout class="QHBoxLayout" name="horizontalLayout_4">
+     <item>
+      <widget class="QGroupBox" name="groupItemData">
+       <property name="title">
+        <string>Item Data</string>
+       </property>
+       <layout class="QGridLayout" name="gridLayout_4" columnstretch="0,0,0,1">
+        <item row="4" column="3">
+         <widget class="QLabel" name="label_field_itemStatus">
+          <property name="text">
+           <string/>
           </property>
-          <property name="alignment">
-           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-          </property>
-          <layout class="QGridLayout" name="gridLayout_3" columnstretch="0,0,0,1,0">
-           <item row="3" column="4">
-            <widget class="QLabel" name="check_delay">
-             <property name="text">
-              <string/>
-             </property>
-             <property name="pixmap">
-              <pixmap resource="myicons.qrc">:/status/resources/pixmap/icons/status/status-no.png</pixmap>
-             </property>
-            </widget>
-           </item>
-           <item row="4" column="0">
-            <widget class="QLabel" name="check_user">
-             <property name="text">
-              <string/>
-             </property>
-             <property name="pixmap">
-              <pixmap resource="myicons.qrc">:/status/resources/pixmap/icons/status/status-no.png</pixmap>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="2">
-            <widget class="QLabel" name="colon7">
-             <property name="text">
-              <string>:</string>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="3">
-            <widget class="QLabel" name="label_field_rederloans">
-             <property name="text">
-              <string>0/0</string>
-             </property>
-             <property name="alignment">
-              <set>Qt::AlignCenter</set>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="3">
-            <widget class="QLabel" name="label_reader_role">
-             <property name="text">
-              <string/>
-             </property>
-             <property name="alignment">
-              <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="2">
-            <widget class="QLabel" name="colon5">
-             <property name="text">
-              <string>:</string>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="2">
-            <widget class="QLabel" name="colon4">
-             <property name="text">
-              <string>:</string>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="1">
-            <widget class="QLabel" name="label_name">
-             <property name="text">
-              <string>Name</string>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="1">
-            <widget class="QLabel" name="label_delays">
-             <property name="text">
-              <string>Delays</string>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="1">
-            <widget class="QLabel" name="label_loans">
-             <property name="text">
-              <string>Loans</string>
-             </property>
-            </widget>
-           </item>
-           <item row="4" column="3">
-            <widget class="QLabel" name="label_field_userStatus">
-             <property name="text">
-              <string/>
-             </property>
-             <property name="alignment">
-              <set>Qt::AlignCenter</set>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="1">
-            <widget class="QLabel" name="label_roleName">
-             <property name="text">
-              <string>Role</string>
-             </property>
-            </widget>
-           </item>
-           <item row="4" column="1">
-            <widget class="QLabel" name="label_readerStatuslabel_8">
-             <property name="text">
-              <string>Status</string>
-             </property>
-            </widget>
-           </item>
-           <item row="4" column="2">
-            <widget class="QLabel" name="colon10">
-             <property name="text">
-              <string>:</string>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="3">
-            <widget class="QLabel" name="label_field_delays">
-             <property name="text">
-              <string/>
-             </property>
-             <property name="alignment">
-              <set>Qt::AlignCenter</set>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="3">
-            <widget class="QLabel" name="label_field_name">
-             <property name="text">
-              <string/>
-             </property>
-             <property name="alignment">
-              <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="2">
-            <widget class="QLabel" name="colon6">
-             <property name="text">
-              <string>:</string>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="4">
-            <widget class="QLabel" name="check_loans">
-             <property name="text">
-              <string/>
-             </property>
-             <property name="pixmap">
-              <pixmap resource="myicons.qrc">:/status/resources/pixmap/icons/status/status-no.png</pixmap>
-             </property>
-            </widget>
-           </item>
-          </layout>
          </widget>
         </item>
-        <item row="1" column="0">
-         <widget class="QGroupBox" name="groupItemData">
-          <property name="title">
-           <string>Item Data</string>
+        <item row="0" column="3">
+         <widget class="QLabel" name="label_field_isbn">
+          <property name="text">
+           <string/>
           </property>
-          <layout class="QGridLayout" name="gridLayout_4" columnstretch="0,0,0,1">
-           <item row="4" column="3">
-            <widget class="QLabel" name="label_field_itemStatus">
-             <property name="text">
-              <string/>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="3">
-            <widget class="QLabel" name="label_field_isbn">
-             <property name="text">
-              <string/>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="2">
-            <widget class="QLabel" name="colon2">
-             <property name="text">
-              <string>:</string>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="1">
-            <widget class="QLabel" name="label_itemLanglabel_4">
-             <property name="text">
-              <string>Language</string>
-             </property>
-            </widget>
-           </item>
-           <item row="4" column="2">
-            <widget class="QLabel" name="colon8">
-             <property name="text">
-              <string>:</string>
-             </property>
-            </widget>
-           </item>
-           <item row="4" column="0">
-            <widget class="QLabel" name="check_item">
-             <property name="text">
-              <string/>
-             </property>
-             <property name="pixmap">
-              <pixmap resource="myicons.qrc">:/status/resources/pixmap/icons/status/status-no.png</pixmap>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="3">
-            <widget class="QLabel" name="label_field_lang">
-             <property name="text">
-              <string/>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="3">
-            <widget class="QLabel" name="label_field_title">
-             <property name="text">
-              <string/>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="3">
-            <widget class="QLabel" name="label_field_author">
-             <property name="text">
-              <string/>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="1">
-            <widget class="QLabel" name="label_title">
-             <property name="text">
-              <string>Title</string>
-             </property>
-            </widget>
-           </item>
-           <item row="4" column="1">
-            <widget class="QLabel" name="label_item_status">
-             <property name="text">
-              <string>Status</string>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="1">
-            <widget class="QLabel" name="Label_author">
-             <property name="text">
-              <string>Author</string>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="2">
-            <widget class="QLabel" name="colon9">
-             <property name="text">
-              <string>:</string>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="2">
-            <widget class="QLabel" name="colon1">
-             <property name="text">
-              <string>:</string>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="1">
-            <widget class="QLabel" name="label_ISBN">
-             <property name="text">
-              <string>ISBN</string>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="2">
-            <widget class="QLabel" name="colon3">
-             <property name="text">
-              <string>:</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
+         </widget>
+        </item>
+        <item row="1" column="2">
+         <widget class="QLabel" name="colon2">
+          <property name="text">
+           <string>:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="1">
+         <widget class="QLabel" name="label_itemLanglabel_4">
+          <property name="text">
+           <string>Language</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QLabel" name="label_title">
+          <property name="text">
+           <string>Title</string>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="1">
+         <widget class="QLabel" name="label_item_status">
+          <property name="text">
+           <string>Status</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="QLabel" name="Label_author">
+          <property name="text">
+           <string>Author</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="2">
+         <widget class="QLabel" name="colon9">
+          <property name="text">
+           <string>:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="2">
+         <widget class="QLabel" name="colon1">
+          <property name="text">
+           <string>:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QLabel" name="label_ISBN">
+          <property name="text">
+           <string>ISBN</string>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="0">
+         <widget class="QLabel" name="check_item">
+          <property name="text">
+           <string/>
+          </property>
+          <property name="pixmap">
+           <pixmap resource="myicons.qrc">:/status/resources/pixmap/icons/status/status-no.png</pixmap>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="2">
+         <widget class="QLabel" name="colon3">
+          <property name="text">
+           <string>:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="2">
+         <widget class="QLabel" name="colon8">
+          <property name="text">
+           <string>:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="3">
+         <widget class="QLabel" name="label_field_lang">
+          <property name="text">
+           <string/>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="3">
+         <widget class="QLabel" name="label_field_title">
+          <property name="text">
+           <string/>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="3">
+         <widget class="QLabel" name="label_field_author">
+          <property name="text">
+           <string/>
+          </property>
          </widget>
         </item>
        </layout>
-      </item>
-     </layout>
-    </widget>
+      </widget>
+     </item>
+     <item>
+      <widget class="QGroupBox" name="groupReaderData">
+       <property name="title">
+        <string>Reader Data</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       </property>
+       <layout class="QGridLayout" name="gridLayout_3" columnstretch="0,0,0,1,0">
+        <item row="3" column="4">
+         <widget class="QLabel" name="check_delay">
+          <property name="text">
+           <string/>
+          </property>
+          <property name="pixmap">
+           <pixmap resource="myicons.qrc">:/status/resources/pixmap/icons/status/status-no.png</pixmap>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="0">
+         <widget class="QLabel" name="check_user">
+          <property name="text">
+           <string/>
+          </property>
+          <property name="pixmap">
+           <pixmap resource="myicons.qrc">:/status/resources/pixmap/icons/status/status-no.png</pixmap>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="2">
+         <widget class="QLabel" name="colon7">
+          <property name="text">
+           <string>:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="3">
+         <widget class="QLabel" name="label_field_rederloans">
+          <property name="text">
+           <string>0/0</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="3">
+         <widget class="QLabel" name="label_reader_role">
+          <property name="text">
+           <string/>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="2">
+         <widget class="QLabel" name="colon5">
+          <property name="text">
+           <string>:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="2">
+         <widget class="QLabel" name="colon4">
+          <property name="text">
+           <string>:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QLabel" name="label_name">
+          <property name="text">
+           <string>Name</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="1">
+         <widget class="QLabel" name="label_delays">
+          <property name="text">
+           <string>Delays</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="QLabel" name="label_loans">
+          <property name="text">
+           <string>Loans</string>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="3">
+         <widget class="QLabel" name="label_field_userStatus">
+          <property name="text">
+           <string/>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QLabel" name="label_roleName">
+          <property name="text">
+           <string>Role</string>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="1">
+         <widget class="QLabel" name="label_readerStatuslabel_8">
+          <property name="text">
+           <string>Status</string>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="2">
+         <widget class="QLabel" name="colon10">
+          <property name="text">
+           <string>:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="3">
+         <widget class="QLabel" name="label_field_delays">
+          <property name="text">
+           <string/>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="3">
+         <widget class="QLabel" name="label_field_name">
+          <property name="text">
+           <string/>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="2">
+         <widget class="QLabel" name="colon6">
+          <property name="text">
+           <string>:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="4">
+         <widget class="QLabel" name="check_loans">
+          <property name="text">
+           <string/>
+          </property>
+          <property name="pixmap">
+           <pixmap resource="myicons.qrc">:/status/resources/pixmap/icons/status/status-no.png</pixmap>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </item>
+    </layout>
    </item>
    <item>
-    <widget class="QFrame" name="frame_3">
-     <property name="frameShape">
-      <enum>QFrame::StyledPanel</enum>
-     </property>
-     <property name="frameShadow">
-      <enum>QFrame::Raised</enum>
-     </property>
-     <layout class="QGridLayout" name="gridLayout_5">
-      <item row="0" column="4">
-       <widget class="QGroupBox" name="groupCalendarDueDate">
-        <property name="title">
-         <string>Due Date</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-        </property>
-        <layout class="QHBoxLayout" name="horizontalLayout_2">
-         <item>
-          <widget class="QCalendarWidget" name="calendarDueDay">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="locale">
-            <locale language="Spanish" country="Chile"/>
-           </property>
-           <property name="firstDayOfWeek">
-            <enum>Qt::Monday</enum>
-           </property>
-           <property name="gridVisible">
-            <bool>true</bool>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </widget>
-      </item>
-      <item row="0" column="3">
-       <spacer name="horizontalSpacer_2">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>40</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-      <item row="0" column="1">
-       <spacer name="horizontalSpacer_4">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>40</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-      <item row="0" column="2">
-       <widget class="QPushButton" name="buttonAction">
-        <property name="text">
-         <string>Loan</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="0">
-       <widget class="QGroupBox" name="groupCalendarLoanDate">
-        <property name="title">
-         <string>Loan Date</string>
-        </property>
-        <layout class="QHBoxLayout" name="horizontalLayout">
-         <item>
-          <widget class="QCalendarWidget" name="calendarToday">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="locale">
-            <locale language="Spanish" country="Chile"/>
-           </property>
-           <property name="minimumDate">
-            <date>
-             <year>2013</year>
-             <month>8</month>
-             <day>14</day>
-            </date>
-           </property>
-           <property name="maximumDate">
-            <date>
-             <year>7918</year>
-             <month>8</month>
-             <day>14</day>
-            </date>
-           </property>
-           <property name="firstDayOfWeek">
-            <enum>Qt::Monday</enum>
-           </property>
-           <property name="gridVisible">
-            <bool>true</bool>
-           </property>
-           <property name="selectionMode">
-            <enum>QCalendarWidget::NoSelection</enum>
-           </property>
-           <property name="navigationBarVisible">
-            <bool>true</bool>
-           </property>
-           <property name="dateEditEnabled">
-            <bool>true</bool>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </widget>
-      </item>
-     </layout>
-    </widget>
+    <layout class="QGridLayout" name="gridLayout_2">
+     <item row="0" column="2">
+      <widget class="QGroupBox" name="groupCalendarDueDate">
+       <property name="title">
+        <string>Due Date</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       </property>
+       <layout class="QHBoxLayout" name="horizontalLayout_2">
+        <item>
+         <widget class="QCalendarWidget" name="calendarDueDay">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="locale">
+           <locale language="Spanish" country="Chile"/>
+          </property>
+          <property name="firstDayOfWeek">
+           <enum>Qt::Monday</enum>
+          </property>
+          <property name="gridVisible">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item row="0" column="0">
+      <widget class="QGroupBox" name="groupCalendarLoanDate">
+       <property name="title">
+        <string>Loan Date</string>
+       </property>
+       <layout class="QHBoxLayout" name="horizontalLayout">
+        <item>
+         <widget class="QCalendarWidget" name="calendarToday">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="locale">
+           <locale language="Spanish" country="Chile"/>
+          </property>
+          <property name="minimumDate">
+           <date>
+            <year>2013</year>
+            <month>8</month>
+            <day>14</day>
+           </date>
+          </property>
+          <property name="maximumDate">
+           <date>
+            <year>7918</year>
+            <month>8</month>
+            <day>14</day>
+           </date>
+          </property>
+          <property name="firstDayOfWeek">
+           <enum>Qt::Monday</enum>
+          </property>
+          <property name="gridVisible">
+           <bool>true</bool>
+          </property>
+          <property name="selectionMode">
+           <enum>QCalendarWidget::NoSelection</enum>
+          </property>
+          <property name="navigationBarVisible">
+           <bool>true</bool>
+          </property>
+          <property name="dateEditEnabled">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <spacer name="horizontalSpacer_4">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item row="1" column="1">
+      <widget class="QPushButton" name="buttonAction">
+       <property name="text">
+        <string>Loan</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </item>
    <item>
     <spacer name="verticalSpacer">
@@ -592,38 +556,5 @@
  <resources>
   <include location="myicons.qrc"/>
  </resources>
- <connections>
-  <connection>
-   <sender>field_itemID</sender>
-   <signal>returnPressed()</signal>
-   <receiver>button_loadItem</receiver>
-   <slot>click()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>217</x>
-     <y>44</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>385</x>
-     <y>44</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>field_readerID</sender>
-   <signal>returnPressed()</signal>
-   <receiver>button_loadReader</receiver>
-   <slot>click()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>217</x>
-     <y>77</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>385</x>
-     <y>77</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
+ <connections/>
 </ui>
