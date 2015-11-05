@@ -553,8 +553,53 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>field_itemID</tabstop>
+  <tabstop>button_loadItem</tabstop>
+  <tabstop>buttonSearchBook</tabstop>
+  <tabstop>field_readerID</tabstop>
+  <tabstop>button_loadReader</tabstop>
+  <tabstop>buttonSearchReader</tabstop>
+  <tabstop>calendarToday</tabstop>
+  <tabstop>calendarDueDay</tabstop>
+  <tabstop>buttonAction</tabstop>
+ </tabstops>
  <resources>
   <include location="myicons.qrc"/>
+  <include location="../../../../../.designer/backup/myicons.qrc"/>
  </resources>
- <connections/>
+ <connections>
+  <connection>
+   <sender>field_itemID</sender>
+   <signal>returnPressed()</signal>
+   <receiver>button_loadItem</receiver>
+   <slot>click()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>315</x>
+     <y>65</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>359</x>
+     <y>67</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>field_readerID</sender>
+   <signal>returnPressed()</signal>
+   <receiver>button_loadReader</receiver>
+   <slot>click()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>327</x>
+     <y>106</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>370</x>
+     <y>102</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>

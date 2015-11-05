@@ -65,14 +65,14 @@ class NewReader(QtGui.QWidget, Ui_NewReader):
 			self.checkComments()
 		]
 		if (False in readerData):
-			QtGui.QMessageBox.critical(self, 'Error', 'There is information Missing or wrong.', QtGui.QMessageBox.No)
+			QtGui.QMessageBox.critical(self, 'Error', 'There is information Missing or wrong.', QtGui.QMessageBox.Ok)
 		else:
 			saved = DataBase.save_new(Constants.TYPE_USER, readerData)
 			if saved:
-				QtGui.QMessageBox.information(self, 'Sucess', 'Reader Saved.', QtGui.QMessageBox.No)
+				QtGui.QMessageBox.information(self, 'Sucess', 'Reader Saved.', QtGui.QMessageBox.Ok)
 				self.reset()
 			else:
-				QtGui.QMessageBox.critical(self, 'Error', 'Error while saving.', QtGui.QMessageBox.No)
+				QtGui.QMessageBox.critical(self, 'Error', 'Error while saving.', QtGui.QMessageBox.Ok)
 
 	def cleanall(self):
 		self.field_name.setText('')
@@ -279,12 +279,12 @@ class EditReader(NewReader, QtGui.QDialog):
 			self.checkID()[0]  # gets the ID, but not the aux variable used to test the type of user
 		]
 		if (False in readerData):
-			QtGui.QMessageBox.critical(self, 'Error', 'There is information Missing or wrong.', QtGui.QMessageBox.No)
+			QtGui.QMessageBox.critical(self, 'Error', 'There is information Missing or wrong.', QtGui.QMessageBox.Ok)
 		else:
 			edited = DataBase.edit_itemUser(Constants.TYPE_USER, readerData)
 			if edited:
-				QtGui.QMessageBox.information(self, 'Sucess', 'Reader Modified.', QtGui.QMessageBox.No)
+				QtGui.QMessageBox.information(self, 'Sucess', 'Reader Modified.', QtGui.QMessageBox.Ok)
 				self.reset()
 				self.cleanall()
 			else:
-				QtGui.QMessageBox.critical(self, 'Error', 'Error while saving.', QtGui.QMessageBox.No)
+				QtGui.QMessageBox.critical(self, 'Error', 'Error while saving.', QtGui.QMessageBox.Ok)

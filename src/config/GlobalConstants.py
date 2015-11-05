@@ -22,6 +22,7 @@ BANED_USER      = 2
 ALL_USERS       = 3
 
 # ###### Stuff type definition ######
+TYPE_FLAG = 0
 TYPE_ITEM = 1
 TYPE_USER = 2
 TYPE_LOAN = 3
@@ -47,21 +48,22 @@ CELPHONE  = 11
 COMMENTS  = 12
 
 # ######## Icons ####################
-ICON_VALID   = ":/status/resources/pixmap/icons/status/status-ok.png"
+ICON_VALID = ":/status/resources/pixmap/icons/status/status-ok.png"
 ICON_INVALID = ":/status/resources/pixmap/icons/status/status-no.png"
 ICON_WARNING = ":/status/resources/pixmap/icons/status/status-warning.png"
+ICON_UNAVAILABLE = ":/status/resources/pixmap/icons/status/status-unavailable.png"
 
 
 # ####### Loan constants ##############
-LOAN_SPAN         = 14
-RENEWAL_LIMIT     = 2
-ST_MAX_LOANS      = 3
+LOAN_SPAN     = 14
+RENEWAL_LIMIT = 2
+ST_MAX_LOANS  = 3
 
-##################################
-###### Developers Only ###########
-##################################
+# #################################
+# ##### Developers Only ###########
+# #################################
 
-###### Table Names ###############
+# ##### Table Names ###############
 # Note: keep your hands out of here
 
 TABLE_USERS = 'users'
@@ -69,4 +71,3 @@ TABLE_ITEMS = 'items'
 TABLE_fORMATS = 'item_formats'
 TABLE_LOANS = 'loans'
 TABLE_HISTORY = 'history'
-

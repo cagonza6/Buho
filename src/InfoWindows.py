@@ -12,7 +12,7 @@ import config.GlobalConstants as Constants
 import session.Session as Session
 from Tools.ItemTools import formatID
 from Tools.treeFunctions import TreeWiews
-from common import flagStatus, flag
+from common import flagStatus, flag, userStatusIcon
 from Tools.timeFunctions import int2date, todaysDate
 
 
@@ -56,7 +56,7 @@ class ReaderInfo(Ui_ReaderInfo, QtGui.QDialog, TreeWiews):
 			self.field_phone.setText(reader.phone())
 			self.field_comments.setText(textwrap.fill(reader.comments(), width=36))
 
-			flagStatus(self.check_status, reader.status())
+			userStatusIcon(self.check_status, reader.status())
 
 			# Data tables
 			# TODO

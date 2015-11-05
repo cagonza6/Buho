@@ -25,7 +25,7 @@ class QCustomDelegate(QtGui.QItemDelegate):
 			currentQAbstractItemModel = indexQModelIndex.model()
 			iconQModelIndex = currentQAbstractItemModel.index(indexQModelIndex.row(), 0, indexQModelIndex.parent())
 			status = currentQAbstractItemModel.data(iconQModelIndex, QtCore.Qt.EditRole)
-			iconQPixmap = QtGui.QPixmap(statusIcon(status))
+			iconQPixmap = QtGui.QPixmap(statusIcon(status, self.type_list))
 
 			if not iconQPixmap.isNull():
 				painterQPainter.drawPixmap(
@@ -273,15 +273,9 @@ class SearchUserWin(SearchMaster):
 
 		for i in range(0, len(elements)):
 			element = elements[i]
-			if element['status'] == Constants.BLOCKED_USERS:
-				statusicon = Constants.STATUS_INVALID
-			if element['status'] == Constants.AVAILABLE_USERS:
-				statusicon = Constants.STATUS_VALID
-			if element['status'] == Constants.BANED_USER:
-				statusicon = Constants.STATUS_WARNING
 
 			cols = [
-				statusicon,
+				element['status'],
 				formatID(element['role'], element['userID']),
 				element['name'],
 				element['familyname'],
@@ -299,7 +293,7 @@ class DuedItemWin(SearchMaster):
 		self.closable = closable
 		self.ID = False
 
-		self.proxyView.setItemDelegate(QCustomDelegate(Constants.TYPE_ITEM))
+		self.proxyView.setItemDelegate(QCustomDelegate(Constants.TYPE_ITEM, Constants.TYPE_LOAN))
 
 		# button actions
 		self.connect(self.button_search, QtCore.SIGNAL("clicked()"), self.btnSearch)

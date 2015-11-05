@@ -110,7 +110,7 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
 		result = QtGui.QMessageBox.question(self,
 					"Confirm Exit...",
 					"Are you sure you want to exit ?",
-					QtGui.QMessageBox.Yes| QtGui.QMessageBox.No)
+					QtGui.QMessageBox.Yes| QtGui.QMessageBox.Ok)
 		event.ignore()
 		self.MainPage()
 		event.accept()

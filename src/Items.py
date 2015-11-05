@@ -173,15 +173,15 @@ class NewItem(QtGui.QWidget, Ui_NewItem):
 		]
 
 		if (False in itemData):
-			QtGui.QMessageBox.critical(self, 'Error', 'There is information Missing or wrong.', QtGui.QMessageBox.No)
+			QtGui.QMessageBox.critical(self, 'Error', 'There is information Missing or wrong.', QtGui.QMessageBox.Ok)
 		else:
 			saved = DataBase.save_new(Constants.TYPE_ITEM, itemData)
 			if saved:
-				QtGui.QMessageBox.information(self, 'Sucess', 'Item Saved.', QtGui.QMessageBox.No)
+				QtGui.QMessageBox.information(self, 'Sucess', 'Item Saved.', QtGui.QMessageBox.Ok)
 				self.reset()
 				self.cleanall()
 			else:
-				QtGui.QMessageBox.critical(self, 'Error', 'Error while saving.', QtGui.QMessageBox.No)
+				QtGui.QMessageBox.critical(self, 'Error', 'Error while saving.', QtGui.QMessageBox.Ok)
 
 	'''
 	check/get the data from the different fields
@@ -343,16 +343,16 @@ class EditItem(NewItem, QtGui.QDialog):
 		]
 
 		if (False in itemData):
-			QtGui.QMessageBox.critical(self, 'Error', 'There is information Missing or wrong.', QtGui.QMessageBox.No)
+			QtGui.QMessageBox.critical(self, 'Error', 'There is information Missing or wrong.', QtGui.QMessageBox.Ok)
 		else:
 			edited = DataBase.edit_itemUser(Constants.TYPE_ITEM, itemData)
 			if edited:
-				QtGui.QMessageBox.information(self, 'Sucess', 'Item Saved.', QtGui.QMessageBox.No)
+				QtGui.QMessageBox.information(self, 'Sucess', 'Item Saved.', QtGui.QMessageBox.Ok)
 				self.reset()
 				self.cleanall()
 				self.field_itemID.setText('')
 			else:
-				QtGui.QMessageBox.critical(self, 'Error', 'Error while saving.', QtGui.QMessageBox.No)
+				QtGui.QMessageBox.critical(self, 'Error', 'Error while saving.', QtGui.QMessageBox.Ok)
 
 	def retranslateUi2(self):
 		self.retranslateUi(self)

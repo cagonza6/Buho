@@ -153,14 +153,15 @@ class LoanReturnMaster(QtGui.QWidget, Ui_LoanReturn, ShowInfo):
 	# ID related methods
 	#
 	def OnChangeReaderID(self):
-		self.checkID(Constants.TYPE_USER)
 		self.resetReader()
+		self.checkID(Constants.TYPE_USER)
+
 
 	def OnChangeItemID(self):
-		self.checkID(Constants.TYPE_ITEM)
 		self.resetItem()
+		self.checkID(Constants.TYPE_ITEM)
 
-	def checkID(self, type_=False):
+	def checkID(self, type_):
 		id_, ident = False, False
 		if type_ == Constants.TYPE_ITEM:
 			aux = unicode(self.field_itemID.text()).strip()
@@ -170,8 +171,16 @@ class LoanReturnMaster(QtGui.QWidget, Ui_LoanReturn, ShowInfo):
 			aux = unicode(self.field_readerID.text()).strip()
 			id_, ident = validations.validate(Constants.IDS, aux, Session.ROLES_INFO)
 			flag(self.check_userID, id_)
-
 		return id_, ident
+
+	#
+	# Hide Main button
+	#
+	def showbutton(self, show):
+		if show:
+			self.buttonAction.show()
+		else:
+			self.buttonAction.hide()
 
 	#
 	# Load Loan
@@ -231,19 +240,19 @@ class LoanItem(LoanReturnMaster):
 
 		if reader:
 			if reader.status() == Constants.STATUS_INVALID:
-				QtGui.QMessageBox.critical(self, 'Error', 'Reader status is Blocked.', QtGui.QMessageBox.No)
+				QtGui.QMessageBox.critical(self, 'Error', 'Reader status is Blocked.', QtGui.QMessageBox.Ok)
 				result = False
 			if reader.status() == Constants.BANED_USER:
-				QtGui.QMessageBox.critical(self, 'Error', 'Reader status is Banned.', QtGui.QMessageBox.No)
+				QtGui.QMessageBox.critical(self, 'Error', 'Reader status is Banned.', QtGui.QMessageBox.Ok)
 				result = False
 
 			if reader.loans() >= Constants.ST_MAX_LOANS:
-				QtGui.QMessageBox.critical(self, 'Error', 'Reader can not loan more than ' + str(Constants.ST_MAX_LOANS) + ' items.', QtGui.QMessageBox.No)
+				QtGui.QMessageBox.critical(self, 'Error', 'Reader can not loan more than ' + str(Constants.ST_MAX_LOANS) + ' items.', QtGui.QMessageBox.Ok)
 				flagStatus(self.check_loans, Constants.STATUS_WARNING)
 				result = False
 
 			if reader.delays():
-				QtGui.QMessageBox.critical(self, 'Error', 'Reader has a delay in [' + str(reader.delays()) + '] items.', QtGui.QMessageBox.No)
+				QtGui.QMessageBox.critical(self, 'Error', 'Reader has a delay in [' + str(reader.delays()) + '] items.', QtGui.QMessageBox.Ok)
 				result = False
 				flagStatus(self.check_delay, Constants.STATUS_WARNING)
 
@@ -251,19 +260,21 @@ class LoanItem(LoanReturnMaster):
 		if not result:
 			self.label_field_userStatus.setText("Can not Loan")
 		self.reader = result
+		self.showbutton(result)
 
 	def checkItem(self, item=False):
 		result = item
 		self.label_field_itemStatus.setText("Can not be Loaned")
 		if item:
 			if item.loaned():
-				QtGui.QMessageBox.critical(self, 'Error', 'Item is loaned.', QtGui.QMessageBox.No)
+				QtGui.QMessageBox.critical(self, 'Error', 'Item is loaned.', QtGui.QMessageBox.Ok)
 				self.label_field_itemStatus.setText("Is Loaned")
 				result = False
 			else:
 				self.label_field_itemStatus.setText("Can be Loaned")
 		flag(self.check_item, result)
 		self.item = result
+		self.showbutton(result)
 
 	def handleButton(self):
 		if not self.item or not self.reader:
@@ -277,16 +288,16 @@ class LoanItem(LoanReturnMaster):
 			]
 
 		if (False in loanData):
-			QtGui.QMessageBox.critical(self, 'Error', 'There is information Missing or wrong.', QtGui.QMessageBox.No)
+			QtGui.QMessageBox.critical(self, 'Error', 'There is information Missing or wrong.', QtGui.QMessageBox.Ok)
 		else:
 			saved = DataBase.loanItem(*loanData)
 			if saved:
-				QtGui.QMessageBox.information(self, 'Sucess', 'Item Loaned.', QtGui.QMessageBox.No)
+				QtGui.QMessageBox.information(self, 'Sucess', 'Item Loaned.', QtGui.QMessageBox.Ok)
 				self.resetall()
 				self.cleanall()
 				self.cheackall()
 			else:
-				QtGui.QMessageBox.critical(self, 'Error', 'Error while Loaning.', QtGui.QMessageBox.No)
+				QtGui.QMessageBox.critical(self, 'Error', 'Error while Loaning.', QtGui.QMessageBox.Ok)
 
 	def loadLoan(self, upadteCalendar, type_, ID):
 		pass
@@ -346,7 +357,7 @@ class ReturnItem(LoanReturnMaster):
 				flagStatus(self.check_loans, Constants.STATUS_WARNING)
 
 			if reader.delays():
-				QtGui.QMessageBox.warning(self, 'Error', 'Reader has a delay in [' + str(reader.delays()) + '] items.', QtGui.QMessageBox.No)
+				QtGui.QMessageBox.warning(self, 'Error', 'Reader has a delay in [' + str(reader.delays()) + '] items.', QtGui.QMessageBox.Ok)
 				flagStatus(self.check_delay, Constants.STATUS_WARNING)
 				result = False
 
@@ -356,13 +367,14 @@ class ReturnItem(LoanReturnMaster):
 		flag(self.check_user, result)
 		self.reader = result
 		self.showReaderInfo(result)
+		self.showbutton(result)
 
 	def checkItem(self, item):
 		result = item
 		self.label_field_itemStatus.setText("Not Loaned")
 		if item:
 			if not item.loaned():
-				QtGui.QMessageBox.critical(self, 'warning', 'Item is not loaned.', QtGui.QMessageBox.No)
+				QtGui.QMessageBox.critical(self, 'warning', 'Item is not loaned.', QtGui.QMessageBox.Ok)
 				self.label_field_itemStatus.setText("Can not be retrieved")
 				result = False
 			else:
@@ -373,6 +385,7 @@ class ReturnItem(LoanReturnMaster):
 		if result:
 			self.loadLoan(True, Constants.TYPE_ITEM, item.ID())
 		# the call to load user is done from loadLoan
+		self.showbutton(result)
 
 	def handleButton(self):
 		if not self.loan:
@@ -384,16 +397,16 @@ class ReturnItem(LoanReturnMaster):
 			]
 
 		if (False in returnData):
-			QtGui.QMessageBox.critical(self, 'Error', 'There is information Missing or wrong.', QtGui.QMessageBox.No)
+			QtGui.QMessageBox.critical(self, 'Error', 'There is information Missing or wrong.', QtGui.QMessageBox.Ok)
 		else:
 			saved = DataBase.returnItem(*returnData)
 			if saved:
-				QtGui.QMessageBox.information(self, 'Sucess', 'Item retrieved.', QtGui.QMessageBox.No)
+				QtGui.QMessageBox.information(self, 'Sucess', 'Item retrieved.', QtGui.QMessageBox.Ok)
 				self.resetall()
 				self.cleanall()
 				self.cheackall()
 			else:
-				QtGui.QMessageBox.critical(self, 'Error', 'Error while retrieving.', QtGui.QMessageBox.No)
+				QtGui.QMessageBox.critical(self, 'Error', 'Error while retrieving.', QtGui.QMessageBox.Ok)
 
 	def retranslateUi2(self):
 		self.groupCalendarLoanDate.setTitle(_translate("LoanReturn", "Loan Date", None))
@@ -442,22 +455,23 @@ class RenewItem(LoanReturnMaster):
 		if reader:
 
 			if reader.status() == Constants.STATUS_INVALID:
-				QtGui.QMessageBox.critical(self, 'Error', 'Reader status is Blocked.', QtGui.QMessageBox.No)
+				QtGui.QMessageBox.critical(self, 'Error', 'Reader status is Blocked.', QtGui.QMessageBox.Ok)
 				result = False
 			if reader.status() == Constants.BANED_USER:
-				QtGui.QMessageBox.critical(self, 'Error', 'Reader status is Banned.', QtGui.QMessageBox.No)
+				QtGui.QMessageBox.critical(self, 'Error', 'Reader status is Banned.', QtGui.QMessageBox.Ok)
 				result = False
 
 			if reader.loans() >= Constants.ST_MAX_LOANS:
 				flagStatus(self.check_loans, Constants.STATUS_WARNING)
 			if reader.delays():
-				QtGui.QMessageBox.warning(self, 'Error', 'Reader has a delay in [' + str(reader.delays()) + '] items.', QtGui.QMessageBox.No)
+				QtGui.QMessageBox.warning(self, 'Error', 'Reader has a delay in [' + str(reader.delays()) + '] items.', QtGui.QMessageBox.Ok)
 				result = False
 				flagStatus(self.check_delay, Constants.STATUS_WARNING)
 		flag(self.check_user, result)
 		self.reader = result
 		if result:
 			self.label_field_userStatus.setText("Can Renew")
+		self.showbutton(result)
 
 	def loadReader(self, id_):
 		if not id_:
@@ -472,24 +486,25 @@ class RenewItem(LoanReturnMaster):
 		self.label_field_itemStatus.setText('')
 		if item:
 			if not item.loaned():
-				QtGui.QMessageBox.critical(self, 'warning', 'Item is not loaned.', QtGui.QMessageBox.No)
+				QtGui.QMessageBox.critical(self, 'warning', 'Item is not loaned.', QtGui.QMessageBox.Ok)
 				result = False
 			else:
 				self.label_field_itemStatus.setText("Can be retrieved")
 			if item.renewals() >= Constants.RENEWAL_LIMIT:
-				QtGui.QMessageBox.critical(self, 'warning', 'Limit of Renewals reached.', QtGui.QMessageBox.No)
+				QtGui.QMessageBox.critical(self, 'warning', 'Limit of Renewals reached.', QtGui.QMessageBox.Ok)
 				result = False
 
 			self.loadLoan(False, Constants.TYPE_ITEM, item.ID())
 			# the call to load user is done from loadLoan
 
 			if self.loan.dueDate() > self.getDueDate():
-				QtGui.QMessageBox.critical(self, 'warning', 'Renewal Date must be after than the actual due date. To modify the Date use Edit loan.', QtGui.QMessageBox.No)
+				QtGui.QMessageBox.critical(self, 'warning', 'Renewal Date must be after than the actual due date. To modify the Date use Edit loan.', QtGui.QMessageBox.Ok)
 				result = False
 		if not result:
 			self.label_field_itemStatus.setText("Can not be renewed.")
 		flag(self.check_item, result)
 		self.item = result
+		self.showbutton(result)
 
 	def handleButton(self):
 		if not self.item or not self.reader:
@@ -500,16 +515,16 @@ class RenewItem(LoanReturnMaster):
 				self.loan.ID()
 			]
 		if (False in returnData):
-			QtGui.QMessageBox.critical(self, 'Error', 'There is information Missing or wrong.', QtGui.QMessageBox.No)
+			QtGui.QMessageBox.critical(self, 'Error', 'There is information Missing or wrong.', QtGui.QMessageBox.Ok)
 		else:
 			saved = DataBase.renewItem(*returnData)
 			if saved:
-				QtGui.QMessageBox.information(self, 'Sucess', 'Item Renewed.', QtGui.QMessageBox.No)
+				QtGui.QMessageBox.information(self, 'Sucess', 'Item Renewed.', QtGui.QMessageBox.Ok)
 				self.resetall()
 				self.cleanall()
 				self.cheackall()
 			else:
-				QtGui.QMessageBox.critical(self, 'Error', 'Error while retrieving.', QtGui.QMessageBox.No)
+				QtGui.QMessageBox.critical(self, 'Error', 'Error while retrieving.', QtGui.QMessageBox.Ok)
 
 	def retranslateUi2(self):
 		self.groupCalendarLoanDate.setTitle(_translate("LoanReturn", "Today", None))

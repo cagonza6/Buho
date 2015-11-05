@@ -20,6 +20,7 @@
     <file>resources/pixmap/icons/miniatures/phone.png</file>
   </qresource>
   <qresource prefix="status">
+    <file>resources/pixmap/icons/status/status-unavailable.png</file>
     <file>resources/pixmap/icons/status/status-warning.png</file>
     <file>resources/pixmap/icons/status/status-no.png</file>
     <file>resources/pixmap/icons/status/status-ok.png</file>
