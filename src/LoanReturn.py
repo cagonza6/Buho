@@ -319,9 +319,9 @@ class ReturnItem(LoanReturnMaster):
 	# ID related methods
 	#
 	def OnChangeItemID(self):
-		self.checkID(Constants.TYPE_ITEM)
 		self.resetItem()
 		self.resetReader()
+		self.checkID(Constants.TYPE_ITEM)
 
 	def searchReader_():
 		pass
@@ -427,9 +427,9 @@ class RenewItem(LoanReturnMaster):
 	# ID related methods
 	#
 	def OnChangeItemID(self):
-		self.checkID(Constants.TYPE_ITEM)
 		self.resetItem()
 		self.resetReader()
+		self.checkID(Constants.TYPE_ITEM)
 
 	def searchReader_():
 		pass
