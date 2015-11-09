@@ -6,7 +6,8 @@ from Tools.ItemTools import formatID
 from Tools.Database import DBManager as DataBase
 from Tools.regexe import cleanKeywords
 from Tools.treeFunctions import TreeWiews
-from Tools.timeFunctions import int2date, todaysDate
+from Tools.timeFunctions import int2date, todaysDate, daysbetween
+from Tools.pdf import DefaultReport
 
 import config.GlobalConstants as Constants
 from common import _translate, statusIcon
@@ -69,6 +70,7 @@ class SearchMaster(QtGui.QDialog, Ui_SearchItemWindow, TreeWiews):
 
 		# Final value initialized as false
 		self.ID = False
+		self.headers = []
 
 		# Search Type
 		self.filterSyntaxComboBox.addItem("Fixed string", QtCore.QRegExp.FixedString)
@@ -78,12 +80,28 @@ class SearchMaster(QtGui.QDialog, Ui_SearchItemWindow, TreeWiews):
 		# actions
 		self.connect(self.proxyView, QtCore.SIGNAL("doubleClicked(QModelIndex)"), self.filteredTreeClicked)
 
+		# button actions
+		self.connect(self.button_search, QtCore.SIGNAL("clicked()"), self.btnSearch)
+		self.connect(self.button_2PDF, QtCore.SIGNAL("clicked()"), self.btnToPdf)
+
 		self.filterPatternLineEdit.textChanged.connect(self.textFilterChanged)
 		self.filterSyntaxComboBox.currentIndexChanged.connect(self.textFilterChanged)
 
 		self.proxyView.setModel(self.proxyModel)
 		self.setTreeDecorations(self.proxyView, True)
 		self.proxyView.sortByColumn(1, QtCore.Qt.AscendingOrder)
+		# options box: to export to PDF
+		self.optionsBox.hide()
+
+	def fillSearchStatus(self, statuses, status):
+		for i in range(0, len(statuses)):
+			status_ = statuses[i]
+			self.combo_status.addItem(*status_)  # text to show in the combobox
+			if status_[1] == status:
+				self.combo_status.setCurrentIndex(i)
+
+	def btnSearch(self):
+		pass
 
 	# Activated when the text of the filter changes.
 	def textFilterChanged(self):
@@ -103,6 +121,12 @@ class SearchMaster(QtGui.QDialog, Ui_SearchItemWindow, TreeWiews):
 		if self.ID:
 			self.openSearcher(self.ID)
 
+	def getTreeData(self):
+		pass
+
+	def btnToPdf(self):
+		pass
+
 
 class SearchItemWin(SearchMaster):
 	def __init__(self, closable, status, parent=None):
@@ -112,9 +136,6 @@ class SearchItemWin(SearchMaster):
 
 		self.proxyView.setItemDelegate(QCustomDelegate(Constants.TYPE_ITEM))
 
-		# button actions
-		self.connect(self.button_search, QtCore.SIGNAL("clicked()"), self.btnSearch)
-
 		# set the status combo box
 		statuses = [
 			['Can be loaned', Constants.AVAILABLE_ITEMS],
@@ -122,11 +143,8 @@ class SearchItemWin(SearchMaster):
 			['Dued Items', Constants.DUED_ITEMS],
 			['All Items', Constants.ALL_ITEMS]
 		]
-		for i in range(0, len(statuses)):
-			status_ = statuses[i]
-			self.combo_status.addItem(*status_)  # text to show in the combobox
-			if status_[1] == status:
-				self.combo_status.setCurrentIndex(i)
+
+		self.fillSearchStatus(statuses, status)
 
 		# Search Parameters
 		search_fields = [['Titulo', 'title'], ['Autor', 'author'], ['Editorial', 'publisher'], ]
@@ -209,20 +227,14 @@ class SearchUserWin(SearchMaster):
 
 		self.proxyView.setItemDelegate(QCustomDelegate(Constants.TYPE_USER))
 
-		# button actions
-		self.connect(self.button_search, QtCore.SIGNAL("clicked()"), self.search)
-
 		# set the status combo box
 		statuses = [
 			['Active', Constants.AVAILABLE_USERS],
 			['Inactive', Constants.BLOCKED_USERS],
 			['Baned', Constants.BANED_USER],
 			['All', Constants.ALL_USERS], ]
-		for i in range(0, len(statuses)):
-			status_ = statuses[i]
-			self.combo_status.addItem(*status_)  # text to show in the combobox
-			if status_[1] == status:
-				self.combo_status.setCurrentIndex(i)
+
+		self.fillSearchStatus(statuses, status)
 
 		# Search Parameters
 		search_fields = [['Name', 'name'], ['E-mail', 'email'], ]
@@ -242,7 +254,7 @@ class SearchUserWin(SearchMaster):
 		self.headers = ['', "ID", "Name", "Family Name", "Class"]
 		self.retranslateUi_2()
 
-	def search(self):
+	def btnSearch(self):
 		column, keys, role, grade = self.getSearchParams()
 		status = self.combo_status.itemData(self.combo_status.currentIndex())
 		users = DataBase.search_users(status, column, keys, role, grade)
@@ -287,6 +299,7 @@ class SearchUserWin(SearchMaster):
 	def retranslateUi_2(self):
 		self.label_title.setText(_translate("SearchItemWindow", "Search Readers", None))
 
+
 class DuedItemWin(SearchMaster):
 	def __init__(self, closable, status, parent=None):
 		super(DuedItemWin, self).__init__()
@@ -295,16 +308,10 @@ class DuedItemWin(SearchMaster):
 
 		self.proxyView.setItemDelegate(QCustomDelegate(Constants.TYPE_ITEM, Constants.TYPE_LOAN))
 
-		# button actions
-		self.connect(self.button_search, QtCore.SIGNAL("clicked()"), self.btnSearch)
-
 		# set the status combo box
-		statuses = [['Dued Items', Constants.DUED_ITEMS] ]
-		for i in range(0, len(statuses)):
-			status_ = statuses[i]
-			self.combo_status.addItem(*status_)  # text to show in the combobox
-			if status_[1] == status:
-				self.combo_status.setCurrentIndex(i)
+		statuses = [['Dued Items', Constants.DUED_ITEMS]]
+
+		self.fillSearchStatus(statuses, status)
 
 		# Search Parameters
 		search_fields = [['Titulo', 'title'], ['Autor', 'author'], ['Editorial', 'publisher'], ]
@@ -316,7 +323,7 @@ class DuedItemWin(SearchMaster):
 			self.combo_functions.addItem(format_['formatNameShort'], format_['formatID'])
 		# sets the default type to search
 
-		self.headers = [' ', 'Loan ID', 'Item ID', 'Title', 'Author', 'Reader ID', 'Reader', 'Grade', 'Loan Date', 'Due Date', 'Renewals']
+		self.headers = [' ', 'Loan ID', 'Item ID', 'Title', 'Author', 'Reader ID', 'Reader', 'Grade', 'Loan Date', 'Due Date', 'Renewals', 'Delay/Days']
 
 		self.combo_functions.setCurrentIndex(1)
 		self.combo_grades.addItem('All', False)
@@ -324,6 +331,7 @@ class DuedItemWin(SearchMaster):
 		self.labelGrades.hide()
 
 		self.retranslateUi_2()
+		self.optionsBox.show()
 
 	def btnSearch(self):
 		column, keys, role, grade = self.getSearchParams()
@@ -333,7 +341,15 @@ class DuedItemWin(SearchMaster):
 		if not elements:
 			elements = []
 		self.setSourceModel(self.createElementModel(elements))
-		self.setColumnWidth(self.proxyView, [16, 90, 90, 250, 200, 90, 250, 90, 100, 100, 90])
+		self.setColumnWidth(self.proxyView, [16, 90, 90, 250, 200, 90, 250, 90, 100, 100, 90, 90])
+
+	def btnToPdf(self):
+		output = str(QtGui.QFileDialog.getSaveFileName(self, "Select Directory"))
+		# output = 'temp/Temp_Report.pdf'
+		if not output:
+			return
+		data = self.getTreeData()
+		Report = DefaultReport(data, output, title='Buho Library Manager', subtitle='Dued Items', colWidths=[40, 70, 100, 100, 70, 100, 40, 70, 70, 60], hor_landscape=True)
 
 	def getSearchParams(self):
 		column = str(self.combo_parameters.itemData(self.combo_parameters.currentIndex())).strip()
@@ -341,7 +357,6 @@ class DuedItemWin(SearchMaster):
 		role = self.combo_functions.itemData(self.combo_functions.currentIndex())
 		grade = self.combo_grades.itemData(self.combo_grades.currentIndex())
 		keys = cleanKeywords(keywords)
-
 		return column, keys, role, grade
 
 	def openSearcher(self, id_):
@@ -353,6 +368,7 @@ class DuedItemWin(SearchMaster):
 
 		for i in range(0, len(elements)):
 			element = elements[i]
+			delay = daysbetween(int2date(element['loanDate']), int2date(todaysDate()))
 			cols = [
 				Constants.STATUS_INVALID,
 				formatID('LO', element['loanID']),
@@ -364,10 +380,30 @@ class DuedItemWin(SearchMaster):
 				element['gradeName'],
 				str(int2date(element['loanDate'])),
 				str(int2date(element['dueDate'])),
-				element['renewals']
+				element['renewals'],
+				delay
 			]
 			self.addElement(model, cols)
 		return model
+
+	def getTreeData(self):
+		headers = self.headers[2:]  # avoids id and loanID
+		headers.pop(len(headers) - 2)  # removes renewals
+		data2File = [['#'] + headers]
+
+		cols, rows = self.proxyModel.columnCount(), self.proxyModel.rowCount()
+		if not rows or not cols:
+			return data2File
+
+		for i in range(0, rows):
+			info = [i + 1]
+			for j in range(2, cols):
+				modelIndex = self.proxyModel.index(i, j)
+				value = modelIndex.data()
+				info.append(unicode(value))
+			info.pop(len(info) - 2)  # removes renewals
+			data2File.append(info)
+		return data2File
 
 	def retranslateUi_2(self):
 		self.label_functions.setText(_translate("DuedItemWin", "Category", None))

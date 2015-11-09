@@ -20,7 +20,7 @@ def isweekend(date):
 
 def int2date(intdate):
 	strdate = str(intdate)
-	if len(strdate)<8:
+	if len(strdate) < 8:
 		return 0
 	return datetime.datetime.strptime(strdate, '%Y%m%d').date()
 
