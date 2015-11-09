@@ -8,6 +8,7 @@ sudo apt-get install pyqt4-dev-tools
 sudo apt-get install python-pip
 sudo pip install --upgrade pip 
 pip install isbnlib
+pip install reportlab
 
 
 #For Developers:
