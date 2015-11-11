@@ -160,7 +160,7 @@ class SearchMaster(QtGui.QDialog, Ui_SearchItemWindow, TreeWiews):
 
 	def btnToPdf(self):
 		# get array with positions to export
-		PDFsaver = PdfExport(self.headers, self.reportPositions, self.reportSubtitle)
+		PDFsaver = PdfExport(self.headers, self.reportPositions, self.reportSubtitle, parent=self)
 		PDFsaver.exec_()
 		reportPositions = PDFsaver.maping
 		pathToFile = PDFsaver.pathToFile
