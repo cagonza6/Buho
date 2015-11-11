@@ -248,12 +248,12 @@ class LoanItem(LoanReturnMaster):
 				result = False
 
 			if reader.loans() >= Constants.ST_MAX_LOANS:
-				QtGui.QMessageBox.critical(self, 'Error', 'Reader can not loan more than ' + str(Constants.ST_MAX_LOANS) + ' items.', QtGui.QMessageBox.Ok)
+				QtGui.QMessageBox.critical(self, 'Error', 'Reader can not loan more than [%s] items.' % (str(Constants.ST_MAX_LOANS), ), QtGui.QMessageBox.Ok)
 				flagStatus(self.check_loans, Constants.STATUS_WARNING)
 				result = False
 
 			if reader.delays():
-				QtGui.QMessageBox.critical(self, 'Error', 'Reader has a delay in [' + str(reader.delays()) + '] items.', QtGui.QMessageBox.Ok)
+				QtGui.QMessageBox.critical(self, 'Error', 'Reader has a delay in [%s] items.' % (str(reader.delays()), ) , QtGui.QMessageBox.Ok)
 				result = False
 				flagStatus(self.check_delay, Constants.STATUS_WARNING)
 
@@ -358,7 +358,7 @@ class ReturnItem(LoanReturnMaster):
 				flagStatus(self.check_loans, Constants.STATUS_WARNING)
 
 			if reader.delays():
-				QtGui.QMessageBox.warning(self, 'Error', 'Reader has a delay in [' + str(reader.delays()) + '] items.', QtGui.QMessageBox.Ok)
+				QtGui.QMessageBox.warning(self, 'Error', 'Reader has a delay in [%s] items.' % (str(reader.delays()), ) , QtGui.QMessageBox.Ok)
 				flagStatus(self.check_delay, Constants.STATUS_WARNING)
 				result = False
 
@@ -465,7 +465,7 @@ class RenewItem(LoanReturnMaster):
 			if reader.loans() >= Constants.ST_MAX_LOANS:
 				flagStatus(self.check_loans, Constants.STATUS_WARNING)
 			if reader.delays():
-				QtGui.QMessageBox.warning(self, 'Error', 'Reader has a delay in [' + str(reader.delays()) + '] items.', QtGui.QMessageBox.Ok)
+				QtGui.QMessageBox.critical(self, 'Error', 'Reader has a delay in [%s] items.' % (str(reader.delays()), ) , QtGui.QMessageBox.Ok)
 				result = False
 				flagStatus(self.check_delay, Constants.STATUS_WARNING)
 		flag(self.check_user, result)

@@ -5,8 +5,7 @@ class AccountsPermissionsEnum(IntEnum):
 	SEE_USER_INFO    = pow(2, 0)
 	PRINT_CARDS      = pow(2, 1)
 	PRINT_OWN_CARD   = pow(2, 2)
-	EDIT_OWN_ACCOUNT = pow(2, 3)
-	EDIT_ACCOUNTS    = pow(2, 4)
+
 
 
 class ItemPermissionsEnum(IntEnum):
@@ -15,9 +14,9 @@ class ItemPermissionsEnum(IntEnum):
 
 
 class UserPermissionsEnum(IntEnum):
-	ADD_USER  = pow(2, 0)
-	EDIT_USER = pow(2, 1)
-
+	ADD_USER      = pow(2, 0)
+	EDIT_USER     = pow(2, 1)
+	EDIT_OWN_DATA = pow(2, 3)
 
 class LoanPermissionsEnum(IntEnum):
 	LOAN_ITEMS      = pow(2, 0)

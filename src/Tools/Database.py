@@ -177,14 +177,14 @@ class DatabaseManager(object):
 			query += "AND users.grade = ? "
 			querrydata.append(grade)
 
-		if column in 'name':
+		if column == Constants.NAME:
 			column = 'name'
-		if column in 'email':
+		if column == Constants.EMAIL:
 			column = 'email'
 
 		if len(keys):
 			key = keys[0].lower()
-			if column == 'name':
+			if column == Constants.NAME:
 				query += "AND (instr(lower(users.name),  ? ) OR instr(lower(users.familyname),  ? ) ) "
 				querrydata.append(key)
 				querrydata.append(key)
@@ -195,7 +195,7 @@ class DatabaseManager(object):
 					querrydata.append(key)
 					querrydata.append(key)
 
-			if column in 'email':
+			if column == Constants.EMAIL:
 				for key in keys:
 					query += "AND (users.email = ?) "
 					querrydata.append(key.lower())
@@ -237,10 +237,12 @@ class DatabaseManager(object):
 			query += "AND items.format = ? "
 			querrydata.append(format_)
 
-		if column in 'author':
+		if column == Constants.AUTHOR:
 			column = 'author'
-		if column in 'title':
+		if column == Constants.TITLE:
 			column = 'title'
+		if column == Constants.PUBLISHER:
+			column = 'publisher'
 
 		if len(keys):
 			key = keys[0].lower()

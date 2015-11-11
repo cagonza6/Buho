@@ -7,6 +7,7 @@ pyuic4 src/Gui/MainPage.ui        -o src/Gui/mMainPage.py
 pyuic4 src/Gui/mLoanInfo.ui       -o src/Gui/mLoanInfo.py
 pyuic4 src/Gui/mReaderInfo.ui     -o src/Gui/mReaderInfo.py
 pyuic4 src/Gui/mItemInfo.ui     -o src/Gui/mItemInfo.py
+pyuic4 src/Gui/mExportPDF.ui     -o src/Gui/mExportPDF.py
 pyrcc4 src/Gui/myicons.qrc        -o src/Gui/myicons_rc.py
 
 #pylupdate4 src/make.pro

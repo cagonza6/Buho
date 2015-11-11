@@ -35,7 +35,7 @@ class PDFmethods():
 
 	def writeBarcode(self, text, x, y, filePDF):
 		self.createBarCodes(text).drawOn(filePDF, x, y)
-		filePDF.drawString(x + 10 * mm, y - 4 * mm, 'ID: ' + text)
+		filePDF.drawString(x + 10 * mm, y - 4 * mm, 'ID: %s' % (text, ))
 
 	def cutCross(self, x0, y0):
 		y0 -= 5 * mm
@@ -98,7 +98,7 @@ class PDFmethods():
 
 
 class DefaultReport(PDFmethods):
-	def __init__(self, data, output, title='title', subtitle='subtitle', colWidths=[40, 70, 100, 120, 70, 120, 75, 70], hor_landscape=False):
+	def __init__(self, data, output, colWidths, title='title', subtitle='subtitle', hor_landscape=False):
 		if hor_landscape:
 			self.width, self.height = landscape(letter)
 			self.vdelay = 20
@@ -107,7 +107,10 @@ class DefaultReport(PDFmethods):
 			self.vdelay = 0
 
 		self.data = data
-		self.colWidths = colWidths
+		if len(colWidths)>1:
+			self.colWidths = colWidths
+		else:
+			self.colWidths = colWidths[0]
 		self.oFile = output
 		self.title = title
 		self.subtitle = subtitle

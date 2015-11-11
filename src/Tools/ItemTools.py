@@ -5,4 +5,4 @@ def formatID(category, id_number):
 	pref = ''
 	for i in range(len(idStr), 5):
 		pref += str('0')
-	return category + pref + idStr
+	return '%s%s%s' % (category, pref, idStr)

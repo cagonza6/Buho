@@ -25,7 +25,7 @@ class ShowInfo():
 			return
 		self.label_field_name.setText(textwrap.fill(reader.name(), width=36))
 		self.label_reader_role.setText(reader.roleName())
-		self.label_field_rederloans.setText(str(reader.loans()) + "/" + str(Constants.ST_MAX_LOANS))
+		self.label_field_rederloans.setText('%s/%s' % (str(reader.loans()), str(Constants.ST_MAX_LOANS)))
 		self.label_field_delays.setText(str(reader.delays()))
 
 	def showItemInfo(self, item):

@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
+import os.path
+
 from PyQt4 import QtCore, QtGui
 
 from Gui.mSearch import Ui_SearchItemWindow
+from Gui.mExportPDF import Ui_PdfExport
 from Tools.ItemTools import formatID
 from Tools.Database import DBManager as DataBase
 from Tools.regexe import cleanKeywords
@@ -71,7 +74,7 @@ class SearchMaster(QtGui.QDialog, Ui_SearchItemWindow, TreeWiews):
 		# Final value initialized as false
 		self.ID = False
 		self.headers = []
-
+		self.reportSubtitle = 'Report'
 		# Search Type
 		self.filterSyntaxComboBox.addItem("Fixed string", QtCore.QRegExp.FixedString)
 		self.filterSyntaxComboBox.addItem("Regular expression", QtCore.QRegExp.RegExp)
@@ -90,8 +93,10 @@ class SearchMaster(QtGui.QDialog, Ui_SearchItemWindow, TreeWiews):
 		self.proxyView.setModel(self.proxyModel)
 		self.setTreeDecorations(self.proxyView, True)
 		self.proxyView.sortByColumn(1, QtCore.Qt.AscendingOrder)
-		# options box: to export to PDF
-		self.optionsBox.hide()
+
+	def allowReports(self, closable):
+		if closable:
+			self.optionsBox.hide()
 
 	def fillSearchStatus(self, statuses, status):
 		for i in range(0, len(statuses)):
@@ -102,6 +107,38 @@ class SearchMaster(QtGui.QDialog, Ui_SearchItemWindow, TreeWiews):
 
 	def btnSearch(self):
 		pass
+
+	def positions2PDF(self, original, positions):
+		headersPDF = []
+		if not len(positions) == len(original):
+			return headersPDF
+		for i in range(0, len(positions)):
+			if positions[i]:
+				headersPDF.append(original[i])
+		return headersPDF
+
+	def getTreeData(self, positions):
+		data2File = []
+		headers = ['#'] + self.headers[1:]  # Avoids the column with the icon status: column 0
+		headers = self.positions2PDF(headers, positions)
+		data2File = [headers]
+
+		cols, rows = self.proxyModel.columnCount(), self.proxyModel.rowCount()
+		if cols != len(positions):
+			return data2File
+		if not rows or not cols:
+			return data2File
+
+		for i in range(0, rows):
+			info = [i + 1]
+			for j in range(1, cols):  # Avoids the column with the icon status: column 0
+				modelIndex = self.proxyModel.index(i, j)
+				value = modelIndex.data()
+				info.append(unicode(value))
+			info = self.positions2PDF(info, positions)
+			data2File.append(info)
+
+		return data2File
 
 	# Activated when the text of the filter changes.
 	def textFilterChanged(self):
@@ -121,11 +158,23 @@ class SearchMaster(QtGui.QDialog, Ui_SearchItemWindow, TreeWiews):
 		if self.ID:
 			self.openSearcher(self.ID)
 
-	def getTreeData(self):
-		pass
-
 	def btnToPdf(self):
-		pass
+		# get array with positions to export
+		PDFsaver = PdfExport(self.headers, self.reportPositions, self.reportSubtitle)
+		PDFsaver.exec_()
+		reportPositions = PDFsaver.maping
+		pathToFile = PDFsaver.pathToFile
+		self.reportSubtitle =  PDFsaver.subtitle
+		colWidths = self.positions2PDF(self.colWidths, reportPositions)
+
+		if PDFsaver.checkMaping(reportPositions):
+			self.reportPositions = reportPositions
+
+		if not reportPositions or not pathToFile:
+			return
+
+		data = self.getTreeData(reportPositions)
+		Report = DefaultReport(data, pathToFile, colWidths, title='Buho Library Manager', subtitle=self.reportSubtitle, hor_landscape=True)
 
 
 class SearchItemWin(SearchMaster):
@@ -147,7 +196,7 @@ class SearchItemWin(SearchMaster):
 		self.fillSearchStatus(statuses, status)
 
 		# Search Parameters
-		search_fields = [['Titulo', 'title'], ['Autor', 'author'], ['Editorial', 'publisher'], ]
+		search_fields = [['Titulo', Constants.TITLE], ['Autor', Constants.AUTHOR], ['Editorial', Constants.PUBLISHER], ]
 		for field in search_fields:
 			self.combo_parameters.addItem(*field)  # text to show in the combobox
 
@@ -156,14 +205,16 @@ class SearchItemWin(SearchMaster):
 			self.combo_functions.addItem(format_['formatNameShort'], format_['formatID'])
 		# sets the default type to search
 
-		self.headers = ['', "ID", "Title", "Author", "Publisher", "Year", "Language"]
-
+		self.headers = [' ', "ID", "Title", "Author", "Publisher", "Year", "Language"]
+		self.reportPositions = [1, 1, 1, 1, 1, 1, 1]
+		self.colWidths = [40, 70, 140, 140, 140, 40, 70]
+		self.reportSubtitle = 'Items'
 		self.combo_functions.setCurrentIndex(1)
 		self.combo_grades.addItem('All', False)
 		self.combo_grades.hide()
 		self.labelGrades.hide()
-
 		self.retranslateUi_2()
+		self.allowReports(closable)
 
 	def btnSearch(self):
 		column, keys, role, grade = self.getSearchParams()
@@ -176,7 +227,7 @@ class SearchItemWin(SearchMaster):
 		self.setColumnWidth(self.proxyView, [16, 100, 200, 200, 200, 50, 50])
 
 	def getSearchParams(self):
-		column = str(self.combo_parameters.itemData(self.combo_parameters.currentIndex())).strip()
+		column = int(self.combo_parameters.itemData(self.combo_parameters.currentIndex()))
 		keywords = str(self.field_keywords.text())
 		role = self.combo_functions.itemData(self.combo_functions.currentIndex())
 		grade = self.combo_grades.itemData(self.combo_grades.currentIndex())
@@ -237,7 +288,7 @@ class SearchUserWin(SearchMaster):
 		self.fillSearchStatus(statuses, status)
 
 		# Search Parameters
-		search_fields = [['Name', 'name'], ['E-mail', 'email'], ]
+		search_fields = [['Name', Constants.NAME], ['E-mail', Constants.EMAIL], ]
 		for field in search_fields:
 			self.combo_parameters.addItem(*field)  # text to show in the combobox
 
@@ -252,6 +303,9 @@ class SearchUserWin(SearchMaster):
 			self.combo_grades.addItem(grade['gradeName'], grade['gradeID'])
 
 		self.headers = ['', "ID", "Name", "Family Name", "Class"]
+		self.reportPositions = [1, 1, 1, 1, 1]
+		self.colWidths = [40, 70, 160, 160, 70]
+		self.reportSubtitle = 'Readers'
 		self.retranslateUi_2()
 
 	def btnSearch(self):
@@ -262,10 +316,10 @@ class SearchUserWin(SearchMaster):
 			users = []
 		self.setSourceModel(self.createElementModel(users))
 
-		self.setColumnWidth(self.proxyView, [16, 100, 200, 500, 50])
+		self.setColumnWidth(self.proxyView, [16, 100, 200, 200, 50])
 
 	def getSearchParams(self):
-		column = str(self.combo_parameters.itemData(self.combo_parameters.currentIndex())).strip()
+		column = int(self.combo_parameters.itemData(self.combo_parameters.currentIndex()))
 		keywords = str(self.field_keywords.text())
 		role = self.combo_functions.itemData(self.combo_functions.currentIndex())
 		grade = self.combo_grades.itemData(self.combo_grades.currentIndex())
@@ -314,7 +368,7 @@ class DuedItemWin(SearchMaster):
 		self.fillSearchStatus(statuses, status)
 
 		# Search Parameters
-		search_fields = [['Titulo', 'title'], ['Autor', 'author'], ['Editorial', 'publisher'], ]
+		search_fields = [['Titulo', Constants.TITLE], ['Autor', Constants.AUTHOR], ['Editorial', Constants.PUBLISHER], ]
 		for field in search_fields:
 			self.combo_parameters.addItem(*field)  # text to show in the combobox
 
@@ -323,7 +377,10 @@ class DuedItemWin(SearchMaster):
 			self.combo_functions.addItem(format_['formatNameShort'], format_['formatID'])
 		# sets the default type to search
 
-		self.headers = [' ', 'Loan ID', 'Item ID', 'Title', 'Author', 'Reader ID', 'Reader', 'Grade', 'Loan Date', 'Due Date', 'Renewals', 'Delay/Days']
+		self.headers = [' ', 'Loan ID', 'Item ID', 'Title', 'Author', 'Reader ID', 'Reader', 'Grade', 'Loan Date', 'Due Date', 'Renewals', 'Delay / Days']
+		self.reportPositions = [1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1]
+		self.colWidths = [40, 70, 70, 120, 120, 70, 120, 40, 70, 70, 60, 60]
+		self.reportSubtitle = 'Dued Items'
 
 		self.combo_functions.setCurrentIndex(1)
 		self.combo_grades.addItem('All', False)
@@ -332,6 +389,7 @@ class DuedItemWin(SearchMaster):
 
 		self.retranslateUi_2()
 		self.optionsBox.show()
+		self.allowReports(closable)
 
 	def btnSearch(self):
 		column, keys, role, grade = self.getSearchParams()
@@ -343,16 +401,8 @@ class DuedItemWin(SearchMaster):
 		self.setSourceModel(self.createElementModel(elements))
 		self.setColumnWidth(self.proxyView, [16, 90, 90, 250, 200, 90, 250, 90, 100, 100, 90, 90])
 
-	def btnToPdf(self):
-		output = str(QtGui.QFileDialog.getSaveFileName(self, "Select Directory"))
-		# output = 'temp/Temp_Report.pdf'
-		if not output:
-			return
-		data = self.getTreeData()
-		Report = DefaultReport(data, output, title='Buho Library Manager', subtitle='Dued Items', colWidths=[40, 70, 100, 100, 70, 100, 40, 70, 70, 60], hor_landscape=True)
-
 	def getSearchParams(self):
-		column = str(self.combo_parameters.itemData(self.combo_parameters.currentIndex())).strip()
+		column = int(self.combo_parameters.itemData(self.combo_parameters.currentIndex()))
 		keywords = str(self.field_keywords.text())
 		role = self.combo_functions.itemData(self.combo_functions.currentIndex())
 		grade = self.combo_grades.itemData(self.combo_grades.currentIndex())
@@ -386,28 +436,91 @@ class DuedItemWin(SearchMaster):
 			self.addElement(model, cols)
 		return model
 
-	def getTreeData(self):
-		headers = self.headers[2:]  # avoids id and loanID
-		headers.pop(len(headers) - 2)  # removes renewals
-		data2File = [['#'] + headers]
-
-		cols, rows = self.proxyModel.columnCount(), self.proxyModel.rowCount()
-		if not rows or not cols:
-			return data2File
-
-		for i in range(0, rows):
-			info = [i + 1]
-			for j in range(2, cols):
-				modelIndex = self.proxyModel.index(i, j)
-				value = modelIndex.data()
-				info.append(unicode(value))
-			info.pop(len(info) - 2)  # removes renewals
-			data2File.append(info)
-		return data2File
-
 	def retranslateUi_2(self):
 		self.label_functions.setText(_translate("DuedItemWin", "Category", None))
 		self.label_title.setText(_translate("DuedItemWin", "Reports: Dued Items", None))
+
+
+class PdfExport(QtGui.QDialog, Ui_PdfExport):
+	def __init__(self, headers, maping, subtitle, baseName='Report', parent=None):
+		super(PdfExport, self).__init__()
+		self.setupUi(self)
+		self.headers = headers
+		self.maping = maping
+		self.pathToFile = False
+		self.subtitle = subtitle
+		self.baseName = baseName
+
+		self.connect(self.btn_searchFile, QtCore.SIGNAL("clicked()"), self.searchFile)
+		self.connect(self.btnExport, QtCore.SIGNAL("clicked()"), self.getExportInfo)
+		self.connect(self.btnCancel, QtCore.SIGNAL("clicked()"), self.closeWin)
+
+		self.cheks = [
+			self.checkBox_01, self.checkBox_02, self.checkBox_03, self.checkBox_04,
+			self.checkBox_05, self.checkBox_06, self.checkBox_07, self.checkBox_08,
+			self.checkBox_09, self.checkBox_10, self.checkBox_11, self.checkBox_12
+		]
+
+		self.field_title.setText(subtitle) 
+
+		for i in range(0, len(self.cheks)):
+			self.cheks[i].hide()
+		for i in range(0, len(self.headers)):
+			self.cheks[i].show()
+			self.cheks[i].setText(headers[i])
+			if self.maping[i]:
+				self.cheks[i].setCheckState(QtCore.Qt.Checked)
+
+
+
+	def searchFile(self):
+		path = str(QtGui.QFileDialog.getSaveFileName(self, "Select Directory", '%s-%s.pdf' % (self.baseName, str(todaysDate())), '*.pdf'))
+		path = os.path.normcase(path)
+		self.field_path.setText(path)
+
+	def getExportInfo(self):
+		self.maping = self.remaping()
+		self.pathToFile = path = str(self.field_path.text()).strip()
+		self.subtitle = unicode(self.field_title.text())
+		if not self.checkPath(path) or not self.checkFields():
+			return
+		self.accept()
+
+	def checkPath(self, path):
+		checkPath = os.access(os.path.dirname(path), os.W_OK)
+		if not checkPath:
+			QtGui.QMessageBox.critical(self, 'Error', 'Invalid path to file.', QtGui.QMessageBox.Ok)
+			return False
+		return True
+
+	def checkFields(self):
+		if not self.checkMaping(self.maping):
+			QtGui.QMessageBox.critical(self, 'Error', 'No fields selected to export.', QtGui.QMessageBox.Ok)
+			return False
+		return True
+
+	def closeEvent(self, event):
+		self.closeWin()
+
+	def closeWin(self):
+		self.maping = self.maping * 0
+		self.pathToFile = False
+		self.accept()
+
+	def checkMaping(self, maping):
+		for var in maping:
+			if var:
+				return True
+		return False
+
+	def remaping(self):
+		maping = []
+		for i in range(0, len(self.headers)):
+			if self.cheks[i].isChecked():
+				maping.append(1)
+			else:
+				maping.append(0)
+		return maping
 
 if __name__ == "__main__":
 	pass
