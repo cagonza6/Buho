@@ -75,6 +75,7 @@ class SearchMaster(QtGui.QDialog, Ui_SearchItemWindow, TreeWiews):
 		self.ID = False
 		self.headers = []
 		self.reportSubtitle = 'Report'
+		self.orientation = Constants.PAPER_LANDSCAPE
 		# Search Type
 		self.filterSyntaxComboBox.addItem("Fixed string", QtCore.QRegExp.FixedString)
 		self.filterSyntaxComboBox.addItem("Regular expression", QtCore.QRegExp.RegExp)
@@ -159,14 +160,13 @@ class SearchMaster(QtGui.QDialog, Ui_SearchItemWindow, TreeWiews):
 			self.openSearcher(self.ID)
 
 	def btnToPdf(self):
-		# get array with positions to export
-		PDFsaver = PdfExport(self.headers, self.reportPositions, self.reportSubtitle, parent=self)
+		PDFsaver = PdfExport(self.headers, self.reportPositions, self.reportSubtitle, orientation=self.orientation, parent=self)
 		PDFsaver.exec_()
 		reportPositions = PDFsaver.maping
 		pathToFile = PDFsaver.pathToFile
-		self.reportSubtitle =  PDFsaver.subtitle
+		self.reportSubtitle = PDFsaver.subtitle
 		colWidths = self.positions2PDF(self.colWidths, reportPositions)
-
+		orientation = PDFsaver.orientation
 		if PDFsaver.checkMaping(reportPositions):
 			self.reportPositions = reportPositions
 
@@ -174,7 +174,7 @@ class SearchMaster(QtGui.QDialog, Ui_SearchItemWindow, TreeWiews):
 			return
 
 		data = self.getTreeData(reportPositions)
-		Report = DefaultReport(data, pathToFile, colWidths, title='Buho Library Manager', subtitle=self.reportSubtitle, hor_landscape=True)
+		DefaultReport(data, pathToFile, colWidths, title='Buho Library Manager', subtitle=self.reportSubtitle, orientation=orientation)
 
 
 class SearchItemWin(SearchMaster):
@@ -207,7 +207,10 @@ class SearchItemWin(SearchMaster):
 
 		self.headers = [' ', "ID", "Title", "Author", "Publisher", "Year", "Language"]
 		self.reportPositions = [1, 1, 1, 1, 1, 1, 1]
-		self.colWidths = [40, 70, 140, 140, 140, 40, 70]
+		self.colWidths = [
+			Constants.WIDTH_NUM, Constants.WIDTH_ID, Constants.WIDTH_NAME, Constants.WIDTH_NAME,
+			Constants.WIDTH_NAME, Constants.WIDTH_NUM, Constants.WIDTH_ID
+		]
 		self.reportSubtitle = 'Items'
 		self.combo_functions.setCurrentIndex(1)
 		self.combo_grades.addItem('All', False)
@@ -305,6 +308,8 @@ class SearchUserWin(SearchMaster):
 		self.headers = ['', "ID", "Name", "Family Name", "Class"]
 		self.reportPositions = [1, 1, 1, 1, 1]
 		self.colWidths = [40, 70, 160, 160, 70]
+		self.colWidths = [Constants.WIDTH_NUM, Constants.WIDTH_ID, Constants.WIDTH_NAME, Constants.WIDTH_NAME, Constants.WIDTH_GRADE]
+
 		self.reportSubtitle = 'Readers'
 		self.retranslateUi_2()
 
@@ -377,10 +382,21 @@ class DuedItemWin(SearchMaster):
 			self.combo_functions.addItem(format_['formatNameShort'], format_['formatID'])
 		# sets the default type to search
 
-		self.headers = [' ', 'Loan ID', 'Item ID', 'Title', 'Author', 'Reader ID', 'Reader', 'Grade', 'Loan Date', 'Due Date', 'Renewals', 'Delay / Days']
+		self.headers = [
+			' ', 'Loan ID', 'Item ID', 'Title', 'Author', 'Reader ID',
+			'Reader', 'Grade', 'Loan Date', 'Due Date', 'Renewals', 'Delay / Days'
+		]
 		self.reportPositions = [1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1]
 		self.colWidths = [40, 70, 70, 120, 120, 70, 120, 40, 70, 70, 60, 60]
+		self.colWidths = [
+			Constants.WIDTH_NUM, Constants.WIDTH_ID, Constants.WIDTH_ID,
+			Constants.WIDTH_NAME, Constants.WIDTH_NAME, Constants.WIDTH_ID,
+			Constants.WIDTH_NAME, Constants.WIDTH_GRADE, Constants.WIDTH_DATE,
+			Constants.WIDTH_DATE, Constants.WIDTH_OTHER, Constants.WIDTH_OTHER
+		]
+
 		self.reportSubtitle = 'Dued Items'
+		self.orientation = Constants.PAPER_LANDSCAPE
 
 		self.combo_functions.setCurrentIndex(1)
 		self.combo_grades.addItem('All', False)
@@ -393,8 +409,8 @@ class DuedItemWin(SearchMaster):
 
 	def btnSearch(self):
 		column, keys, role, grade = self.getSearchParams()
-		# status = self.combo_status.itemData(self.combo_status.currentIndex())
-		elements = DataBase.duedItems()
+		status = self.combo_status.itemData(self.combo_status.currentIndex())
+		elements = DataBase.duedItems(status, column, keys, role)
 
 		if not elements:
 			elements = []
@@ -442,10 +458,17 @@ class DuedItemWin(SearchMaster):
 
 
 class PdfExport(QtGui.QDialog, Ui_PdfExport):
-	def __init__(self, headers, maping, subtitle, baseName='Report', parent=None):
+	def __init__(self, headers, maping, subtitle, baseName='Report', orientation=Constants.PAPER_PORTAIL, parent=None):
 		super(PdfExport, self).__init__()
 		self.setupUi(self)
+
+		if orientation == Constants.PAPER_LANDSCAPE:
+			self.radio_landscape.setChecked(True)
+		else:
+			self.radio_portail.setChecked(True)
+
 		self.headers = headers
+		headers[0] = '#'
 		self.maping = maping
 		self.pathToFile = False
 		self.subtitle = subtitle
@@ -461,7 +484,7 @@ class PdfExport(QtGui.QDialog, Ui_PdfExport):
 			self.checkBox_09, self.checkBox_10, self.checkBox_11, self.checkBox_12
 		]
 
-		self.field_title.setText(subtitle) 
+		self.field_title.setText(subtitle)
 
 		for i in range(0, len(self.cheks)):
 			self.cheks[i].hide()
@@ -470,8 +493,6 @@ class PdfExport(QtGui.QDialog, Ui_PdfExport):
 			self.cheks[i].setText(headers[i])
 			if self.maping[i]:
 				self.cheks[i].setCheckState(QtCore.Qt.Checked)
-
-
 
 	def searchFile(self):
 		path = str(QtGui.QFileDialog.getSaveFileName(self, "Select Directory", '%s-%s.pdf' % (self.baseName, str(todaysDate())), '*.pdf'))
@@ -482,9 +503,15 @@ class PdfExport(QtGui.QDialog, Ui_PdfExport):
 		self.maping = self.remaping()
 		self.pathToFile = path = str(self.field_path.text()).strip()
 		self.subtitle = unicode(self.field_title.text())
+		self.orientation = self.checkOrientation()
 		if not self.checkPath(path) or not self.checkFields():
 			return
 		self.accept()
+
+	def checkOrientation(self):
+		if self.radio_portail.isChecked():
+			return Constants.PAPER_PORTAIL
+		return Constants.PAPER_LANDSCAPE
 
 	def checkPath(self, path):
 		checkPath = os.access(os.path.dirname(path), os.W_OK)
@@ -495,7 +522,7 @@ class PdfExport(QtGui.QDialog, Ui_PdfExport):
 
 	def checkFields(self):
 		if not self.checkMaping(self.maping):
-			QtGui.QMessageBox.critical(self, 'Error', 'No fields selected to export.', QtGui.QMessageBox.Ok)
+			QtGui.QMessageBox.critical(self, 'Error', 'At least two [2] fields required.', QtGui.QMessageBox.Ok)
 			return False
 		return True
 
@@ -508,8 +535,11 @@ class PdfExport(QtGui.QDialog, Ui_PdfExport):
 		self.accept()
 
 	def checkMaping(self, maping):
+		cnt = 0
 		for var in maping:
 			if var:
+				cnt += 1
+			if cnt > 1:
 				return True
 		return False
 

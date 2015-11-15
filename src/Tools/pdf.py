@@ -9,6 +9,7 @@ from reportlab.platypus import Paragraph, Table, SimpleDocTemplate, Spacer, Tabl
 from reportlab.pdfbase.pdfmetrics import stringWidth
 
 from Tools.timeFunctions import todaysDate, int2date
+import config.GlobalConstants as Constants
 
 
 class PDFmethods():
@@ -98,23 +99,35 @@ class PDFmethods():
 
 
 class DefaultReport(PDFmethods):
-	def __init__(self, data, output, colWidths, title='title', subtitle='subtitle', hor_landscape=False):
-		if hor_landscape:
+	def __init__(self, data, output, colWidths, title='title', subtitle='subtitle', orientation=Constants.PAPER_PORTAIL, parent=None):
+		if orientation == Constants.PAPER_LANDSCAPE:
 			self.width, self.height = landscape(letter)
-			self.vdelay = 20
 		else:
 			self.width, self.height = letter
-			self.vdelay = 0
 
+		self.vdelay = 20
 		self.data = data
-		if len(colWidths)>1:
-			self.colWidths = colWidths
+		if len(colWidths) > 1:
+			self.colWidths = self.colsize(colWidths)
 		else:
 			self.colWidths = colWidths[0]
 		self.oFile = output
 		self.title = title
 		self.subtitle = subtitle
 		self.run()
+
+	def colsize(self, colWidths):
+		'''
+		Normalizes the column width in order to use the complete width of the page
+		'''
+		totWidth = 0
+		for i in range(0, len(colWidths)):
+			totWidth += colWidths[i]
+		delta = max(self.width - totWidth - 15 * mm, 0)
+
+		for i in range(0, len(colWidths)):
+			colWidths[i] = colWidths[i] * (1 + delta / totWidth)
+		return colWidths
 
 	def run(self):
 		self.doc = SimpleDocTemplate(self.oFile, pagesize=(self.width, self.height), rightMargin=30, leftMargin=30, topMargin=30, bottomMargin=18)

@@ -1,37 +1,37 @@
 # -*- coding: utf-8 -*-
 
-# ######## General #################
+# ######## General ################
 NULL = ''
 
-# ######## GENERAL STATUS ##########
+# ######## GENERAL STATUS #########
 STATUS_INVALID = 0
 STATUS_VALID   = 1
 STATUS_WARNING = 2
 
 
-# ######## Items Constants #########
+# ######## Items Constants ########
 AVAILABLE_ITEMS = 0
 LOANED_ITEMS    = 1
 ALL_ITEMS       = 2
 DUED_ITEMS      = 3
 
-# ######## Items Constants #########
+# ######## Items Constants ########
 BLOCKED_USERS   = 0
 AVAILABLE_USERS = 1
 BANED_USER      = 2
 ALL_USERS       = 3
 
-# ###### Stuff type definition ######
+# ##### Stuff type definition #####
 TYPE_FLAG = 0
 TYPE_ITEM = 1
 TYPE_USER = 2
 TYPE_LOAN = 3
 
-# ######## DataBase ################
+# ######## DataBase ###############
 ITEM_BOOK  = 'BK'
 ITEM_MUSIC = 'MU'
 
-# ######## DB fields #######
+# ############ DB fields ##########
 # Enumerations used mostly to in validations and DB saving processes
 
 TITLE     = 1
@@ -47,17 +47,32 @@ PHONE     = 10
 CELPHONE  = 11
 COMMENTS  = 12
 
-# ######## Icons ####################
+# ######## Icons ##################
 ICON_VALID = ":/status/resources/pixmap/icons/status/status-ok.png"
 ICON_INVALID = ":/status/resources/pixmap/icons/status/status-no.png"
 ICON_WARNING = ":/status/resources/pixmap/icons/status/status-warning.png"
 ICON_UNAVAILABLE = ":/status/resources/pixmap/icons/status/status-unavailable.png"
 
 
-# ####### Loan constants ##############
+# ####### Loan constants ##########
 LOAN_SPAN     = 14
 RENEWAL_LIMIT = 2
 ST_MAX_LOANS  = 3
+
+# ####### Paper orientation #######
+PAPER_PORTAIL = 0
+PAPER_LANDSCAPE = 1
+
+# #### Column width for reports ###
+
+WIDTH_NUM = 14
+WIDTH_ID = 25
+WIDTH_NAME = 42
+WIDTH_GRADE = 15
+WIDTH_DATE = 25
+WIDTH_DELAY = 21
+WIDTH_OTHER = 21
+
 
 # #################################
 # ##### Developers Only ###########

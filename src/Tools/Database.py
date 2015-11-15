@@ -209,27 +209,23 @@ class DatabaseManager(object):
 		Result = self.cur.fetchall()
 		return Result
 
-	def searchItems(self, sStatus, column, keys, format_):
+	def searchItemsFilters(self, sStatus, column, keys, format_):
+		query = ''
 		querrydata = []
-		query = "SELECT "
-		query += "       items.itemID,  items.format,  items.ISBN,  items.title,  items.author,  items.publisher,  items.year,  items.location, items.comments,  "
-		query += "       item_formats.formatName,  languages.Ref_Name AS language,  "
-		query += "       count (loans.itemID) AS loaned, loans.dueDate, loans.loanDate, loans.renewals "
-		query += "FROM "
-		query += "    'items' "
-		query += "    INNER JOIN item_formats ON items.format = item_formats.formatID "
-		query += "    left JOIN languages    ON items.lang  = languages.langIsoID "
-		query += "    left  JOIN loans        ON items.itemID = loans.itemID "
-		query += "WHERE \n"
+		'''
+		The validarion for id>0 is equivalent to search all the items,
+		this one comes by default from the orginal method and is used to
+		make the the methods searchItems() and duedItems() compatible
 
 		if sStatus == Constants.ALL_ITEMS:
-			query += "items.itemID >0 "
+			query += "AND items.itemID >0 "
+		'''
 		if sStatus == Constants.AVAILABLE_ITEMS:
-			query += "loans.itemID is NULL "
-		if sStatus == Constants.LOANED_ITEMS:
-			query += "loans.itemID > 0  "
-		if sStatus == Constants.DUED_ITEMS:
-			query += "loans.itemID > 0 and loans.dueDate < ?"
+			query += "AND loans.itemID is NULL "
+		elif sStatus == Constants.LOANED_ITEMS:
+			query += "AND loans.itemID > 0  "
+		elif sStatus == Constants.DUED_ITEMS:
+			query += "AND loans.itemID > 0 and loans.dueDate < ?"
 			querrydata.append(todaysDate())
 
 		if format_:
@@ -239,9 +235,9 @@ class DatabaseManager(object):
 
 		if column == Constants.AUTHOR:
 			column = 'author'
-		if column == Constants.TITLE:
+		elif column == Constants.TITLE:
 			column = 'title'
-		if column == Constants.PUBLISHER:
+		elif column == Constants.PUBLISHER:
 			column = 'publisher'
 
 		if len(keys):
@@ -254,6 +250,22 @@ class DatabaseManager(object):
 					query += "OR instr(lower(items." + column + "),  ?) \n"
 					querrydata.append(key)
 		query += "GROUP BY items.itemID;"
+		return query, querrydata
+
+	def searchItems(self, sStatus, column, keys, format_):
+		query = "SELECT "
+		query += "       items.itemID,  items.format,  items.ISBN,  items.title,  items.author,  items.publisher,  items.year,  items.location, items.comments,  "
+		query += "       item_formats.formatName,  languages.Ref_Name AS language,  "
+		query += "       count (loans.itemID) AS loaned, loans.dueDate, loans.loanDate, loans.renewals "
+		query += "FROM "
+		query += "    'items' "
+		query += "    INNER JOIN item_formats ON items.format = item_formats.formatID "
+		query += "    left JOIN languages    ON items.lang  = languages.langIsoID "
+		query += "    left  JOIN loans        ON items.itemID = loans.itemID "
+		query += "WHERE items.itemID > 0 \n"
+
+		queryF, querrydata = self.searchItemsFilters(sStatus, column, keys, format_)
+		query += queryF
 
 		try:
 			self.cur.execute(query, querrydata)
@@ -262,6 +274,31 @@ class DatabaseManager(object):
 			return False
 		Result = self.cur.fetchall()
 		return Result
+
+	def duedItems(self, sStatus, column, keys, format_):
+		query = "SELECT "
+		query += "      loans.loanID, loans.itemID, loans.userID, loans.loanDate, loans.dueDate, loans.renewals, "
+		query += "      items.author, items.format, items.publisher, items.title, items.year, items.lang AS language, "
+		query += "      users.name, users.familyname, users.userID, users.role, "
+		query += "      grades.gradeName "
+		query += "FROM loans "
+		query += "INNER JOIN users ON users.userID = loans.userID  "
+		query += "INNER JOIN items ON loans.itemID = items.itemID "
+		query += "LEFT JOIN grades ON users.grade = grades.gradeID "
+		query += "WHERE dueDate < ? "
+
+		queryF, querrydata = self.searchItemsFilters(sStatus, column, keys, format_)
+		querrydata = [todaysDate()] + querrydata
+		query += queryF
+
+		try:
+			self.cur.execute(query, querrydata)
+		except sqlite3.Error as e:
+			self.saveToLog("duedItems - Error :" + str(e))
+			return False
+		self.Result = self.cur.fetchall()
+		return self.Result
+
 
 # load information
 
@@ -582,26 +619,6 @@ class DatabaseManager(object):
 			self.cur.execute(query, [date, ])
 		except sqlite3.Error as e:
 			self.saveToLog("duetoday - Error :" + str(e))
-			return False
-		self.Result = self.cur.fetchall()
-		return self.Result
-
-	def duedItems(self):
-		query = "SELECT "
-		query += "      loans.loanID, loans.itemID, loans.userID, loans.loanDate, loans.dueDate, loans.renewals, "
-		query += "      items.author, items.format, items.publisher, items.title, items.year, items.lang AS language, "
-		query += "      users.name, users.familyname, users.userID, users.role, "
-		query += "      grades.gradeName "
-		query += "FROM loans "
-		query += "INNER JOIN users ON users.userID = loans.userID  "
-		query += "INNER JOIN items ON loans.itemID = items.itemID "
-		query += "LEFT JOIN grades ON users.grade = grades.gradeID "
-		query += "WHERE dueDate < ? "
-
-		try:
-			self.cur.execute(query, [todaysDate(), ])
-		except sqlite3.Error as e:
-			self.saveToLog("duedItems - Error :" + str(e))
 			return False
 		self.Result = self.cur.fetchall()
 		return self.Result

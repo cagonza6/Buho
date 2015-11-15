@@ -320,7 +320,7 @@ class EditItem(NewItem, QtGui.QDialog):
 			self.needsISBN = True
 		self.field_format.setCurrentIndex(self.listIndex(self.field_format, item.formatID()))
 		self.field_language.setCurrentIndex(self.listIndex(self.field_language, item.langIsoID()))
-		self.field_ISBN.setText(isbn)
+		self.field_ISBN.setText(str(isbn))
 		self.field_title.setText(item.title())
 		self.field_author.setText(item.author())
 		self.field_publisher.setText(item.publisher())
