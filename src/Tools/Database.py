@@ -141,7 +141,7 @@ class DatabaseManager(object):
 
 # search
 
-	def search_users(self, sStatus, column, keys, role, grade):
+	def search_users(self, sStatus, column_type, keys, role, grade):
 		querrydata = []
 		query = "SELECT "
 		query += "      users.userID,  users.role,  users.name,  users.familyname,  users.IDN,"
@@ -176,15 +176,21 @@ class DatabaseManager(object):
 			grade = int(grade)
 			query += "AND users.grade = ? "
 			querrydata.append(grade)
-
-		if column == Constants.NAME:
+		column = 'name'  # default
+		if column_type == Constants.NAME:
 			column = 'name'
-		if column == Constants.EMAIL:
+		if column_type == Constants.EMAIL:
 			column = 'email'
+		elif column_type == Constants.IDS:
+			column = 'userID'
 
+		if column_type == Constants.IDS:
+			if len(keys):
+				query += 'AND users.userID = ? '
+				querrydata.append(keys[0])
 		if len(keys):
 			key = keys[0].lower()
-			if column == Constants.NAME:
+			if column_type == Constants.NAME:
 				query += "AND (instr(lower(users.name),  ? ) OR instr(lower(users.familyname),  ? ) ) "
 				querrydata.append(key)
 				querrydata.append(key)
@@ -195,7 +201,7 @@ class DatabaseManager(object):
 					querrydata.append(key)
 					querrydata.append(key)
 
-			if column == Constants.EMAIL:
+			if column_type == Constants.EMAIL:
 				for key in keys:
 					query += "AND (users.email = ?) "
 					querrydata.append(key.lower())
@@ -209,7 +215,7 @@ class DatabaseManager(object):
 		Result = self.cur.fetchall()
 		return Result
 
-	def searchItemsFilters(self, sStatus, column, keys, format_):
+	def searchItemsFilters(self, sStatus, column_type, keys, format_):
 		query = ''
 		querrydata = []
 		'''
@@ -233,14 +239,21 @@ class DatabaseManager(object):
 			query += "AND items.format = ? "
 			querrydata.append(format_)
 
-		if column == Constants.AUTHOR:
+		column = 'title'  # default
+		if column_type == Constants.AUTHOR:
 			column = 'author'
-		elif column == Constants.TITLE:
+		elif column_type == Constants.TITLE:
 			column = 'title'
-		elif column == Constants.PUBLISHER:
+		elif column_type == Constants.PUBLISHER:
 			column = 'publisher'
+		elif column_type == Constants.IDS:
+			column = 'itemID'
 
-		if len(keys):
+		if column_type == Constants.IDS:
+			if len(keys):
+				query += 'AND items.itemID = ? '
+				querrydata.append(keys[0])
+		elif len(keys):
 			key = keys[0].lower()
 			query += "AND instr(lower(items." + column + "),  ?) \n"
 			querrydata.append(key)
@@ -252,7 +265,7 @@ class DatabaseManager(object):
 		query += "GROUP BY items.itemID;"
 		return query, querrydata
 
-	def searchItems(self, sStatus, column, keys, format_):
+	def searchItems(self, sStatus, column_type, keys, format_):
 		query = "SELECT "
 		query += "       items.itemID,  items.format,  items.ISBN,  items.title,  items.author,  items.publisher,  items.year,  items.location, items.comments,  "
 		query += "       item_formats.formatName,  languages.Ref_Name AS language,  "
@@ -264,7 +277,7 @@ class DatabaseManager(object):
 		query += "    left  JOIN loans        ON items.itemID = loans.itemID "
 		query += "WHERE items.itemID > 0 \n"
 
-		queryF, querrydata = self.searchItemsFilters(sStatus, column, keys, format_)
+		queryF, querrydata = self.searchItemsFilters(sStatus, column_type, keys, format_)
 		query += queryF
 
 		try:
@@ -275,7 +288,7 @@ class DatabaseManager(object):
 		Result = self.cur.fetchall()
 		return Result
 
-	def duedItems(self, sStatus, column, keys, format_):
+	def duedItems(self, sStatus, column_type, keys, format_):
 		query = "SELECT "
 		query += "      loans.loanID, loans.itemID, loans.userID, loans.loanDate, loans.dueDate, loans.renewals, "
 		query += "      items.author, items.format, items.publisher, items.title, items.year, items.lang AS language, "
@@ -287,7 +300,7 @@ class DatabaseManager(object):
 		query += "LEFT JOIN grades ON users.grade = grades.gradeID "
 		query += "WHERE dueDate < ? "
 
-		queryF, querrydata = self.searchItemsFilters(sStatus, column, keys, format_)
+		queryF, querrydata = self.searchItemsFilters(sStatus, column_type, keys, format_)
 		querrydata = [todaysDate()] + querrydata
 		query += queryF
 

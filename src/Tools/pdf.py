@@ -56,7 +56,9 @@ class PDFmethods():
 		filePDF.setFont(font, size)
 		filePDF.drawString(x, y, string)
 
-	def rectangle(self, x0, y0, x1, y1):
+	def rectangle(self, x0, y0, w, h):
+		x1 = x0 + w
+		y1 = y0 + h
 		return [
 			(x0, y0, x1, y0),  # horizontal down
 			(x0, y1, x1, y1),  # horizontal top
@@ -179,6 +181,99 @@ class DefaultReport(PDFmethods):
 		self.writeTitle(filePDF, title, font, font_big)
 		self.writeTableTitle(filePDF, subtitle, font, font_big, self.Y(35))
 		self.writeDate(filePDF, str(int2date(todaysDate())), font, font_normal)
+
+
+class CreateIDCard(PDFmethods):
+	def __init__(self, output, users, parent=None):
+		self.width, self.height = letter
+		self.filePDF = canvas.Canvas(output, pagesize=letter)
+		self.H = 54 * mm
+		self.W = 86 * mm
+		self.vdelay = 20
+		self.writeCardBatch(users)
+		self.filePDF.save()
+
+	def writeCardBatch(self, users):
+		x0, y0 = 5, 3
+		for i in range(0, len(users)):
+			user = users[i]
+			y = y0 + i * self.H / mm
+			if i:
+				y += i
+			self.writeIDcard(x0, y, user, self.filePDF)
+		self.filePDF.save()
+
+	def writeIDcard(self, x, y, user, filePDF):  # user data, school data
+		id_ = user.id2str()
+		x0, y0 = self.coord(x, y)
+		H = self.H
+		W = self.W
+		y0 -= H
+
+		# Font Size Definition
+		font_tiny = 6
+		font_small = 8
+		font_big = 10
+		font = 'Helvetica'
+
+		recs = self.rectangle(x0, y0, W, H) + self.rectangle(x0 + W, y0, W, H)
+		filePDF.lines(recs)
+
+		# photo square
+		x0f = x0 + 4 * mm
+		y0f = y0 + 8 * mm
+		hf = 32 * mm
+		wf = 22 * mm
+
+		rec2 = self.rectangle(x0f, y0f, wf, hf)
+		filePDF.lines(rec2)
+
+		# ###################
+		x0t = x0 + 30 * mm
+		y0t = y0 + H
+
+		# ### Data block
+		l = -1 * mm
+
+		# tittle and sub tittle
+		self.writetext(filePDF, font, font_big, x0t, y0t + 8 * l, 'Library Name - title')
+		self.writetext(filePDF, font, font_tiny, x0t, y0t + 11 * l, 'Schol Name - subtitle')
+		# writetext(font, font_small, x0t + 30*mm, y0t + 18 * l, 'Apellidos')
+
+		# user data
+		self.writetext(filePDF, font, font_tiny, x0t, y0t + 15 * l, 'Name')
+		self.writetext(filePDF, font, font_big, x0t + 3 * mm, y0t + 18 * l, user.name())
+		self.writetext(filePDF, font, font_big, x0t + 3 * mm, y0t + 22 * l, user.familyname())
+		self.writetext(filePDF, font, font_tiny, x0t, y0t + 30 * l, 'Role')
+		self.writetext(filePDF, font, font_big, x0t + 3 * mm, y0t + 34 * l, user.roleName())
+
+		# user barcode
+		# Id card Data
+		self.writetext(filePDF, font, font_tiny, x0t + 00 * mm, y0t + 48 * l, 'Date of issue:')
+		# self.writetext(filePDF, font, font_tiny, x0t + 25 * mm, y0t + 48 * l, 'Due Date')
+		self.writetext(filePDF, font, font_small, x0t + 00 * mm, y0t + 52 * l, str(int2date(todaysDate())))
+		# self.writetext(filePDF, font, font_small, x0t + 25 * mm, y0t + 52 * l, '12/12/2015')
+
+		xbc = x0 + W  # -5*mm
+		ybc = y0 - 16 * l
+		filePDF.setFont(font, font_big)
+		self.writeBarcode(id_, xbc, ybc, filePDF)
+
+		# School information
+		self.writetext(filePDF, font, font_small, x0 + W - 2 * l, y0t + 5 * l, 'Address L1')
+		self.writetext(filePDF, font, font_small, x0 + W - 2 * l, y0t + 9 * l, 'Address L2')
+
+		self.writetext(filePDF, font, font_small, x0 + W - 2 * l, y0t + 15 * l, 'Phone: +555-school')
+		self.writetext(filePDF, font, font_small, x0 + W - 2 * l, y0t + 18 * l, 'www.school.web')
+		self.writetext(filePDF, font, font_small, x0 + W - 2 * l, y0t + 21 * l, 'e@mail.com')
+
+		# logo
+		logo = Image('images/logo/logo.png')
+		logoSide = 76 * mm * .30
+		logo.drawHeight = logo.drawWidth = 76 * mm * .30
+		xl = x0 + 1.8 * W - logoSide / 2
+		yl = y0 - 30 * l
+		logo.drawOn(filePDF, xl, yl)
 
 if __name__ == "__main__":
 	pass

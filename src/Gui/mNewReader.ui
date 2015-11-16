@@ -493,6 +493,20 @@
       </spacer>
      </item>
      <item>
+      <widget class="QPushButton" name="btn_ban">
+       <property name="text">
+        <string>Ban</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="btn_card">
+       <property name="text">
+        <string>Generate ID card</string>
+       </property>
+      </widget>
+     </item>
+     <item>
       <widget class="QPushButton" name="button_add">
        <property name="text">
         <string>Add</string>

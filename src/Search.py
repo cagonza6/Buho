@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
-import os.path
 
 from PyQt4 import QtCore, QtGui
 
 from Gui.mSearch import Ui_SearchItemWindow
-from Gui.mExportPDF import Ui_PdfExport
+from Dialogs import PdfExport
 from Tools.ItemTools import formatID
 from Tools.Database import DBManager as DataBase
 from Tools.regexe import cleanKeywords
@@ -176,6 +175,14 @@ class SearchMaster(QtGui.QDialog, Ui_SearchItemWindow, TreeWiews):
 		data = self.getTreeData(reportPositions)
 		DefaultReport(data, pathToFile, colWidths, title='Buho Library Manager', subtitle=self.reportSubtitle, orientation=orientation)
 
+	def getSearchParams(self):
+		column = int(self.combo_parameters.itemData(self.combo_parameters.currentIndex()))
+		keywords = str(self.field_keywords.text())
+		role = self.combo_functions.itemData(self.combo_functions.currentIndex())
+		grade = self.combo_grades.itemData(self.combo_grades.currentIndex())
+		keys = cleanKeywords(keywords, column)
+		return column, keys, role, grade
+
 
 class SearchItemWin(SearchMaster):
 	def __init__(self, closable, status, parent=None):
@@ -196,7 +203,7 @@ class SearchItemWin(SearchMaster):
 		self.fillSearchStatus(statuses, status)
 
 		# Search Parameters
-		search_fields = [['Titulo', Constants.TITLE], ['Autor', Constants.AUTHOR], ['Editorial', Constants.PUBLISHER], ]
+		search_fields = [['Titulo', Constants.TITLE], ['Autor', Constants.AUTHOR], ['Editorial', Constants.PUBLISHER], ['ID', Constants.IDS]]
 		for field in search_fields:
 			self.combo_parameters.addItem(*field)  # text to show in the combobox
 
@@ -228,15 +235,6 @@ class SearchItemWin(SearchMaster):
 			elements = []
 		self.setSourceModel(self.createElementModel(elements))
 		self.setColumnWidth(self.proxyView, [16, 100, 200, 200, 200, 50, 50])
-
-	def getSearchParams(self):
-		column = int(self.combo_parameters.itemData(self.combo_parameters.currentIndex()))
-		keywords = str(self.field_keywords.text())
-		role = self.combo_functions.itemData(self.combo_functions.currentIndex())
-		grade = self.combo_grades.itemData(self.combo_grades.currentIndex())
-		keys = cleanKeywords(keywords)
-
-		return column, keys, role, grade
 
 	def openSearcher(self, id_):
 		if not id_:
@@ -291,7 +289,7 @@ class SearchUserWin(SearchMaster):
 		self.fillSearchStatus(statuses, status)
 
 		# Search Parameters
-		search_fields = [['Name', Constants.NAME], ['E-mail', Constants.EMAIL], ]
+		search_fields = [['Name', Constants.NAME], ['E-mail', Constants.EMAIL], ['ID', Constants.IDS]]
 		for field in search_fields:
 			self.combo_parameters.addItem(*field)  # text to show in the combobox
 
@@ -322,15 +320,6 @@ class SearchUserWin(SearchMaster):
 		self.setSourceModel(self.createElementModel(users))
 
 		self.setColumnWidth(self.proxyView, [16, 100, 200, 200, 50])
-
-	def getSearchParams(self):
-		column = int(self.combo_parameters.itemData(self.combo_parameters.currentIndex()))
-		keywords = str(self.field_keywords.text())
-		role = self.combo_functions.itemData(self.combo_functions.currentIndex())
-		grade = self.combo_grades.itemData(self.combo_grades.currentIndex())
-		keys = cleanKeywords(keywords)
-
-		return column, keys, role, grade
 
 	def openSearcher(self, id_):
 		if not id_:
@@ -417,14 +406,6 @@ class DuedItemWin(SearchMaster):
 		self.setSourceModel(self.createElementModel(elements))
 		self.setColumnWidth(self.proxyView, [16, 90, 90, 250, 200, 90, 250, 90, 100, 100, 90, 90])
 
-	def getSearchParams(self):
-		column = int(self.combo_parameters.itemData(self.combo_parameters.currentIndex()))
-		keywords = str(self.field_keywords.text())
-		role = self.combo_functions.itemData(self.combo_functions.currentIndex())
-		grade = self.combo_grades.itemData(self.combo_grades.currentIndex())
-		keys = cleanKeywords(keywords)
-		return column, keys, role, grade
-
 	def openSearcher(self, id_):
 		pass
 
@@ -456,101 +437,6 @@ class DuedItemWin(SearchMaster):
 		self.label_functions.setText(_translate("DuedItemWin", "Category", None))
 		self.label_title.setText(_translate("DuedItemWin", "Reports: Dued Items", None))
 
-
-class PdfExport(QtGui.QDialog, Ui_PdfExport):
-	def __init__(self, headers, maping, subtitle, baseName='Report', orientation=Constants.PAPER_PORTAIL, parent=None):
-		super(PdfExport, self).__init__()
-		self.setupUi(self)
-
-		if orientation == Constants.PAPER_LANDSCAPE:
-			self.radio_landscape.setChecked(True)
-		else:
-			self.radio_portail.setChecked(True)
-
-		self.headers = headers
-		headers[0] = '#'
-		self.maping = maping
-		self.pathToFile = False
-		self.subtitle = subtitle
-		self.baseName = baseName
-
-		self.connect(self.btn_searchFile, QtCore.SIGNAL("clicked()"), self.searchFile)
-		self.connect(self.btnExport, QtCore.SIGNAL("clicked()"), self.getExportInfo)
-		self.connect(self.btnCancel, QtCore.SIGNAL("clicked()"), self.closeWin)
-
-		self.cheks = [
-			self.checkBox_01, self.checkBox_02, self.checkBox_03, self.checkBox_04,
-			self.checkBox_05, self.checkBox_06, self.checkBox_07, self.checkBox_08,
-			self.checkBox_09, self.checkBox_10, self.checkBox_11, self.checkBox_12
-		]
-
-		self.field_title.setText(subtitle)
-
-		for i in range(0, len(self.cheks)):
-			self.cheks[i].hide()
-		for i in range(0, len(self.headers)):
-			self.cheks[i].show()
-			self.cheks[i].setText(headers[i])
-			if self.maping[i]:
-				self.cheks[i].setCheckState(QtCore.Qt.Checked)
-
-	def searchFile(self):
-		path = str(QtGui.QFileDialog.getSaveFileName(self, "Select Directory", '%s-%s.pdf' % (self.baseName, str(todaysDate())), '*.pdf'))
-		path = os.path.normcase(path)
-		self.field_path.setText(path)
-
-	def getExportInfo(self):
-		self.maping = self.remaping()
-		self.pathToFile = path = str(self.field_path.text()).strip()
-		self.subtitle = unicode(self.field_title.text())
-		self.orientation = self.checkOrientation()
-		if not self.checkPath(path) or not self.checkFields():
-			return
-		self.accept()
-
-	def checkOrientation(self):
-		if self.radio_portail.isChecked():
-			return Constants.PAPER_PORTAIL
-		return Constants.PAPER_LANDSCAPE
-
-	def checkPath(self, path):
-		checkPath = os.access(os.path.dirname(path), os.W_OK)
-		if not checkPath:
-			QtGui.QMessageBox.critical(self, 'Error', 'Invalid path to file.', QtGui.QMessageBox.Ok)
-			return False
-		return True
-
-	def checkFields(self):
-		if not self.checkMaping(self.maping):
-			QtGui.QMessageBox.critical(self, 'Error', 'At least two [2] fields required.', QtGui.QMessageBox.Ok)
-			return False
-		return True
-
-	def closeEvent(self, event):
-		self.closeWin()
-
-	def closeWin(self):
-		self.maping = self.maping * 0
-		self.pathToFile = False
-		self.accept()
-
-	def checkMaping(self, maping):
-		cnt = 0
-		for var in maping:
-			if var:
-				cnt += 1
-			if cnt > 1:
-				return True
-		return False
-
-	def remaping(self):
-		maping = []
-		for i in range(0, len(self.headers)):
-			if self.cheks[i].isChecked():
-				maping.append(1)
-			else:
-				maping.append(0)
-		return maping
 
 if __name__ == "__main__":
 	pass

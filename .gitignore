@@ -3,8 +3,10 @@ sqliteLog.txt
 #ignores geany project file
 *.geany
 
-#compiles Gui files
+#compiles Gui files for main windows and dialogs
 /src/Gui/*.py
+/src/Gui/dialogs/*.py
+
 #Ignore output folder
 /temp/*
 #Custom entries (rest is from gitignore template):

@@ -387,6 +387,40 @@
       </spacer>
      </item>
      <item>
+      <widget class="QPushButton" name="btn_ban">
+       <property name="text">
+        <string>Ban User</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer_3">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QPushButton" name="btn_printReport">
+       <property name="text">
+        <string>Print Report</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="btn_card">
+       <property name="text">
+        <string>Generate ID card</string>
+       </property>
+      </widget>
+     </item>
+     <item>
       <widget class="QPushButton" name="btn_ok">
        <property name="text">
         <string>Ok</string>

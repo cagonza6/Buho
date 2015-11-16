@@ -1,19 +1,23 @@
 # -*- coding: utf-8 -*-
 import textwrap
 
-from PyQt4 import QtGui
+from PyQt4 import QtGui, QtCore
 
 from Gui.mReaderInfo import Ui_ReaderInfo
 from Gui.mItemInfo import Ui_ItemInfo
 from Gui.mLoanInfo import Ui_LoanInfo
+from Dialogs import GetPath
+
 from Classes import Reader, Item
-from Tools import validations
 import config.GlobalConstants as Constants
 import session.Session as Session
+from Tools import validations
 from Tools.ItemTools import formatID
 from Tools.treeFunctions import TreeWiews
-from common import flagStatus, flag, userStatusIcon
 from Tools.timeFunctions import int2date, todaysDate
+from Tools.pdf import CreateIDCard
+
+from common import flagStatus, flag, userStatusIcon
 
 
 class ShowInfo():
@@ -41,47 +45,65 @@ class ReaderInfo(Ui_ReaderInfo, QtGui.QDialog, TreeWiews):
 	def __init__(self, id_, parent=None):
 		super(ReaderInfo, self).__init__()
 		self.setupUi(self)
+
+		self.btn_ban.hide()
+		self.btn_printReport.hide()
+
 		id_, aux = validations.validate(Constants.IDS, id_, Session.ROLES_INFO)
 
-		if id_:
-			reader = Reader(id_)
-			self.field_ID.setText(reader.id2str())
-			self.field_name.setText(textwrap.fill(reader.fullName(), width=36))
-			self.field_role.setText(reader.roleName())
-			self.field_email.setText(reader.email())
-			self.field_address.setText(reader.address())
-			self.field_cellphone.setText(reader.cellphone())
-			self.field_IDN.setText(reader.IDN())
-			self.field_grade.setText(reader.gradeName())
-			self.field_phone.setText(reader.phone())
-			self.field_comments.setText(textwrap.fill(reader.comments(), width=36))
+		# actions
+		self.connect(self.btn_card, QtCore.SIGNAL("clicked()"), self.getPath)
 
-			userStatusIcon(self.check_status, reader.status())
+		if id_:
+			self.reader = Reader(id_)
+			self.field_ID.setText(self.reader.id2str())
+			self.field_name.setText(textwrap.fill(self.reader.fullName(), width=36))
+			self.field_role.setText(self.reader.roleName())
+			self.field_email.setText(self.reader.email())
+			self.field_address.setText(self.reader.address())
+			self.field_cellphone.setText(self.reader.cellphone())
+			self.field_IDN.setText(self.reader.IDN())
+			self.field_grade.setText(self.reader.gradeName())
+			self.field_phone.setText(self.reader.phone())
+			self.field_comments.setText(textwrap.fill(self.reader.comments(), width=36))
+
+			userStatusIcon(self.check_status, self.reader.status())
 
 			# Data tables
-			# TODO
 			self.proxyLoans = QtGui.QSortFilterProxyModel(self)
 			self.proxyDueItems = QtGui.QSortFilterProxyModel(self)
 			self.proxyHistory = QtGui.QSortFilterProxyModel(self)
 
-			self.modelActiveloans = self.createElementModel(reader.activeLoans, ['itemIdStr', 'title', 'author', 'publisher', 'year'])
+			self.modelActiveloans = self.createElementModel(self.reader.activeLoans, ['itemIdStr', 'title', 'author', 'publisher', 'year'])
 			self.setHeaders(self.modelActiveloans, ['ID', 'Title', 'Author', 'Publisher', 'year'])
 			self.proxyLoans.setSourceModel(self.modelActiveloans)
 			self.treeLoans.setModel(self.proxyLoans)
 			self.setColumnWidth(self.treeLoans, [90, 150, 150, 150, 50])
 
-			self.modelActiveloans = self.createElementModel(reader.duedItems, ['itemIdStr', 'title', 'author', 'publisher', 'year'])
+			self.modelActiveloans = self.createElementModel(self.reader.duedItems, ['itemIdStr', 'title', 'author', 'publisher', 'year'])
 			self.setHeaders(self.modelActiveloans, ['ID', 'Title', 'Author', 'Publisher', 'year'])
 			self.proxyDueItems.setSourceModel(self.modelActiveloans)
 			self.treeDued.setModel(self.proxyDueItems)
 			self.setColumnWidth(self.treeDued, [90, 150, 150, 150, 50])
 
 			self.headersH = ['ID', 'Title', 'Author', 'Publisher', 'year', 'Due Date', 'Returned', 'Renewed']
-			self.modelHistory = self.createElementModelH(reader.history)
+			self.modelHistory = self.createElementModelH(self.reader.history)
 			self.setHeaders(self.modelHistory, self.headersH)
 			self.proxyHistory.setSourceModel(self.modelHistory)
 			self.treeHistory.setModel(self.proxyHistory)
 			self.setColumnWidth(self.treeHistory, [90, 220, 220, 180, 50, 120, 120, 50])
+
+	def getPath(self):
+		if not self.reader:
+			return
+		PathM = GetPath(self.reader.id2str(), self)
+		PathM.exec_()
+		pathToCard = PathM.pathToFile
+		if not pathToCard:
+			return
+		CreateIDCard(pathToCard, [self.reader,])
+
+
 
 	def createElementModelH(self, elements):
 		model = QtGui.QStandardItemModel(0, len(self.headersH), self)
