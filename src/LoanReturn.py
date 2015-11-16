@@ -116,6 +116,7 @@ class LoanReturnMaster(QtGui.QWidget, Ui_LoanReturn, ShowInfo):
 		self.label_field_author.setText('')
 		self.label_field_lang.setText('')
 		self.label_field_itemStatus.setText('')
+		self.field_renewals.setText('-')
 		flag(self.check_itemID, False)
 
 	def cleanall(self):

@@ -39,6 +39,11 @@ class ShowInfo():
 		self.label_field_title.setText(textwrap.fill(item.title(), width=36))
 		self.label_field_author.setText(textwrap.fill(item.author(), width=36))
 		self.label_field_lang.setText(item.language())
+		renewals = item.renewals()
+		if renewals:
+			self.field_renewals.setText(str(renewals))
+		else:
+			self.field_renewals.setText('0')
 
 
 class ReaderInfo(Ui_ReaderInfo, QtGui.QDialog, TreeWiews):
