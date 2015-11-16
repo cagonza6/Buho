@@ -11,6 +11,7 @@ from reportlab.pdfbase.pdfmetrics import stringWidth
 from Tools.timeFunctions import todaysDate, int2date
 import config.GlobalConstants as Constants
 
+import config.SchoolData as SchoolData
 
 class PDFmethods():
 	def __init__(self):
@@ -177,7 +178,7 @@ class DefaultReport(PDFmethods):
 		subtitle = self.subtitle
 		title = self.title
 
-		self.drawLogo(filePDF, 'images/logo/logo.png', 10, 15)
+		self.drawLogo(filePDF, SchoolData.SCHOOL_LOGO, 10, 15)
 		self.writeTitle(filePDF, title, font, font_big)
 		self.writeTableTitle(filePDF, subtitle, font, font_big, self.Y(35))
 		self.writeDate(filePDF, str(int2date(todaysDate())), font, font_normal)
@@ -236,9 +237,9 @@ class CreateIDCard(PDFmethods):
 		l = -1 * mm
 
 		# tittle and sub tittle
-		self.writetext(filePDF, font, font_big, x0t, y0t + 8 * l, 'Library Name - title')
-		self.writetext(filePDF, font, font_tiny, x0t, y0t + 11 * l, 'Schol Name - subtitle')
-		# writetext(font, font_small, x0t + 30*mm, y0t + 18 * l, 'Apellidos')
+		self.writetext(filePDF, font, font_big, x0t, y0t + 8 * l, SchoolData.LIBRARY_NAME)
+		self.writetext(filePDF, font, font_small, x0t, y0t + 11 * l, SchoolData.SCHOOL_NAME)
+
 
 		# user data
 		self.writetext(filePDF, font, font_tiny, x0t, y0t + 15 * l, 'Name')
@@ -260,15 +261,15 @@ class CreateIDCard(PDFmethods):
 		self.writeBarcode(id_, xbc, ybc, filePDF)
 
 		# School information
-		self.writetext(filePDF, font, font_small, x0 + W - 2 * l, y0t + 5 * l, 'Address L1')
-		self.writetext(filePDF, font, font_small, x0 + W - 2 * l, y0t + 9 * l, 'Address L2')
+		self.writetext(filePDF, font, font_small, x0 + W - 2 * l, y0t + 5 * l, SchoolData.SCHOOL_ADD1)
+		self.writetext(filePDF, font, font_small, x0 + W - 2 * l, y0t + 9 * l, SchoolData.SCHOOL_ADD2)
 
-		self.writetext(filePDF, font, font_small, x0 + W - 2 * l, y0t + 15 * l, 'Phone: +555-school')
-		self.writetext(filePDF, font, font_small, x0 + W - 2 * l, y0t + 18 * l, 'www.school.web')
-		self.writetext(filePDF, font, font_small, x0 + W - 2 * l, y0t + 21 * l, 'e@mail.com')
+		self.writetext(filePDF, font, font_small, x0 + W - 2 * l, y0t + 15 * l, '%s : %s' % ('Phone', SchoolData.SCHOOL_PHONE))
+		self.writetext(filePDF, font, font_small, x0 + W - 2 * l, y0t + 18 * l, SchoolData.SCHOOL_WEB)
+		self.writetext(filePDF, font, font_small, x0 + W - 2 * l, y0t + 21 * l, SchoolData.SCHOOL_EMAIL)
 
 		# logo
-		logo = Image('images/logo/logo.png')
+		logo = Image(SchoolData.SCHOOL_LOGO)
 		logoSide = 76 * mm * .30
 		logo.drawHeight = logo.drawWidth = 76 * mm * .30
 		xl = x0 + 1.8 * W - logoSide / 2
