@@ -303,7 +303,7 @@ class SearchUserWin(SearchMaster):
 		for grade in Session.GRADES_INFO:
 			self.combo_grades.addItem(grade['gradeName'], grade['gradeID'])
 
-		self.headers = ['', "ID", "Name", "Family Name", "Class"]
+		self.headers = [Constants.EMPTY, "ID", "Name", "Family Name", "Class"]
 		self.reportPositions = [1, 1, 1, 1, 1]
 		self.colWidths = [40, 70, 160, 160, 70]
 		self.colWidths = [Constants.WIDTH_NUM, Constants.WIDTH_ID, Constants.WIDTH_NAME, Constants.WIDTH_NAME, Constants.WIDTH_GRADE]

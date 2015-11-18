@@ -1,24 +1,26 @@
 /*
-Contiene todos los libros en existencia
-llave: id_libro unica para cada libro
+Contains all data from books
+primary key: itemID
 */
 CREATE TABLE items (
     itemID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE,
     format TEXT NOT NULL REFERENCES item_formats (formatID) ON UPDATE CASCADE DEFAULT 'BK',
+    barcode TEXT,
     ISBN TEXT,
     title TEXT,
     author TEXT,
     publisher TEXT DEFAULT ('?') NOT NULL,
     year INTEGER NOT NULL DEFAULT (1980),
     lang TEXT NOT NULL DEFAULT ('spa') REFERENCES languages (langIsoID) ON UPDATE CASCADE,
+    copy INTEGER NOT NULL DEFAULT (1),
     location TEXT,
     comments TEXT
 );
 
 
 /*
-contiene todos los usuarios registrados
-llave: id_usuario
+Contains all data from users
+primary key: userID
 */
 CREATE TABLE users (
     userID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE,
@@ -37,8 +39,31 @@ CREATE TABLE users (
     );
 
 /*
-*
-*
+Contains all data from bans ever done
+primary key: banID
+*/
+CREATE TABLE banlog (
+    banID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE,
+    userID INTEGER NOT NULL,
+    banned_by INTEGER NOT NULL,
+    ban_until INTEGER NOT NULL,
+    ban_date INTEGER NOT NULL,
+    ban_reason TEXT NOT NULL DEFAULT (' ')
+    );
+
+/*
+Contains all data from active bans
+primary key: banID
+*/
+CREATE TABLE ban_active (
+    banID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE,
+    userID INTEGER NOT NULL UNIQUE,
+    ban_until INTEGER NOT NULL
+    );
+
+/*
+Contains the data of active classrooms in the system
+primary key: gradeID
 */
 CREATE TABLE grades (
     gradeID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE,
@@ -61,10 +86,9 @@ INSERT INTO grades (gradeID, gradeName) VALUES (13,"Kinder");
 INSERT INTO grades (gradeID, gradeName) VALUES (14,"Pre-Kinder");
 
 /*
-Contiene los prestamos activos
-llave: id_prestamo
+Contains the data of active loans
+primary key: loanID
 */
--- Describe LOANS
 DROP TABLE if exists loans;
 CREATE TABLE loans (
     loanID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE,
@@ -72,13 +96,13 @@ CREATE TABLE loans (
     userID INTEGER NOT NULL REFERENCES users (userID) ON UPDATE CASCADE,
     loanDate INTEGER NOT NULL,
     dueDate INTEGER NOT NULL,
-    renewals INTEGER default(0)
+    renewals INTEGER DEFAULT(0)
 );
+
 /*
-Contiene el historial prestamos realizados
-llave: id_prestamo
+Contains the data of loans ever done
+primary key: loanID
 */
--- Describe HISTORY
 DROP TABLE if exists history;
 CREATE TABLE history (
    loanID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE,
@@ -86,15 +110,13 @@ CREATE TABLE history (
    userID INTEGER NOT NULL REFERENCES users (userID) ON UPDATE CASCADE,
    loanDate INTEGER NOT NULL,
    dueDate INTEGER NOT NULL,
-   returnDate INTEGER default 0,
-   renewals INTEGER default(0)
+   returnDate INTEGER DEFAULT 0,
+   renewals INTEGER DEFAULT(0)
 );
 
 /*
-contiene los posibles cargos a ocupar por quienes
-puedan pedir libros y los diferentes permisos de acceso (eventualmente)
-Se llena al momento del registro.
-Admin es el unico que pude registrar bibliotecarios.
+Contains the data of the possible roles of the users
+primary key: roleID
 */
 CREATE TABLE roles (
     roleID text NOT NULL PRIMARY KEY UNIQUE,
@@ -112,9 +134,11 @@ INSERT INTO roles (roleID, roleName,roleHasGrade) VALUES ("GD","Apoderado(a)"   
 INSERT INTO roles (roleID, roleName,roleHasGrade) VALUES ("OT","Otro"             ,0);
 
 /*
-Categorias de los items que pueden ser ingresados y prestados
-Utiliza la misma clasificacion general de el sistema sibuc de la UC
+Contains the information about the categories of items
+that exist in the system
+primary key: formatID
 */
+
 CREATE TABLE item_formats (
     formatID text NOT NULL PRIMARY KEY UNIQUE,
     formatName text NOT NULL,
@@ -130,10 +154,11 @@ INSERT INTO item_formats (formatID, formatName, formatNameShort) VALUES ("VM","M
 INSERT INTO item_formats (formatID, formatName, formatNameShort) VALUES ("MX","Material Mixto (Otros)","Otros");
 
 /*
-contiene los nombres de los idiomas en Iso, usables para clasificar.
-Los idiomas mas comunes para hispanohablantes son los primeros de la lista
-el resto viene posteriormente en orden alfabetico
+Contains the information about the categories of languages
+that can be asociated to the items
+primary key: langIsoID
 */
+
 CREATE TABLE languages (
     langIsoID TEXT PRIMARY KEY NOT NULL UNIQUE,
     Part2B TEXT NOT NULL,

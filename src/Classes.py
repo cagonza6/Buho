@@ -289,63 +289,6 @@ class Loan(BaseElement):
 			return False
 		return self.Data['renewals']
 
-'''
-class DuedLoan(BaseElement):
-	def __init__(self, type_, id_):
-
-		self.Data = False
-		self.Data = DataBase.loan_data(type_, id_)
-
-	def ID(self):
-		if not self.check():
-			return False
-		return self.Data['loanID']
-
-	def id2str(self):
-		if not self.check():
-			return False
-		return formatID('LO', self.Data['loanID'])
-
-	def itemID(self):
-		if not self.check():
-			return False
-		return self.Data['itemID']
-
-	def loanDate(self):
-		if not self.check():
-			return False
-		return self.Data['loanDate']
-
-	def userID(self):
-		if not self.check():
-			return False
-		return self.Data['userID']
-
-	def dueDate(self):
-		if not self.check():
-			return False
-		return self.Data['dueDate']
-
-	def renewals(self):
-		if not self.check():
-			return False
-		return self.Data['renewals']
-
-	def userName(self):
-		if not self.check():
-			return False
-		return self.Data['name']+' '+self.Data['familyname']
-
-	def itemTitle(self):
-		if not self.check():
-			return False
-		return self.Data['loanID']
-
-	def userGrade(self):
-		if not self.check():
-			return False
-		return self.Data['gradeName']
-'''
 
 if __name__ == '__main__':
 

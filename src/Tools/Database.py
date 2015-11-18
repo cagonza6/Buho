@@ -437,12 +437,12 @@ class DatabaseManager(object):
 			self.conn.commit()
 		return True
 
-	def returnItem(self, returnDate, loanID):
+	def returnItem(self, loanID):
 		# Erease the Loan from the active loans (table)
 		query1 = "DELETE FROM loans WHERE loanID = ?;"
 
 		# updates the status of the loan in the history table.
-		data2 = [returnDate, loanID]
+		data2 = [todaysDate(), loanID]
 		query2 = "UPDATE history set returnDate = ? WHERE loanID= ? ; "
 
 		error = False
@@ -619,7 +619,10 @@ class DatabaseManager(object):
 		self.Result = self.cur.fetchall()
 		return self.Result
 
-	def duetoday(self, date):
+	def dueInDate(self, date):
+		'''
+		it will also used to get reports for items 
+		'''
 		query = "SELECT "
 		query += "loans.itemID,  loans.loanID,  loans.renewals,  "
 		query += "items.title,  items.author "

@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>780</width>
-    <height>204</height>
+    <height>217</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -46,7 +46,7 @@
        <property name="title">
         <string>Item Data</string>
        </property>
-       <layout class="QGridLayout" name="gridLayout" columnstretch="0,0,0,1">
+       <layout class="QGridLayout" name="gridLayout" columnstretch="0,0,0,0">
         <item row="3" column="0">
          <widget class="QLabel" name="Label_author">
           <property name="text">
@@ -74,33 +74,41 @@
           </property>
          </widget>
         </item>
-        <item row="2" column="0">
-         <widget class="QLabel" name="label_title">
+        <item row="3" column="3">
+         <widget class="QLabel" name="label_field_author">
           <property name="text">
-           <string>Title</string>
+           <string/>
+          </property>
+         </widget>
+        </item>
+        <item row="5" column="1">
+         <widget class="QLabel" name="colon10">
+          <property name="text">
+           <string>:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="1">
+         <widget class="QLabel" name="colon9">
+          <property name="text">
+           <string>:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="5" column="0">
+         <widget class="QLabel" name="header_loanDate">
+          <property name="text">
+           <string>Loan Date</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
           </property>
          </widget>
         </item>
-        <item row="4" column="0">
-         <widget class="QLabel" name="label_itemLanglabel">
+        <item row="4" column="3">
+         <widget class="QLabel" name="label_field_lang">
           <property name="text">
-           <string>Language</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="5" column="3">
-         <widget class="QLabel" name="label_loanDate">
-          <property name="toolTip">
-           <string notr="true">yyyy-mm-dd</string>
-          </property>
-          <property name="text">
-           <string>YYYY-mm-dd</string>
+           <string/>
           </property>
          </widget>
         </item>
@@ -138,41 +146,54 @@
           </property>
          </widget>
         </item>
-        <item row="5" column="1">
-         <widget class="QLabel" name="colon10">
+        <item row="2" column="0">
+         <widget class="QLabel" name="label_title">
           <property name="text">
-           <string>:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="4" column="1">
-         <widget class="QLabel" name="colon9">
-          <property name="text">
-           <string>:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="5" column="0">
-         <widget class="QLabel" name="header_loanDate">
-          <property name="text">
-           <string>Loan Date</string>
+           <string>Title</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
           </property>
          </widget>
         </item>
-        <item row="4" column="3">
-         <widget class="QLabel" name="label_field_lang">
+        <item row="4" column="0">
+         <widget class="QLabel" name="label_itemLanglabel">
           <property name="text">
-           <string/>
+           <string>Language</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
           </property>
          </widget>
         </item>
-        <item row="3" column="3">
-         <widget class="QLabel" name="label_field_author">
+        <item row="5" column="3">
+         <widget class="QLabel" name="label_loanDate">
+          <property name="toolTip">
+           <string notr="true">yyyy-mm-dd</string>
+          </property>
           <property name="text">
-           <string/>
+           <string>YYYY-mm-dd</string>
+          </property>
+         </widget>
+        </item>
+        <item row="6" column="0" alignment="Qt::AlignRight">
+         <widget class="QLabel" name="label_renewals">
+          <property name="text">
+           <string>Renewals</string>
+          </property>
+         </widget>
+        </item>
+        <item row="6" column="3">
+         <widget class="QLabel" name="field_renewals">
+          <property name="text">
+           <string>-</string>
+          </property>
+         </widget>
+        </item>
+        <item row="6" column="1">
+         <widget class="QLabel" name="colon10_2">
+          <property name="text">
+           <string>:</string>
           </property>
          </widget>
         </item>
@@ -187,7 +208,60 @@
        <property name="alignment">
         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
        </property>
-       <layout class="QGridLayout" name="gridLayout_4" rowstretch="0,0,0,0,0,0" columnstretch="0,0,1,0">
+       <layout class="QGridLayout" name="gridLayout_4" rowstretch="0,0,0,0,0,0" columnstretch="0,0,0,0">
+        <item row="3" column="0">
+         <widget class="QLabel" name="label_loans">
+          <property name="text">
+           <string>Loans</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="1">
+         <widget class="QLabel" name="colon7">
+          <property name="text">
+           <string>:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="0">
+         <widget class="QLabel" name="label_delays">
+          <property name="text">
+           <string>Delays</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="label_name">
+          <property name="text">
+           <string>Name</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="3">
+         <widget class="QLabel" name="check_delay">
+          <property name="maximumSize">
+           <size>
+            <width>16</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+          <property name="pixmap">
+           <pixmap resource="myicons.qrc">:/status/resources/pixmap/icons/status/status-no.png</pixmap>
+          </property>
+         </widget>
+        </item>
         <item row="1" column="2">
          <widget class="QLabel" name="label_field_name">
           <property name="text">
@@ -228,16 +302,6 @@
           </property>
          </widget>
         </item>
-        <item row="5" column="2">
-         <widget class="QLabel" name="label_dueDate">
-          <property name="toolTip">
-           <string notr="true">yyyy-mm-dd</string>
-          </property>
-          <property name="text">
-           <string>YYYY-mm-dd</string>
-          </property>
-         </widget>
-        </item>
         <item row="2" column="2">
          <widget class="QLabel" name="label_reader_role">
           <property name="text">
@@ -266,53 +330,6 @@
          <widget class="QLabel" name="colon6">
           <property name="text">
            <string>:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="0">
-         <widget class="QLabel" name="label_loans">
-          <property name="text">
-           <string>Loans</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="4" column="1">
-         <widget class="QLabel" name="colon7">
-          <property name="text">
-           <string>:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="4" column="0">
-         <widget class="QLabel" name="label_delays">
-          <property name="text">
-           <string>Delays</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="5" column="0">
-         <widget class="QLabel" name="header_dueDatelabel">
-          <property name="text">
-           <string>Due Date</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="0">
-         <widget class="QLabel" name="label_name">
-          <property name="text">
-           <string>Name</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
           </property>
          </widget>
         </item>
@@ -345,19 +362,23 @@
           </property>
          </widget>
         </item>
-        <item row="4" column="3">
-         <widget class="QLabel" name="check_delay">
-          <property name="maximumSize">
-           <size>
-            <width>16</width>
-            <height>16777215</height>
-           </size>
+        <item row="5" column="2">
+         <widget class="QLabel" name="label_dueDate">
+          <property name="toolTip">
+           <string notr="true">yyyy-mm-dd</string>
           </property>
           <property name="text">
-           <string/>
+           <string>YYYY-mm-dd</string>
           </property>
-          <property name="pixmap">
-           <pixmap resource="myicons.qrc">:/status/resources/pixmap/icons/status/status-no.png</pixmap>
+         </widget>
+        </item>
+        <item row="5" column="0">
+         <widget class="QLabel" name="header_dueDatelabel">
+          <property name="text">
+           <string>Due Date</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
           </property>
          </widget>
         </item>
@@ -382,7 +403,14 @@
       </spacer>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton_2">
+      <widget class="QPushButton" name="btnEdit">
+       <property name="text">
+        <string>Edit Loan</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="btnReturn">
        <property name="text">
         <string>Return Item</string>
        </property>

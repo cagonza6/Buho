@@ -2,6 +2,7 @@
 
 # ######## General ################
 NULL = ''
+EMPTY = ' '
 
 # ######## GENERAL STATUS #########
 STATUS_INVALID = 0
@@ -86,3 +87,16 @@ TABLE_ITEMS = 'items'
 TABLE_fORMATS = 'item_formats'
 TABLE_LOANS = 'loans'
 TABLE_HISTORY = 'history'
+
+
+# #################################
+'''
+Actinos to take to transit fro window to window sometimes.
+At the moment just used in HomePage to call other windows in MainWindow.
+'''
+
+
+#Note:  Never use 0 here
+ACTION_RETURN_ITEM = 1
+ACTION_EDIT_LOAN = 2
+

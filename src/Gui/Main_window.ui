@@ -24,7 +24,7 @@
    </size>
   </property>
   <property name="windowTitle">
-   <string>BiblioteK</string>
+   <string>Buho</string>
   </property>
   <property name="locale">
    <locale language="Spanish" country="Chile"/>
@@ -97,11 +97,19 @@
     </property>
     <addaction name="action_Quit"/>
    </widget>
+   <widget class="QMenu" name="menuAbout">
+    <property name="title">
+     <string>About</string>
+    </property>
+    <addaction name="actionAbout_Buho"/>
+    <addaction name="actionAbout_Qt"/>
+   </widget>
    <addaction name="menuBook"/>
    <addaction name="menuReaders"/>
    <addaction name="menuLoans"/>
    <addaction name="menuReports"/>
    <addaction name="menuSalir"/>
+   <addaction name="menuAbout"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <widget class="QToolBar" name="toolBar">
@@ -335,6 +343,16 @@
    </property>
    <property name="text">
     <string>Home</string>
+   </property>
+  </action>
+  <action name="actionAbout_Qt">
+   <property name="text">
+    <string>About Qt</string>
+   </property>
+  </action>
+  <action name="actionAbout_Buho">
+   <property name="text">
+    <string>About Buho</string>
    </property>
   </action>
  </widget>

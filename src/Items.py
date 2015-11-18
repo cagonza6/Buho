@@ -77,15 +77,8 @@ class NewItem(QtGui.QWidget, Ui_NewItem):
 			lang = Session.LANGUAGES_INFO[i]
 			if langIso not in lang.values():
 				continue
-			if lang['langIsoID'] == langIso:
-				langAux = 'langIsoID'
-			elif lang['Part2B'] == langIso:
-				langAux = 'Part2B'
-			elif lang['Part2T'] == langIso:
-				langAux = 'Part2T'
-			elif lang['Part1'] == langIso:
-				langAux = 'Part1'
-			language = lang[langAux]
+			if langIso in lang.values():
+				language = lang['langIsoID']
 		return language
 
 	def setlang(self, langIso):
@@ -122,7 +115,7 @@ class NewItem(QtGui.QWidget, Ui_NewItem):
 	'''
 
 	def reset(self):
-		self.field_ISBN.setText('')
+		#self.field_ISBN.setText(Constants.EMPTY)
 		self.needsISBN = False
 		self.cleanall()
 		self.field_format.setCurrentIndex(0)
@@ -138,11 +131,11 @@ class NewItem(QtGui.QWidget, Ui_NewItem):
 
 	def defaults(self):
 		self.field_title.setText('untitled')
-		self.field_ISBN.setText(' ')
+		self.field_ISBN.setText(Constants.EMPTY)
 		self.field_author.setText('unknown')
 		self.field_publisher.setText('unknown')
-		self.field_location.setText('')
-		self.field_comments.setPlainText('')
+		self.field_location.setText(Constants.EMPTY)
+		self.field_comments.setPlainText(Constants.EMPTY)
 
 	'''
 	Methods to check and valid data
@@ -350,7 +343,7 @@ class EditItem(NewItem, QtGui.QDialog):
 				QtGui.QMessageBox.information(self, 'Sucess', 'Item Saved.', QtGui.QMessageBox.Ok)
 				self.reset()
 				self.cleanall()
-				self.field_itemID.setText('')
+				self.field_itemID.setText(Constants.EMPTY)
 			else:
 				QtGui.QMessageBox.critical(self, 'Error', 'Error while saving.', QtGui.QMessageBox.Ok)
 

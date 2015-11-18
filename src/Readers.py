@@ -75,17 +75,17 @@ class NewReader(QtGui.QWidget, Ui_NewReader):
 				QtGui.QMessageBox.critical(self, 'Error', 'Error while saving.', QtGui.QMessageBox.Ok)
 
 	def cleanall(self):
-		self.field_name.setText('')
-		self.field_familyname.setText('')
+		self.field_name.setText(Constants.EMPTY)
+		self.field_familyname.setText(Constants.EMPTY)
 		self.list_grades.setCurrentIndex(0)
 		self.list_roles.setCurrentIndex(0)
 		self.list_grades.setCurrentIndex(0)
-		self.field_IDN.setText('')
-		self.field_email.setText('')
-		self.field_address.setText('')
-		self.field_telephone.setText('')
-		self.field_cellphone.setText('')
-		self.field_comments.setPlainText('')
+		self.field_IDN.setText(Constants.EMPTY)
+		self.field_email.setText(Constants.EMPTY)
+		self.field_address.setText(Constants.EMPTY)
+		self.field_telephone.setText(Constants.EMPTY)
+		self.field_cellphone.setText(Constants.EMPTY)
+		self.field_comments.setPlainText(Constants.EMPTY)
 
 	def defaults(self):
 		self.field_name.setText('Jhon')
@@ -95,10 +95,10 @@ class NewReader(QtGui.QWidget, Ui_NewReader):
 		self.list_grades.setCurrentIndex(0)
 		self.field_IDN.setText('11111111-1')
 		self.field_email.setText('a@a.com')
-		self.field_address.setText('')
+		self.field_address.setText(Constants.EMPTY)
 		self.field_telephone.setText('000000')
 		self.field_cellphone.setText('90000000')
-		self.field_comments.setPlainText('')
+		self.field_comments.setPlainText(Constants.EMPTY)
 
 	def reset(self):
 		pass

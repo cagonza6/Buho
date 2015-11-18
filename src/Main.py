@@ -20,12 +20,18 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
 	def __init__(self, parent=None):
 		super(MainWindow, self).__init__()
 		self.setupUi(self)
+		self.showMaximized()
 
 		self.NeedsAccept = False
 		#
 		# General Actions
 		#
 		self.actionHome.triggered.connect(self.MainPage)
+
+		#
+		# About Actions
+		#
+		self.actionAbout_Qt.triggered.connect(self.aboutQt)
 
 		#
 		# Users Actions
@@ -49,7 +55,7 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
 		self.actionLoan_Item.triggered.connect(self.LoanItem)
 		self.actionReturn_Item.triggered.connect(self.ReturnItem)
 		self.actionLoanedItems.triggered.connect(self.LoanedItems)
-		# self.actionEdit_Loan.triggered.connect(self.EditLoan)
+		# self.actionEdit_Loan.triggered.connect(self.editLoan)
 
 		#
 		# Reports
@@ -87,8 +93,8 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
 	def LoanItem(self):
 		self.changePanel(LoanItem(self))
 
-	def ReturnItem(self):
-		self.changePanel(ReturnItem(self))
+	def ReturnItem(self, id_=False):
+		self.changePanel(ReturnItem(id_, self))
 
 	def RenewItem(self):
 		self.changePanel(RenewItem(self))
@@ -104,6 +110,9 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
 
 	def DuedItems(self):
 		self.changePanel(DuedItemWin(False, GlobalConstants.ALL_ITEMS, self))
+
+	def aboutQt(self):
+		QtGui.QMessageBox.aboutQt(self, 'About Qt')
 
 	'''
 	def closeEvent(self, event):

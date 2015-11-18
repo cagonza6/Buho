@@ -106,9 +106,7 @@ class ReaderInfo(Ui_ReaderInfo, QtGui.QDialog, TreeWiews):
 		pathToCard = PathM.pathToFile
 		if not pathToCard:
 			return
-		CreateIDCard(pathToCard, [self.reader,])
-
-
+		CreateIDCard(pathToCard, [self.reader, ])
 
 	def createElementModelH(self, elements):
 		model = QtGui.QStandardItemModel(0, len(self.headersH), self)
@@ -155,7 +153,7 @@ class ItemInfo(Ui_ItemInfo, QtGui.QDialog, TreeWiews):
 		self.field_ISBN.setText(item.ISBN())
 		self.field_author.setText(textwrap.fill(item.author(), width=36))
 		self.field_language.setText(item.language())
-		self.field_status.setText('')
+		self.field_status.setText(Constants.EMPTY)
 		self.field_year.setText(str(item.year()))
 		flagStatus(self.check_status, item.status())
 
@@ -192,11 +190,22 @@ class ItemInfo(Ui_ItemInfo, QtGui.QDialog, TreeWiews):
 
 
 class LoanInfo(QtGui.QDialog, Ui_LoanInfo, ShowInfo):
-	def __init__(self, loan, reader, item, parent=None):
+	def __init__(self, loan, reader, item, edit, return_, parent=None):
 		super(LoanInfo, self).__init__()
 		self.setupUi(self)
 
+		if not edit:
+			self.btnEdit.hide()
+		# else:
+			# self.connect(self.btnEdit, QtCore.SIGNAL("clicked()"), self.doEditLoan)
+		if not return_:
+			self.btnReturn.hide()
+		else:
+			self.connect(self.btnReturn, QtCore.SIGNAL("clicked()"), self.doReturnLoan)
+
 		self.showReaderInfo(reader)
+
+		self.actionToTake = False
 
 		flag(self.check_delay, not reader.delays())
 		flag(self.check_dued, loan.dueDate() >= todaysDate())
@@ -205,3 +214,20 @@ class LoanInfo(QtGui.QDialog, Ui_LoanInfo, ShowInfo):
 		self.label_dueDate.setText(str(int2date(loan.dueDate())))
 
 		self.showItemInfo(item)
+
+	def doReturnLoan(self):
+		reply = QtGui.QMessageBox.question(self, 'Message', "Are you sure you want to return the item?", QtGui.QMessageBox.Yes, QtGui.QMessageBox.No)
+		if reply == QtGui.QMessageBox.Yes:
+			self.actionToTake = Constants.ACTION_RETURN_ITEM
+			self.accept()
+
+		return
+	'''
+	def doEditLoan(self):
+		reply = QtGui.QMessageBox.question(self, 'Message', "Are you sure you want to modify the loan?", QtGui.QMessageBox.Yes, QtGui.QMessageBox.No)
+		if reply == QtGui.QMessageBox.Yes:
+			self.actionToTake = Constants.ACTION_EDIT_LOAN
+			self.accept()
+
+		return
+	'''

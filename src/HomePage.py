@@ -14,9 +14,10 @@ class Home(QtGui.QWidget, Ui_MainPage, TreeWiews):
 	def __init__(self, parent=None):
 		super(Home, self).__init__()
 		self.setupUi(self)
+		self.parent = parent
 
 		self.lastLoans = DataBase.lastNloans()
-		self.dueToday = DataBase.duetoday(todaysDate())
+		self.dueToday = DataBase.dueInDate(todaysDate())
 		self.itemsInCats = DataBase.itemsInCategory()
 
 		# defines the proxy
@@ -55,18 +56,28 @@ class Home(QtGui.QWidget, Ui_MainPage, TreeWiews):
 
 	def getLastLoansID(self):
 		loanID = str(self.tree_lastLoans.selectedIndexes()[0].data())
-		self.showLoanInfo(loanID)
+		self.showLoanInfo(loanID, True, False)
 
 	def getDueTodayID(self):
 		loanID = str(self.tree_dueToday.selectedIndexes()[0].data())
-		self.showLoanInfo(loanID)
+		self.showLoanInfo(loanID, False, True)
 
-	def showLoanInfo(self, LoanID):
+	def showLoanInfo(self, LoanID, edit, return_):
 		loan = Loan(Constants.TYPE_LOAN, int(LoanID))
 		reader = Reader(loan.userID())
 		item = Item(loan.itemID())
-		showinfo = LoanInfo(loan, reader, item, self)
+		showinfo = LoanInfo(loan, reader, item, edit, return_, self)
 		showinfo.exec_()
+		action = showinfo.actionToTake
+		if not action:
+			return
+		if action == Constants.ACTION_RETURN_ITEM:
+			if self.parent:
+				self.parent.ReturnItem(item.id2str())
+			'''
+			elif action == Constants.ACTION_EDIT_ITEM:
+				self.parent.editLoan(item.id2str())
+			'''
 
 	def fillStatistics(self):
 		self.value_itemsTotal.setText(str(DataBase.totalFromTable(Constants.TABLE_ITEMS)))

@@ -101,27 +101,27 @@ class LoanReturnMaster(QtGui.QWidget, Ui_LoanReturn, ShowInfo):
 		self.resetLoan()
 
 	def cleanReader(self):
-		self.label_field_name.setText('')
-		self.label_reader_role.setText('')
-		self.label_field_rederloans.setText('')
-		self.label_field_delays.setText('')
-		self.label_field_userStatus.setText('')
+		self.label_field_name.setText(Constants.EMPTY)
+		self.label_reader_role.setText(Constants.EMPTY)
+		self.label_field_rederloans.setText(Constants.EMPTY)
+		self.label_field_delays.setText(Constants.EMPTY)
+		self.label_field_userStatus.setText(Constants.EMPTY)
 		flag(self.check_loans, False)
 		flag(self.check_delay, False)
 		flag(self.check_userID, False)
 
 	def cleanItem(self):
-		self.label_field_isbn.setText('')
-		self.label_field_title.setText('')
-		self.label_field_author.setText('')
-		self.label_field_lang.setText('')
-		self.label_field_itemStatus.setText('')
+		self.label_field_isbn.setText(Constants.EMPTY)
+		self.label_field_title.setText(Constants.EMPTY)
+		self.label_field_author.setText(Constants.EMPTY)
+		self.label_field_lang.setText(Constants.EMPTY)
+		self.label_field_itemStatus.setText(Constants.EMPTY)
 		self.field_renewals.setText('-')
 		flag(self.check_itemID, False)
 
 	def cleanall(self):
-		self.field_itemID.setText('')
-		self.field_readerID.setText('')
+		self.field_itemID.setText(Constants.EMPTY)
+		self.field_readerID.setText(Constants.EMPTY)
 		self.cleanReader()
 		self.cleanItem()
 
@@ -306,7 +306,7 @@ class LoanItem(LoanReturnMaster):
 
 
 class ReturnItem(LoanReturnMaster):
-	def __init__(self, parent=None):
+	def __init__(self, id_, parent=None):
 		super(ReturnItem, self).__init__()
 
 		# Proper dates for the calendars
@@ -316,6 +316,11 @@ class ReturnItem(LoanReturnMaster):
 		self.hideElements()
 		self.retranslateUi2()
 
+		if id_:
+			self.field_itemID.setText(id_)
+			self.loadItem()
+			self.groupLoad.hide()
+
 	#
 	# ID related methods
 	#
@@ -324,10 +329,10 @@ class ReturnItem(LoanReturnMaster):
 		self.resetReader()
 		self.checkID(Constants.TYPE_ITEM)
 
-	def searchReader_():
+	def searchReader_(self):
 		pass
 
-	def OnChangeReaderID():
+	def OnChangeReaderID(self):
 		pass
 
 	def loadReader(self, id_):
@@ -377,10 +382,10 @@ class ReturnItem(LoanReturnMaster):
 		if item:
 			if not item.loaned():
 				QtGui.QMessageBox.critical(self, 'warning', 'Item is not loaned.', QtGui.QMessageBox.Ok)
-				self.label_field_itemStatus.setText("Can not be retrieved")
+				self.label_field_itemStatus.setText("Can not be Returned")
 				result = False
 			else:
-				self.label_field_itemStatus.setText("Can be retrieved")
+				self.label_field_itemStatus.setText("Can be Returned")
 		flag(self.check_item, result)
 
 		self.item = result
@@ -391,24 +396,21 @@ class ReturnItem(LoanReturnMaster):
 
 	def handleButton(self):
 		if not self.loan:
-			returnData = [False, False]
+			returnData = False
 		else:
-			returnData = [
-				todaysDate(),
-				self.loan.ID()
-			]
+			returnData = self.loan.ID()
 
-		if (False in returnData):
+		if (not returnData):
 			QtGui.QMessageBox.critical(self, 'Error', 'There is information Missing or wrong.', QtGui.QMessageBox.Ok)
 		else:
-			saved = DataBase.returnItem(*returnData)
+			saved = DataBase.returnItem(returnData)
 			if saved:
-				QtGui.QMessageBox.information(self, 'Sucess', 'Item retrieved.', QtGui.QMessageBox.Ok)
+				QtGui.QMessageBox.information(self, 'Sucess', 'Item Returned.', QtGui.QMessageBox.Ok)
 				self.resetall()
 				self.cleanall()
 				self.cheackall()
 			else:
-				QtGui.QMessageBox.critical(self, 'Error', 'Error while retrieving.', QtGui.QMessageBox.Ok)
+				QtGui.QMessageBox.critical(self, 'Error', 'Error while Returned.', QtGui.QMessageBox.Ok)
 
 	def retranslateUi2(self):
 		self.groupCalendarLoanDate.setTitle(_translate("LoanReturn", "Loan Date", None))
@@ -432,10 +434,10 @@ class RenewItem(LoanReturnMaster):
 		self.resetReader()
 		self.checkID(Constants.TYPE_ITEM)
 
-	def searchReader_():
+	def searchReader_(self):
 		pass
 
-	def OnChangeReaderID():
+	def OnChangeReaderID(self):
 		pass
 
 	def loadItem(self):
@@ -485,13 +487,13 @@ class RenewItem(LoanReturnMaster):
 	def checkItem(self, item=False):
 		result = item
 		self.label_field_itemStatus.setText("Can be renewed.")
-		self.label_field_itemStatus.setText('')
+		self.label_field_itemStatus.setText(Constants.EMPTY)
 		if item:
 			if not item.loaned():
 				QtGui.QMessageBox.critical(self, 'warning', 'Item is not loaned.', QtGui.QMessageBox.Ok)
 				result = False
 			else:
-				self.label_field_itemStatus.setText("Can be retrieved")
+				self.label_field_itemStatus.setText("Can be Returned")
 			if item.renewals() >= Constants.RENEWAL_LIMIT:
 				QtGui.QMessageBox.critical(self, 'warning', 'Limit of Renewals reached.', QtGui.QMessageBox.Ok)
 				result = False
@@ -526,7 +528,7 @@ class RenewItem(LoanReturnMaster):
 				self.cleanall()
 				self.cheackall()
 			else:
-				QtGui.QMessageBox.critical(self, 'Error', 'Error while retrieving.', QtGui.QMessageBox.Ok)
+				QtGui.QMessageBox.critical(self, 'Error', 'Error while Returned.', QtGui.QMessageBox.Ok)
 
 	def retranslateUi2(self):
 		self.groupCalendarLoanDate.setTitle(_translate("LoanReturn", "Today", None))
