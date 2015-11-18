@@ -11,13 +11,23 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>Reader Information</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
+    <widget class="QLabel" name="title">
+     <property name="text">
+      <string>Reader Information</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item>
     <widget class="QGroupBox" name="groupBox_4">
      <property name="title">
-      <string>Reader Information</string>
+      <string>Details</string>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_2">
       <item>

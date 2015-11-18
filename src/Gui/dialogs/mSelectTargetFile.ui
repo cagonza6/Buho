@@ -7,13 +7,23 @@
     <x>0</x>
     <y>0</y>
     <width>529</width>
-    <height>116</height>
+    <height>150</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Save File</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QLabel" name="title">
+     <property name="text">
+      <string>Login</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+   </item>
    <item>
     <widget class="QGroupBox" name="groupBox">
      <property name="title">

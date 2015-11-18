@@ -24,9 +24,19 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_2">
    <item>
+    <widget class="QLabel" name="title">
+     <property name="text">
+      <string>Item Information</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item>
     <widget class="QGroupBox" name="groupBox">
      <property name="title">
-      <string>Item Information</string>
+      <string>Details</string>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout">
       <item>
@@ -357,6 +367,7 @@
   <zorder>groupBox</zorder>
   <zorder>verticalSpacer</zorder>
   <zorder>groupBox_2</zorder>
+  <zorder>title</zorder>
  </widget>
  <resources>
   <include location="myicons.qrc"/>

@@ -8,6 +8,7 @@ sip.setapi('QVariant', 2)
 
 from PyQt4 import QtGui
 from Gui.Main_window import Ui_MainWindow
+from Dialogs import AboutApplication
 from Items import NewItem, EditItem
 from HomePage import Home
 from Readers import NewReader, EditReader
@@ -32,6 +33,7 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
 		# About Actions
 		#
 		self.actionAbout_Qt.triggered.connect(self.aboutQt)
+		self.actionAbout_Buho.triggered.connect(self.aboutApp)
 
 		#
 		# Users Actions
@@ -114,6 +116,9 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
 	def aboutQt(self):
 		QtGui.QMessageBox.aboutQt(self, 'About Qt')
 
+	def aboutApp(self):
+		ab = AboutApplication(self)
+		ab.exec_()
 	'''
 	def closeEvent(self, event):
 		result = QtGui.QMessageBox.question(self,
@@ -149,6 +154,8 @@ if __name__ == '__main__':
 	import sys
 
 	app = QtGui.QApplication(sys.argv)
+	app.setApplicationName('Buho')
+	app.setApplicationVersion('Alpha - 0.1')
 	window = MainWindow()
 	window.show()
 	sys.exit(app.exec_())

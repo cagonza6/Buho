@@ -4,6 +4,7 @@ import os.path
 from PyQt4 import QtCore, QtGui
 from Gui.dialogs.mExportPDF import Ui_PdfExport
 from Gui.dialogs.mSelectTargetFile import Ui_SelectTargetFile
+from Gui.mAbout import Ui_About
 from Tools.timeFunctions import todaysDate
 
 import config.GlobalConstants as Constants
@@ -127,3 +128,49 @@ class PdfExport(Ui_PdfExport, PathMethods):
 			else:
 				maping.append(0)
 		return maping
+
+
+class AboutApplication(QtGui.QDialog, Ui_About):
+	def __init__(self, parent=None):
+		super(AboutApplication, self).__init__()
+		self.setupUi(self)
+
+		self.setWindowTitle("About %s" % QtCore.QCoreApplication.applicationName())
+		self.title.setText(QtCore.QCoreApplication.applicationName())
+		self.version.setText("Version %s" % QtCore.QCoreApplication.applicationVersion())
+
+		title_font = QtGui.QFont()
+		title_font.setBold(True)
+		title_font.setPointSize(title_font.pointSize() + 4)
+		self.title.setFont(title_font)
+
+		authors = [
+			("Maite Barros", "maite.barros@gmail.com"),
+			(unicode("Cristian González", 'utf-8'), "cagonza6@gmail.com")
+		]
+		web = 'http://www.google.com'
+		thanksto = False
+		self.content.setHtml(self.aboutText(authors, web, thanksto))
+
+	def MakeHtml(self, name, email=False):
+		line = name
+		if not email:
+			return line
+		else:
+			line = "%s &lt;<a href=\"mailto:%s\">%s</a>&gt;" % (name, email, email)
+		return line
+
+	def aboutText(self, authors, kUrl, thanksTo):
+		ret = ''
+		if kUrl:
+			ret += "<p><a href=\"%s\">%s</a></p><p><b>%s:</b>" % (kUrl, kUrl, "Authors")
+
+		for author in authors:
+			ret += "<br />" + self.MakeHtml(*author)
+
+		if thanksTo:
+			ret += "</p><p><b>%s:</b>" % ("Thanks to", )
+			for person in thanksTo:
+				ret += "<br />" + self.MakeHtml(person)
+
+		return ret

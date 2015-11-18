@@ -5,7 +5,7 @@ from PyQt4 import QtGui, QtCore
 from Gui.mNewReader import Ui_NewReader
 from Tools import validations
 from Tools.Database import DBManager as DataBase
-from common import flag
+from common import flag, _translate
 import config.GlobalConstants as Constants
 from Classes import Reader
 import session.Session as Session
@@ -17,6 +17,8 @@ class NewReader(QtGui.QWidget, Ui_NewReader):
 		super(NewReader, self).__init__()
 		self.setupUi(self)
 		self.frameEditReader.hide()
+		self.hideShowActionButtons(False)
+
 		# The idea is to validate the format of each field. Then, when a
 		# field is modified it trigers the corresponding check of field
 		self.connect(self.field_name, QtCore.SIGNAL("textChanged(QString)"), self.getName)
@@ -38,6 +40,14 @@ class NewReader(QtGui.QWidget, Ui_NewReader):
 		self.reset()
 		self.cheackall()
 		self.defaults()
+
+	def hideShowActionButtons(self, show):
+		if show:
+			self.btn_ban.show()
+			self.btnunban.show()
+		else:
+			self.btn_ban.hide()
+			self.btnunban.hide()
 
 	def fillGrades(self):
 		if Session.GRADES_INFO:
@@ -206,9 +216,11 @@ class EditReader(NewReader, QtGui.QDialog):
 		self.connect(self.buttonSearch, QtCore.SIGNAL("clicked()"), self.searchReader)
 		self.connect(self.field_readerID, QtCore.SIGNAL("textChanged(QString)"), self.changeID)
 
+		self.retranslateUi2()
 	def changeID(self):
 		self.checkID()
 		self.cleanall()
+		self.hideShowActionButtons(False)
 
 	def searchReader(self):
 		self.searchElement(Constants.TYPE_USER, Constants.ALL_USERS)
@@ -250,6 +262,7 @@ class EditReader(NewReader, QtGui.QDialog):
 			if not reader.role() == ident:
 				return False
 			self.showReaderData(reader)
+			# Here select button by status: ban button or unban button
 		return id_, ident
 
 	def showReaderData(self, reader):
@@ -288,3 +301,9 @@ class EditReader(NewReader, QtGui.QDialog):
 				self.cleanall()
 			else:
 				QtGui.QMessageBox.critical(self, 'Error', 'Error while saving.', QtGui.QMessageBox.Ok)
+
+	def retranslateUi2(self):
+		self.retranslateUi(self)
+		self.setWindowTitle(_translate("EditReader", "Edit Reader", None))
+		self.title.setText(_translate("EditReader", "Edit Reader", None))
+		self.button_add.setText(_translate("EditReader", "Edit", None))

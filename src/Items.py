@@ -350,5 +350,5 @@ class EditItem(NewItem, QtGui.QDialog):
 	def retranslateUi2(self):
 		self.retranslateUi(self)
 		self.setWindowTitle(_translate("NewItem", "Edit Item", None))
-		self.Label_windowTitle.setText(_translate("NewItem", "Edit Item", None))
+		self.title.setText(_translate("NewItem", "Edit Item", None))
 		self.button_add.setText(_translate("NewItem", "Edit", None))

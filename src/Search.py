@@ -345,7 +345,7 @@ class SearchUserWin(SearchMaster):
 		return model
 
 	def retranslateUi_2(self):
-		self.label_title.setText(_translate("SearchItemWindow", "Search Readers", None))
+		self.title.setText(_translate("SearchItemWindow", "Search Readers", None))
 
 
 class DuedItemWin(SearchMaster):
@@ -435,7 +435,7 @@ class DuedItemWin(SearchMaster):
 
 	def retranslateUi_2(self):
 		self.label_functions.setText(_translate("DuedItemWin", "Category", None))
-		self.label_title.setText(_translate("DuedItemWin", "Reports: Dued Items", None))
+		self.title.setText(_translate("DuedItemWin", "Reports: Dued Items", None))
 
 
 if __name__ == "__main__":

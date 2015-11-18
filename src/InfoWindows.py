@@ -27,8 +27,10 @@ class ShowInfo():
 	def showReaderInfo(self, reader):
 		if not reader:
 			return
-		self.label_field_name.setText(textwrap.fill(reader.name(), width=36))
+		self.label_field_name.setText(textwrap.fill(reader.fullName(), width=36))
 		self.label_reader_role.setText(reader.roleName())
+		self.field_grade.setText(reader.gradeName())
+		self.field_email.setText(reader.email())
 		self.label_field_rederloans.setText('%s/%s' % (str(reader.loans()), str(Constants.ST_MAX_LOANS)))
 		self.label_field_delays.setText(str(reader.delays()))
 
