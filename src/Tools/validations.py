@@ -2,9 +2,8 @@
 import re
 from datetime import date
 
-from isbnlib import clean as isbnclean, is_isbn10, is_isbn13, to_isbn13, canonical, mask
-
 import config.GlobalConstants as Constants
+import ISBN
 
 
 # Removes breacklines and empty spaces at the end and begining of the string
@@ -28,12 +27,7 @@ def validate_comments(comments):
 
 
 def validate_isbn(isbnlike):
-	isbnlike = isbnclean(isbnlike)
-	if is_isbn10(isbnlike):
-		return mask(canonical(isbnlike), separator='-')
-	if is_isbn13(isbnlike):
-		return mask(canonical(isbnlike), separator='-')
-	return False
+	return ISBN.isISBN(isbnlike)
 
 
 def validate_year(year):

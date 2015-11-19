@@ -47,6 +47,9 @@ EMAIL     = 9
 PHONE     = 10
 CELPHONE  = 11
 COMMENTS  = 12
+ISBN10    = 13
+ISBN13    = 14
+BARCODE   = 15
 
 # ######## Icons ##################
 ICON_VALID = ":/status/resources/pixmap/icons/status/status-ok.png"
@@ -88,15 +91,13 @@ TABLE_fORMATS = 'item_formats'
 TABLE_LOANS = 'loans'
 TABLE_HISTORY = 'history'
 
-
 # #################################
 '''
 Actinos to take to transit fro window to window sometimes.
 At the moment just used in HomePage to call other windows in MainWindow.
 '''
 
-
-#Note:  Never use 0 here
+#Note:  Never use 0 in this enumeration
 ACTION_RETURN_ITEM = 1
 ACTION_EDIT_LOAN = 2
 

@@ -4,6 +4,7 @@ from isbnlib import meta as isbnmetadata
 
 from Gui.mNewItem import Ui_NewItem
 from Tools import validations
+from Tools import ISBN
 from Tools.Database import DBManager as DataBase
 from Search import SearchItemWin
 import config.GlobalConstants as Constants
@@ -17,7 +18,7 @@ class NewItem(QtGui.QWidget, Ui_NewItem):
 		super(NewItem, self).__init__()
 		self.setupUi(self)
 		self.frameEditItem.hide()
-
+		self.newItem = True  # to identify the module
 		# The idea is to validate the format of each field. Then, when a
 		# field is modified it trigers the corresponding check of field
 		self.connect(self.field_format, QtCore.SIGNAL("currentIndexChanged(int)"), self.getFormat)
@@ -34,7 +35,7 @@ class NewItem(QtGui.QWidget, Ui_NewItem):
 		self.reset()
 		# Button action
 		self.connect(self.button_add, QtCore.SIGNAL("clicked()"), self.handleButton)
-		self.connect(self.buttonIsbnSearch, QtCore.SIGNAL("clicked()"), self.buttonISBNSearch)
+		self.connect(self.buttonIsbnSearch, QtCore.SIGNAL("clicked()"), self.searchISBN)
 		# ISBN check, some book could not have one
 		self.check_needIsbn.toggled.connect(self.getFormat)
 
@@ -85,18 +86,37 @@ class NewItem(QtGui.QWidget, Ui_NewItem):
 		langIso = self.getlangtype(langIso)
 		self.field_language.setCurrentIndex(self.listIndex(self.field_language, langIso))
 
-	def buttonISBNSearch(self):
-		bookIsbn = self.getISBN()
+	def searchISBN(self):
+		fromDb = metaData = False
+		itemFromDb = item = False
+		copies = 0
+		cleanISBN = ISBN.clean(self.getISBN())
+		itemFromDb = DataBase.searchByCodeBar(cleanISBN)
+		self.field_ISBN.setText(ISBN.formated(cleanISBN))
+		if itemFromDb:
+			item = Item(itemFromDb['itemID'])
+			copies = int(itemFromDb['copies'])
+			reply = QtGui.QMessageBox.question(self, 'Question', 'There are [%s] copies of this item in the actual Datadase. Do you want to use the data of them?' % copies, QtGui.QMessageBox.Yes, QtGui.QMessageBox.No)
+			if reply == QtGui.QMessageBox.No:
+				itemFromDb = False
 
-		if bookIsbn:
-			self.field_ISBN.setText(bookIsbn)
-			metaData = isbnmetadata(bookIsbn, service='default', cache='default')
-			if metaData:
-				QtGui.QMessageBox.information(self, 'Search', 'Book Found.', QtGui.QMessageBox.Ok)
-			else:
-				QtGui.QMessageBox.information(self, 'Search', 'Book not Found.', QtGui.QMessageBox.Ok)
-				return
+		if itemFromDb:
+			self.fillItemFields(item)
+			fromDb = True
+		elif ISBN.isISBN(cleanISBN):
+			metaData = self.searchBookInet(cleanISBN)
 
+		if self.newItem:
+			self.field_copy.setValue(copies + 1)
+
+		if fromDb or metaData:
+			QtGui.QMessageBox.information(self, 'Search', 'Book Found.', QtGui.QMessageBox.Ok)
+		else:
+			QtGui.QMessageBox.information(self, 'Search', 'Book not Found.', QtGui.QMessageBox.Ok)
+
+	def searchBookInet(self, bookIsbn):
+		metaData = isbnmetadata(bookIsbn, service='default', cache='default')
+		if metaData:
 			if 'Publisher' in metaData.keys():
 				self.field_publisher.setText(metaData['Publisher'])
 			if 'Title' in metaData.keys():
@@ -109,17 +129,18 @@ class NewItem(QtGui.QWidget, Ui_NewItem):
 			if 'Language' in metaData.keys():
 				langIso = unicode(metaData['Language'])
 				self.setlang(langIso)
-
+		return metaData
 	'''
 	Methods to clean data
 	'''
 
 	def reset(self):
-		#self.field_ISBN.setText(Constants.EMPTY)
+		# self.field_ISBN.setText(Constants.EMPTY)
 		self.needsISBN = False
 		self.cleanall()
 		self.field_format.setCurrentIndex(0)
 		self.field_year.setValue(1400)
+		self.field_copy.setValue(1)
 
 	def cleanall(self):
 		self.field_title.setText(' ')
@@ -151,19 +172,38 @@ class NewItem(QtGui.QWidget, Ui_NewItem):
 		self.getLocation()
 		self.getComments()
 
-	def handleButton(self):
-		self.cheackall()
+	def fillItemFields(self, item):
+		self.field_format.setCurrentIndex(self.listIndex(self.field_format, item.formatID()))
+		self.field_language.setCurrentIndex(self.listIndex(self.field_language, item.langIsoID()))
+		self.field_ISBN.setText(ISBN.formated(item.ISBN()))
+		self.field_title.setText(item.title())
+		self.field_author.setText(item.author())
+		self.field_publisher.setText(item.publisher())
+		self.field_year.setValue(int(item.year()))
+		self.field_location.setText(item.location())
+		self.field_comments.setPlainText(item.comments())
+		self.field_copy.setValue(int(item.copy()))
+
+	def getData2sql(self):
 		itemData = [
 			self.getFormat(),
-			self.getISBN(),
+			ISBN.clean(self.getISBN()),
+			ISBN.isbn10(self.getISBN()),
+			ISBN.isbn13(self.getISBN()),
 			self.getTitile(),
 			self.getAuthor(),
 			self.getPublisher(),
 			self.getYear(),
 			self.getLanguage(),
 			self.getLocation(),
-			self.getComments()
+			self.getComments(),
+			self.getCopy()
 		]
+		return itemData
+
+	def handleButton(self):
+		self.cheackall()
+		itemData = self.getData2sql()
 
 		if (False in itemData):
 			QtGui.QMessageBox.critical(self, 'Error', 'There is information Missing or wrong.', QtGui.QMessageBox.Ok)
@@ -223,8 +263,14 @@ class NewItem(QtGui.QWidget, Ui_NewItem):
 		year = validations.validate(Constants.YEAR, inputyear)
 		return year
 
+	def getCopy(self):
+		copy = int(self.field_copy.value())
+		if copy:
+			return copy
+		return False
+
 	def getLanguage(self):
-		# Just used when called from buttonISBNSearch for automatic search
+		# Just used when called from searchISBN for automatic search
 		lang = self.field_language.itemData(self.field_language.currentIndex())
 		flag(self.label_language_check, self.field_language.currentIndex())
 
@@ -250,6 +296,7 @@ class NewItem(QtGui.QWidget, Ui_NewItem):
 class EditItem(NewItem, QtGui.QDialog):
 	def __init__(self, id_, parent=None):
 		super(EditItem, self).__init__()
+		self.newItem = False  # to identify the module
 		if not id_:
 			self.frameEditItem.show()
 		else:
@@ -311,29 +358,11 @@ class EditItem(NewItem, QtGui.QDialog):
 		isbn = item.ISBN()
 		if isbn:
 			self.needsISBN = True
-		self.field_format.setCurrentIndex(self.listIndex(self.field_format, item.formatID()))
-		self.field_language.setCurrentIndex(self.listIndex(self.field_language, item.langIsoID()))
-		self.field_ISBN.setText(str(isbn))
-		self.field_title.setText(item.title())
-		self.field_author.setText(item.author())
-		self.field_publisher.setText(item.publisher())
-		self.field_year.setValue(item.year())
-		self.field_location.setText(item.location())
-		self.field_comments.setPlainText(item.comments())
+		self.fillItemFields(item)
 
 	def handleButton(self):
-		itemData = [
-			self.getFormat(),
-			self.getISBN(),
-			self.getTitile(),
-			self.getAuthor(),
-			self.getPublisher(),
-			self.getYear(),
-			self.getLanguage(),
-			self.getLocation(),
-			self.getComments(),
-			self.checkID()[0]  # gets the ID, but not the aux variable used to test the type of item
-		]
+		itemData = self.getData2sql()
+		itemData.append(self.checkID()[0])  # gets the ID, but not the aux variable used to test the type of item
 
 		if (False in itemData):
 			QtGui.QMessageBox.critical(self, 'Error', 'There is information Missing or wrong.', QtGui.QMessageBox.Ok)

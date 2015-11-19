@@ -179,10 +179,19 @@ class Item(BaseElement):
 			return False
 		return self.Data['publisher']
 
+	def barcode(self):
+		if not self.check():
+			return False
+		if self.Data['barcode']:
+			return self.Data['barcode']
+
 	def ISBN(self):
 		if not self.check():
 			return False
-		return self.Data['ISBN']
+		if self.Data['ISBN10']:
+			return self.Data['ISBN10']
+		elif self.Data['ISBN13']:
+			return self.Data['ISBN13']
 
 	def langIsoID(self):
 		if not self.check():
@@ -237,6 +246,11 @@ class Item(BaseElement):
 		if not self.check():
 			return False
 		return self.Data['comments']
+
+	def copy(self):
+		if not self.check():
+			return False
+		return self.Data['copy']
 
 	def getHistory(self):
 		if self.history:

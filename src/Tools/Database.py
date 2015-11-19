@@ -35,7 +35,7 @@ class DatabaseManager(object):
 	###################
 	def load_categories(self):
 		query = "SELECT "
-		query += "        formatID,  formatName,  formatNameShort "
+		query += "        formatID, formatName, formatNameShort "
 		query += "FROM item_formats "
 		query += "ORDER BY formatID "
 
@@ -50,7 +50,7 @@ class DatabaseManager(object):
 
 	def load_languages(self):
 		query = "SELECT "
-		query += "        langIsoID,  Part2B,  Part2T,  Part1,  Ref_Name "
+		query += "        langIsoID, Part2B, Part2T, Part1, Ref_Name "
 		query += "FROM languages "
 		query += "ORDER BY langIsoID "
 
@@ -65,7 +65,7 @@ class DatabaseManager(object):
 
 	def load_roles(self):
 		query = "SELECT "
-		query += "        roleID,  roleName, roleHasGrade "
+		query += "        roleID, roleName, roleHasGrade "
 		query += "FROM roles "
 		query += "ORDER BY roleID "
 
@@ -80,7 +80,7 @@ class DatabaseManager(object):
 
 	def load_grades(self):
 		query = "SELECT "
-		query += "        gradeID,  gradeName "
+		query += "        gradeID, gradeName "
 		query += "FROM grades "
 		query += "ORDER BY gradeID "
 
@@ -100,11 +100,11 @@ class DatabaseManager(object):
 # creation and modifications
 	def save_new(self, type_, data_):
 		if type_ == Constants.TYPE_ITEM:
-			query = "INSERT INTO items ( format,  ISBN,  title,  author,  publisher,  year,  lang,  location, comments) "
-			query += "VALUES           (   ?   ,   ?  ,    ?  ,    ?   ,     ?     ,    ? ,    ? ,     ?    ,    ?    );"
+			query = "INSERT INTO items ( format, barcode, ISBN10, ISBN13, title, author, publisher, year, lang, location, comments, copy) "
+			query += "VALUES           (   ?   ,  ?     ,  ?    ,  ?    ,   ?  ,   ?   ,    ?     ,   ? ,   ? ,    ?    ,    ?    , ?);"
 		elif type_ == Constants.TYPE_USER:
-			query = "INSERT INTO users (  role,  name,  familyname,  IDN,  email,  address,  phone,  cellphone,  grade,  comments ) "
-			query += "VALUES           (   ?  ,  ?  ,      ?     ,   ? ,    ?  ,    ?    ,    ?  ,    ?       ,   ?  ,      ?     );"
+			query = "INSERT INTO users ( role, name, familyname, IDN, email, address, phone, cellphone, grade, comments ) "
+			query += "VALUES           (   ? ,  ?  ,      ?    ,   ?,   ?  ,   ?    ,   ?  ,    ?     ,   ?  ,    ?     );"
 		else:
 			return False
 
@@ -121,10 +121,10 @@ class DatabaseManager(object):
 
 	def edit_itemUser(self, type_, data_):
 		if type_ == Constants.TYPE_ITEM:
-			query = "UPDATE items SET format = ?,  ISBN = ? ,  title = ?,  author = ?,  publisher = ?,  year = ?,  lang = ?,  location = ?, comments = ? WHERE itemID = ?"
+			query = "UPDATE items SET format = ?, barcode = ?, ISBN10 = ?, ISBN13 = ?, title = ?, author = ?, publisher = ?, year = ?, lang = ?, location = ?, comments = ?, copy = ? WHERE itemID = ?"
 
 		elif type_ == Constants.TYPE_USER:
-			query = "UPDATE users SET role = ?,  name = ?,  familyname = ?,  IDN = ?,  email = ?,  address = ?,  phone = ?,  cellphone = ?,  grade = ?,  comments = ? WHERE userID = ?"
+			query = "UPDATE users SET role = ?, name = ?, familyname = ?, IDN = ?, email = ?, address = ?, phone = ?, cellphone = ?, grade = ?, comments = ? WHERE userID = ?"
 		else:
 			return False
 
@@ -144,11 +144,11 @@ class DatabaseManager(object):
 	def search_users(self, sStatus, column_type, keys, role, grade):
 		querrydata = []
 		query = "SELECT "
-		query += "      users.userID,  users.role,  users.name,  users.familyname,  users.IDN,"
-		query += "      users.email,  users.address,  users.phone,  users.cellphone,  users.comments, "
-		query += " users.IDN,  users.password,  users.status,  "
-		query += "      grades.gradeName,  "
-		query += "      roles.roleName,  roles.roleName,  "
+		query += "      users.userID, users.role, users.name, users.familyname, users.IDN,"
+		query += "      users.email, users.address, users.phone, users.cellphone, users.comments, "
+		query += "      users.IDN, users.password, users.status, "
+		query += "      grades.gradeName, "
+		query += "      roles.roleName, roles.roleName, "
 		query += "      count(loans.userID) AS loans "
 		query += "FROM users "
 		query += "INNER JOIN grades ON users.grade = grades.gradeID "
@@ -191,13 +191,13 @@ class DatabaseManager(object):
 		if len(keys):
 			key = keys[0].lower()
 			if column_type == Constants.NAME:
-				query += "AND (instr(lower(users.name),  ? ) OR instr(lower(users.familyname),  ? ) ) "
+				query += "AND (instr(lower(users.name), ? ) OR instr(lower(users.familyname), ? ) ) "
 				querrydata.append(key)
 				querrydata.append(key)
 				if len(keys) > 1:
 					for i in range(1, len(keys)):
 						key = keys[i].lower()
-					query += "OR (instr(lower(users.name),  ? ) OR instr(lower(users.familyname),  ? ) ) "
+					query += "OR (instr(lower(users.name), ? ) OR instr(lower(users.familyname), ? ) ) "
 					querrydata.append(key)
 					querrydata.append(key)
 
@@ -255,20 +255,21 @@ class DatabaseManager(object):
 				querrydata.append(keys[0])
 		elif len(keys):
 			key = keys[0].lower()
-			query += "AND instr(lower(items." + column + "),  ?) \n"
+			query += "AND instr(lower(items." + column + "), ?) \n"
 			querrydata.append(key)
 			if len(keys) > 1:
 				for i in range(1, len(keys)):
 					key = keys[i].lower()
-					query += "OR instr(lower(items." + column + "),  ?) \n"
+					query += "OR instr(lower(items." + column + "), ?) \n"
 					querrydata.append(key)
 		query += "GROUP BY items.itemID;"
 		return query, querrydata
 
 	def searchItems(self, sStatus, column_type, keys, format_):
 		query = "SELECT "
-		query += "       items.itemID,  items.format,  items.ISBN,  items.title,  items.author,  items.publisher,  items.year,  items.location, items.comments,  "
-		query += "       item_formats.formatName,  languages.Ref_Name AS language,  "
+		query += "       items.itemID, items.format, items.barcode, items.ISBN10, items.ISBN13, "
+		query += " items.title, items.author, items.publisher, items.year, items.location, items.comments, items.copy, "
+		query += "       item_formats.formatName, languages.Ref_Name AS language, "
 		query += "       count (loans.itemID) AS loaned, loans.dueDate, loans.loanDate, loans.renewals "
 		query += "FROM "
 		query += "    'items' "
@@ -291,7 +292,7 @@ class DatabaseManager(object):
 	def duedItems(self, sStatus, column_type, keys, format_):
 		query = "SELECT "
 		query += "      loans.loanID, loans.itemID, loans.userID, loans.loanDate, loans.dueDate, loans.renewals, "
-		query += "      items.author, items.format, items.publisher, items.title, items.year, items.lang AS language, "
+		query += "      items.author, items.format, items.publisher, items.title, items.year, items.lang AS language, items.copy, "
 		query += "      users.name, users.familyname, users.userID, users.role, "
 		query += "      grades.gradeName "
 		query += "FROM loans "
@@ -312,17 +313,37 @@ class DatabaseManager(object):
 		self.Result = self.cur.fetchall()
 		return self.Result
 
+	def searchByCodeBar(self, barcode):
+
+		if not barcode or barcode.strip() == '':
+			return False
+		querydata=[barcode, barcode, barcode]
+		query = "SELECT "
+		query += "      items.itemID, count(barcode) AS copies "
+		query += "FROM  items "
+		query += "WHERE items.barcode = ? "
+		query += "GROUP BY items.barcode ; "
+		try:
+			self.cur.execute(query, [barcode, ])
+		except sqlite3.Error as e:
+			self.saveToLog("searchByCodeBar:" + str(e))
+			return False
+
+		Result = self.cur.fetchone()
+
+		return Result
+
 
 # load information
 
 	def load_items(self, itemID=False):
 
 		query = "SELECT "
-		query += "       items.itemID,  items.format,  items.ISBN,  items.title,  items.author, "
-		query += "       items.publisher,  items.year,  items.location, items.comments,  "
-		query += "       item_formats.formatName,  item_formats.formatID,  languages.langIsoID, "
+		query += "       items.itemID, items.format, items.barcode, items.ISBN10, items.ISBN13, items.title, " 
+		query += "       items.author, items.publisher, items.year, items.location, items.comments, items.copy, "
+		query += "       item_formats.formatName, item_formats.formatID, languages.langIsoID, "
 		query += " languages.Ref_Name AS language, "
-		query += "       count (loans.itemID) AS loaned,  renewals "
+		query += "       count (loans.itemID) AS loaned, renewals "
 		query += "FROM "
 		query += "    'items' "
 		query += "    INNER JOIN item_formats ON items.format = item_formats.formatID "
@@ -351,11 +372,11 @@ class DatabaseManager(object):
 	def load_users(self, readerID=False):
 
 		query = "SELECT "
-		query += "      users.userID,  users.role,  users.name,  users.familyname,  users.IDN, "
-		query += "      users.email,  users.address,  users.phone,  users.cellphone,  users.comments, "
-		query += " users.IDN,  users.password,  users.status, "
-		query += "      grades.gradeID as grade, grades.gradeName,  "
-		query += "      roles.roleName,  "
+		query += "      users.userID, users.role, users.name, users.familyname, users.IDN, "
+		query += "      users.email, users.address, users.phone, users.cellphone, users.comments, "
+		query += " users.IDN, users.password, users.status, "
+		query += "      grades.gradeID as grade, grades.gradeName, "
+		query += "      roles.roleName, "
 		query += "      count(loans.userID) AS loans "
 		query += "FROM users "
 		query += "INNER JOIN grades ON users.grade = grades.gradeID "
@@ -405,8 +426,8 @@ class DatabaseManager(object):
 
 	def loanItem(self, itemID, userID, loanDate, dueDate):
 		data = [itemID, userID, loanDate, dueDate]
-		self.query1 = "INSERT INTO loans   ( itemID, userID, loanDate, dueDate) VALUES ( ?,  ?,  ?,  ?);"
-		self.query2 = "INSERT INTO history ( itemID, userID, loanDate, dueDate) VALUES ( ?,  ?,  ?,  ?);"
+		self.query1 = "INSERT INTO loans   ( itemID, userID, loanDate, dueDate) VALUES ( ?, ?, ?, ?);"
+		self.query2 = "INSERT INTO history ( itemID, userID, loanDate, dueDate) VALUES ( ?, ?, ?, ?);"
 
 		error = False
 		try:
@@ -422,8 +443,8 @@ class DatabaseManager(object):
 
 	def renewItem(self, date, loanID):
 		data = [date, loanID]
-		self.query1 = "UPDATE loans   set renewals = renewals+1,  dueDate = ? WHERE loanID = ? "
-		self.query2 = "UPDATE history set renewals = renewals+1,  dueDate = ? WHERE loanID = ? "
+		self.query1 = "UPDATE loans   set renewals = renewals+1, dueDate = ? WHERE loanID = ? "
+		self.query2 = "UPDATE history set renewals = renewals+1, dueDate = ? WHERE loanID = ? "
 
 		error = False
 		try:
@@ -491,8 +512,8 @@ class DatabaseManager(object):
 		if not userID:
 			return False
 		query = "SELECT "
-		query += "       items.itemID, items.title,  items.author, "
-		query += "       items.publisher,  items.year, "
+		query += "       items.itemID, items.title, items.author, "
+		query += "       items.publisher, items.year, "
 		query += "       item_formats.formatID, languages.Ref_Name AS language, "
 		query += "       history.renewals, history.dueDate, history.returnDate "
 		query += "FROM "
@@ -518,10 +539,10 @@ class DatabaseManager(object):
 		if not userID:
 			return False
 		query = "SELECT "
-		query += "       items.itemID, items.title,  items.author, "
-		query += "       items.publisher,  items.year, "
+		query += "       items.itemID, items.title, items.author, "
+		query += "       items.publisher, items.year, "
 		query += "       item_formats.formatID, languages.Ref_Name AS language, "
-		query += "       count (loans.itemID) AS loaned,  renewals "
+		query += "       count (loans.itemID) AS loaned, renewals "
 		query += "FROM "
 		query += "    'items' "
 		query += "    INNER JOIN item_formats ON items.format = item_formats.formatID "
@@ -545,10 +566,10 @@ class DatabaseManager(object):
 		if not userID:
 			return False
 		query = "SELECT "
-		query += "       items.itemID, items.title,  items.author, "
-		query += "       items.publisher,  items.year, "
+		query += "       items.itemID, items.title, items.author, "
+		query += "       items.publisher, items.year, "
 		query += "       item_formats.formatID, languages.Ref_Name AS language, "
-		query += "       count (loans.itemID) AS loaned,  renewals "
+		query += "       count (loans.itemID) AS loaned, renewals "
 		query += "FROM "
 		query += "    'items' "
 		query += "    INNER JOIN item_formats ON items.format = item_formats.formatID "
@@ -585,8 +606,8 @@ class DatabaseManager(object):
 
 	def lastNloans(self, limit=3):
 		query = "SELECT  "
-		query += "loans.itemID,  loans.loanID,  "
-		query += "items.title,  items.author "
+		query += "loans.itemID, loans.loanID, "
+		query += "items.title, items.author "
 		query += "FROM loans "
 		query += "INNER JOIN items ON loans.itemID = items.itemID "
 		query += "GROUP BY loans.itemID "
@@ -603,8 +624,8 @@ class DatabaseManager(object):
 
 	def lastNreturns(self, limit=3):
 		query = "SELECT "
-		query += "history.itemID,  "
-		query += "items.title,  items.author "
+		query += "history.itemID, "
+		query += "items.title, items.author "
 		query += "FROM history "
 		query += "INNER JOIN items ON history.itemID = items.itemID "
 		query += "WHERE returnDate>0 "
@@ -624,8 +645,8 @@ class DatabaseManager(object):
 		it will also used to get reports for items 
 		'''
 		query = "SELECT "
-		query += "loans.itemID,  loans.loanID,  loans.renewals,  "
-		query += "items.title,  items.author "
+		query += "loans.itemID, loans.loanID, loans.renewals, "
+		query += "items.title, items.author "
 		query += "FROM loans "
 		query += "INNER JOIN items ON loans.itemID = items.itemID "
 		query += "WHERE dueDate = ? "
