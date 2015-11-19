@@ -192,6 +192,21 @@ class Item(BaseElement):
 			return self.Data['ISBN10']
 		elif self.Data['ISBN13']:
 			return self.Data['ISBN13']
+		return False
+
+	def ISBN10(self):
+		if not self.check():
+			return False
+		if self.Data['ISBN10']:
+			return self.Data['ISBN10']
+		return False
+
+	def ISBN13(self):
+		if not self.check():
+			return False
+		if self.Data['ISBN13']:
+			return self.Data['ISBN13']
+		return False
 
 	def langIsoID(self):
 		if not self.check():
