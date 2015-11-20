@@ -13,8 +13,10 @@ def isISBN(isbnlike):
 
 
 def formated(isbnlike):
-	isbnlike = isbnclean(isbnlike)
-	return mask(canonical(isbnlike), separator='-')
+	isbnClean = isISBN(isbnclean(isbnlike))
+	if not isbnClean:
+		return isbnlike
+	return mask(canonical(isbnClean), separator='-')
 
 
 def clean(isbnlike):

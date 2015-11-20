@@ -1,4 +1,3 @@
-#!/usr/bin/python
 # -*- coding: utf-8 -*-
 import sqlite3
 
@@ -108,15 +107,14 @@ class DatabaseManager(object):
 		else:
 			return False
 
-		error = False
 		try:
 			self.cur.execute(query, data_)
 		except sqlite3.Error as e:
 			self.saveToLog("save_new:" + str(e))
-			error = True
+			self.conn.rollback()
 			return False
-		if not error:
-			self.conn.commit()
+
+		self.conn.commit()
 		return True
 
 	def edit_itemUser(self, type_, data_):
@@ -128,15 +126,14 @@ class DatabaseManager(object):
 		else:
 			return False
 
-		error = False
 		try:
 			self.cur.execute(query, data_)
 		except sqlite3.Error as e:
 			self.saveToLog("edit_itemUser:" + str(e))
-			error = True
+			self.conn.rollback()
 			return False
-		if not error:
-			self.conn.commit()
+
+		self.conn.commit()
 		return True
 
 # search
@@ -429,16 +426,15 @@ class DatabaseManager(object):
 		self.query1 = "INSERT INTO loans   ( itemID, userID, loanDate, dueDate) VALUES ( ?, ?, ?, ?);"
 		self.query2 = "INSERT INTO history ( itemID, userID, loanDate, dueDate) VALUES ( ?, ?, ?, ?);"
 
-		error = False
 		try:
 			self.cur.execute(self.query1, data)
 			self.cur.execute(self.query2, data)
 		except sqlite3.Error as e:
 			self.saveToLog("loanItem:" + str(e))
-			error = True
+			self.conn.rollback()
 			return False
-		if not error:
-			self.conn.commit()
+
+		self.conn.commit()
 		return True
 
 	def renewItem(self, date, loanID):
@@ -446,16 +442,15 @@ class DatabaseManager(object):
 		self.query1 = "UPDATE loans   set renewals = renewals+1, dueDate = ? WHERE loanID = ? "
 		self.query2 = "UPDATE history set renewals = renewals+1, dueDate = ? WHERE loanID = ? "
 
-		error = False
 		try:
 			self.cur.execute(self.query1, data)
 			self.cur.execute(self.query2, data)
 		except sqlite3.Error as e:
 			self.saveToLog("renewItem:" + str(e))
-			error = True
+			self.conn.rollback()
 			return False
-		if not error:
-			self.conn.commit()
+
+		self.conn.commit()
 		return True
 
 	def returnItem(self, loanID):
@@ -466,16 +461,15 @@ class DatabaseManager(object):
 		data2 = [todaysDate(), loanID]
 		query2 = "UPDATE history set returnDate = ? WHERE loanID= ? ; "
 
-		error = False
 		try:
 			self.cur.execute(query1, [loanID, ])
 			self.cur.execute(query2, data2)
 		except sqlite3.Error as e:
 			self.saveToLog("returnItem - Error :" + str(e))
-			error = True
+			self.conn.rollback()
 			return False
-		if not error:
-			self.conn.commit()
+
+		self.conn.commit()
 		return True
 
 # asociated to users, items and loans
