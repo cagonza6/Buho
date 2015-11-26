@@ -217,6 +217,7 @@ class EditReader(NewReader, QtGui.QDialog):
 		self.connect(self.field_readerID, QtCore.SIGNAL("textChanged(QString)"), self.changeID)
 
 		self.retranslateUi2()
+
 	def changeID(self):
 		self.checkID()
 		self.cleanall()

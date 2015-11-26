@@ -12,7 +12,7 @@ from Dialogs import AboutApplication
 from Items import NewItem, EditItem
 from HomePage import Home
 from Readers import NewReader, EditReader
-from LoanReturn import ReturnItem, LoanItem, RenewItem
+from LoanReturn import ReturnItem, LoanItem, RenewItem, EditLoan
 from Search import SearchItemWin, SearchUserWin, DuedItemWin
 from Tools.Database import DBManager as DataBase
 
@@ -57,7 +57,7 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
 		self.actionLoan_Item.triggered.connect(self.LoanItem)
 		self.actionReturn_Item.triggered.connect(self.ReturnItem)
 		self.actionLoanedItems.triggered.connect(self.LoanedItems)
-		# self.actionEdit_Loan.triggered.connect(self.editLoan)
+		self.actionEdit_Loan.triggered.connect(self.EditLoan)
 
 		#
 		# Reports
@@ -100,6 +100,9 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
 
 	def RenewItem(self):
 		self.changePanel(RenewItem(self))
+
+	def EditLoan(self):
+		self.changePanel(EditLoan(False, self))
 
 	def LoanedItems(self):
 		self.changePanel(SearchItemWin(False, GlobalConstants.LOANED_ITEMS, self))

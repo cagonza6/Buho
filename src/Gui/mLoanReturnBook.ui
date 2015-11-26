@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>800</width>
-    <height>574</height>
+    <height>680</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -34,6 +34,73 @@
      <property name="alignment">
       <set>Qt::AlignCenter</set>
      </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="frameMasterID">
+     <property name="title">
+      <string>Load Loan</string>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout_6">
+      <item>
+       <widget class="QLabel" name="check_MId">
+        <property name="text">
+         <string/>
+        </property>
+        <property name="pixmap">
+         <pixmap resource="myicons.qrc">:/status/resources/pixmap/icons/status/status-no.png</pixmap>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="MId_Name">
+        <property name="text">
+         <string>Loan ID</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="label_colon11">
+        <property name="text">
+         <string>:</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout_7">
+        <item>
+         <widget class="QLineEdit" name="fieldMasterId"/>
+        </item>
+        <item>
+         <widget class="QPushButton" name="buttonLoadMasterId">
+          <property name="text">
+           <string>Load</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer name="horizontalSpacer">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <widget class="QPushButton" name="buttonSearchMasterId">
+          <property name="text">
+           <string>Search Loan</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+     </layout>
     </widget>
    </item>
    <item>
@@ -95,19 +162,6 @@
          <string>Load</string>
         </property>
        </widget>
-      </item>
-      <item row="1" column="4">
-       <spacer name="horizontalSpacer_7">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>40</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
       </item>
       <item row="0" column="5">
        <widget class="QPushButton" name="buttonSearchBook">
@@ -497,37 +551,6 @@
    </item>
    <item>
     <layout class="QGridLayout" name="gridLayout_2">
-     <item row="0" column="2">
-      <widget class="QGroupBox" name="groupCalendarDueDate">
-       <property name="title">
-        <string>Due Date</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-       <layout class="QHBoxLayout" name="horizontalLayout_2">
-        <item>
-         <widget class="QCalendarWidget" name="calendarDueDay">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="locale">
-           <locale language="Spanish" country="Chile"/>
-          </property>
-          <property name="firstDayOfWeek">
-           <enum>Qt::Monday</enum>
-          </property>
-          <property name="gridVisible">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </widget>
-     </item>
      <item row="0" column="0">
       <widget class="QGroupBox" name="groupCalendarLoanDate">
        <property name="title">
@@ -596,6 +619,61 @@
       <widget class="QPushButton" name="buttonAction">
        <property name="text">
         <string>Loan</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="2">
+      <widget class="QGroupBox" name="groupCalendarDueDate">
+       <property name="title">
+        <string>Due Date</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       </property>
+       <layout class="QHBoxLayout" name="horizontalLayout_2">
+        <item>
+         <widget class="QCalendarWidget" name="calendarDueDay">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="locale">
+           <locale language="Spanish" country="Chile"/>
+          </property>
+          <property name="firstDayOfWeek">
+           <enum>Qt::Monday</enum>
+          </property>
+          <property name="gridVisible">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_3">
+     <item>
+      <spacer name="horizontalSpacer_2">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QPushButton" name="btn_delete">
+       <property name="text">
+        <string>Delete Loan</string>
        </property>
       </widget>
      </item>

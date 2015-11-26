@@ -12,7 +12,7 @@ class BaseElement:
 			return False
 		return True
 
-	def Data(self):
+	def ArrayData(self):
 		if not self.check():
 			return False
 		return self.Data

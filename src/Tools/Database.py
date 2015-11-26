@@ -1,3 +1,4 @@
+#!/usr/bin/python
 # -*- coding: utf-8 -*-
 import sqlite3
 
@@ -339,7 +340,7 @@ class DatabaseManager(object):
 		query += "       items.itemID, items.format, items.barcode, items.ISBN10, items.ISBN13, items.title, " 
 		query += "       items.author, items.publisher, items.year, items.location, items.comments, items.copy, "
 		query += "       item_formats.formatName, item_formats.formatID, languages.langIsoID, "
-		query += " languages.Ref_Name AS language, "
+		query += "       languages.Ref_Name AS language, "
 		query += "       count (loans.itemID) AS loaned, renewals "
 		query += "FROM "
 		query += "    'items' "

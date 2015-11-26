@@ -13,9 +13,9 @@ from Classes import Item
 import session.Session as Session
 
 
-class NewItem(QtGui.QWidget, Ui_NewItem):
+class ItemMaster(QtGui.QWidget, Ui_NewItem):
 	def __init__(self, parent=None):
-		super(NewItem, self).__init__()
+		super(ItemMaster, self).__init__()
 		self.setupUi(self)
 		self.frameEditItem.hide()
 		self.newItem = True  # to identify the module
@@ -202,19 +202,7 @@ class NewItem(QtGui.QWidget, Ui_NewItem):
 		return itemData
 
 	def handleButton(self):
-		self.cheackall()
-		itemData = self.getData2sql()
-
-		if (False in itemData):
-			QtGui.QMessageBox.critical(self, 'Error', 'There is information Missing or wrong.', QtGui.QMessageBox.Ok)
-		else:
-			saved = DataBase.save_new(Constants.TYPE_ITEM, itemData)
-			if saved:
-				QtGui.QMessageBox.information(self, 'Sucess', 'Item Saved.', QtGui.QMessageBox.Ok)
-				self.reset()
-				self.cleanall()
-			else:
-				QtGui.QMessageBox.critical(self, 'Error', 'Error while saving.', QtGui.QMessageBox.Ok)
+		pass
 
 	'''
 	check/get the data from the different fields
@@ -293,7 +281,27 @@ class NewItem(QtGui.QWidget, Ui_NewItem):
 		return index
 
 
-class EditItem(NewItem, QtGui.QDialog):
+class NewItem(ItemMaster):
+	def __init__(self, parent=None):
+		super(NewItem, self).__init__()
+
+	def handleButton(self):
+		self.cheackall()
+		itemData = self.getData2sql()
+
+		if (False in itemData):
+			QtGui.QMessageBox.critical(self, 'Error', 'There is information Missing or wrong.', QtGui.QMessageBox.Ok)
+		else:
+			saved = DataBase.save_new(Constants.TYPE_ITEM, itemData)
+			if saved:
+				QtGui.QMessageBox.information(self, 'Sucess', 'Item Saved.', QtGui.QMessageBox.Ok)
+				self.reset()
+				self.cleanall()
+			else:
+				QtGui.QMessageBox.critical(self, 'Error', 'Error while saving.', QtGui.QMessageBox.Ok)
+
+
+class EditItem(ItemMaster, QtGui.QDialog):
 	def __init__(self, id_, parent=None):
 		super(EditItem, self).__init__()
 		self.newItem = False  # to identify the module
@@ -343,7 +351,7 @@ class EditItem(NewItem, QtGui.QDialog):
 		flag(self.check_itemID, id_)
 		return id_, ident
 
-	def loadElement(self, dummy=False):
+	def loadElement(self):
 		id_, ident = self.checkID()
 		if not id_:
 			return False
