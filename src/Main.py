@@ -23,7 +23,6 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
 		self.setupUi(self)
 		self.showMaximized()
 
-		self.NeedsAccept = False
 		#
 		# General Actions
 		#
@@ -101,8 +100,8 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
 	def RenewItem(self):
 		self.changePanel(RenewItem(self))
 
-	def EditLoan(self):
-		self.changePanel(EditLoan(False, self))
+	def EditLoan(self, id_=False):
+		self.changePanel(EditLoan(id_, self))
 
 	def LoanedItems(self):
 		self.changePanel(SearchItemWin(False, GlobalConstants.LOANED_ITEMS, self))

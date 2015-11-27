@@ -13,6 +13,7 @@ CREATE TABLE items (
     publisher TEXT DEFAULT ('?') NOT NULL,
     year INTEGER NOT NULL DEFAULT (1980),
     lang TEXT NOT NULL DEFAULT ('spa') REFERENCES languages (langIsoID) ON UPDATE CASCADE,
+    volume INTEGER NOT NULL DEFAULT (0),
     copy INTEGER NOT NULL DEFAULT (1),
     location TEXT,
     comments TEXT

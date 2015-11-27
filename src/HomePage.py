@@ -74,10 +74,9 @@ class Home(QtGui.QWidget, Ui_MainPage, TreeWiews):
 		if action == Constants.ACTION_RETURN_ITEM:
 			if self.parent:
 				self.parent.ReturnItem(item.id2str())
-			'''
-			elif action == Constants.ACTION_EDIT_ITEM:
-				self.parent.editLoan(item.id2str())
-			'''
+		elif action == Constants.ACTION_EDIT_LOAN:
+			if self.parent:
+				self.parent.EditLoan(item.id2str())
 
 	def fillStatistics(self):
 		self.value_itemsTotal.setText(str(DataBase.totalFromTable(Constants.TABLE_ITEMS)))

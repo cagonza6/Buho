@@ -198,8 +198,8 @@ class LoanInfo(QtGui.QDialog, Ui_LoanInfo, ShowInfo):
 
 		if not edit:
 			self.btnEdit.hide()
-		# else:
-			# self.connect(self.btnEdit, QtCore.SIGNAL("clicked()"), self.doEditLoan)
+		else:
+			self.connect(self.btnEdit, QtCore.SIGNAL("clicked()"), self.doEditLoan)
 		if not return_:
 			self.btnReturn.hide()
 		else:
@@ -222,14 +222,12 @@ class LoanInfo(QtGui.QDialog, Ui_LoanInfo, ShowInfo):
 		if reply == QtGui.QMessageBox.Yes:
 			self.actionToTake = Constants.ACTION_RETURN_ITEM
 			self.accept()
-
 		return
-	'''
+
 	def doEditLoan(self):
 		reply = QtGui.QMessageBox.question(self, 'Message', "Are you sure you want to modify the loan?", QtGui.QMessageBox.Yes, QtGui.QMessageBox.No)
 		if reply == QtGui.QMessageBox.Yes:
 			self.actionToTake = Constants.ACTION_EDIT_LOAN
 			self.accept()
-
 		return
-	'''
+
