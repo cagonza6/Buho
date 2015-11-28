@@ -4,9 +4,10 @@ import os.path
 from PyQt4 import QtCore, QtGui
 from Gui.dialogs.mExportPDF import Ui_PdfExport
 from Gui.dialogs.mSelectTargetFile import Ui_SelectTargetFile
+from Gui.dialogs.mPrintCards import Ui_SaveCards
 from Gui.mAbout import Ui_About
 from Tools.timeFunctions import todaysDate
-
+import session.Session as Session
 import config.GlobalConstants as Constants
 
 
@@ -57,7 +58,6 @@ class GetPath(Ui_SelectTargetFile, PathMethods):
 class PdfExport(Ui_PdfExport, PathMethods):
 	def __init__(self, headers, maping, subtitle, baseName='Report', orientation=Constants.PAPER_PORTAIL, parent=None):
 		super(PdfExport, self).__init__()
-
 		if orientation == Constants.PAPER_LANDSCAPE:
 			self.radio_landscape.setChecked(True)
 		else:
@@ -128,6 +128,21 @@ class PdfExport(Ui_PdfExport, PathMethods):
 			else:
 				maping.append(0)
 		return maping
+
+
+class ExportCards(Ui_SaveCards, PathMethods):
+	def __init__(self, parent=None):
+		super(ExportCards, self).__init__()
+		self.baseName = 'ID-Card'
+		self.pathToFile = ''
+
+		self.combo_grades.addItem('Select', False)
+		for grade in Session.GRADES_INFO:
+			self.combo_grades.addItem(grade['gradeName'], grade['gradeID'])
+
+	def getExportInfo():
+		pass
+#		searcher = SearchUserWin()
 
 
 class AboutApplication(QtGui.QDialog, Ui_About):

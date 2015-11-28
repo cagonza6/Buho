@@ -188,6 +188,7 @@ class SearchItemWin(SearchMaster):
 	def __init__(self, closable, status, parent=None):
 		super(SearchItemWin, self).__init__()
 		self.closable = closable
+		self.allowReports(closable)
 		self.ID = False
 
 		self.proxyView.setItemDelegate(QCustomDelegate(Constants.TYPE_ITEM))
@@ -224,7 +225,6 @@ class SearchItemWin(SearchMaster):
 		self.combo_grades.hide()
 		self.labelGrades.hide()
 		self.retranslateUi_2()
-		self.allowReports(closable)
 
 	def btnSearch(self):
 		column, keys, role, grade = self.getSearchParams()
@@ -276,6 +276,7 @@ class SearchUserWin(SearchMaster):
 	def __init__(self, closable, status, parent=None):
 		super(SearchUserWin, self).__init__()
 		self.closable = closable
+		self.allowReports(closable)
 
 		self.proxyView.setItemDelegate(QCustomDelegate(Constants.TYPE_USER))
 
@@ -352,6 +353,7 @@ class DuedItemWin(SearchMaster):
 	def __init__(self, closable, status, parent=None):
 		super(DuedItemWin, self).__init__()
 		self.closable = closable
+		self.allowReports(closable)
 		self.ID = False
 
 		self.proxyView.setItemDelegate(QCustomDelegate(Constants.TYPE_ITEM, Constants.TYPE_LOAN))
@@ -394,7 +396,6 @@ class DuedItemWin(SearchMaster):
 
 		self.retranslateUi_2()
 		self.optionsBox.show()
-		self.allowReports(closable)
 
 	def btnSearch(self):
 		column, keys, role, grade = self.getSearchParams()

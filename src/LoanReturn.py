@@ -255,12 +255,19 @@ class LoanReturnMaster(QtGui.QWidget, Ui_LoanReturn, ShowInfo):
 			self.buttonAction.hide()
 
 	# Search Element
-	def searchElement(self, type_, status):
-		# Select the type of search window
+	def openSearchWindow(self, type_, status):
+		Searcher = False
 		if type_ == Constants.TYPE_USER:
 			Searcher = SearchUserWin(True, status, self)
 		elif type_ == Constants.TYPE_ITEM:
 			Searcher = SearchItemWin(True, status, self)
+		return Searcher
+
+	def searchElement(self, type_, status):
+		# Select the type of search window
+		Searcher = self.openSearchWindow(type_, status)
+		if not Searcher:
+			return
 		Searcher.exec_()
 		# After closing the dialog search for the Id of the object to be shown
 		ID = Searcher.ID

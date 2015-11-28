@@ -8,7 +8,7 @@ sip.setapi('QVariant', 2)
 
 from PyQt4 import QtGui
 from Gui.Main_window import Ui_MainWindow
-from Dialogs import AboutApplication
+from Dialogs import AboutApplication, ExportCards
 from Items import NewItem, EditItem
 from HomePage import Home
 from Readers import NewReader, EditReader
@@ -40,6 +40,7 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
 		self.actionNewReader.triggered.connect(self.addNewReader)
 		self.actionSearchReader.triggered.connect(self.SearchReaders)
 		self.actionEditReader.triggered.connect(self.editReader)
+		self.actionGenerate_Card.triggered.connect(self.GenerateCard)
 
 		#
 		# Item Actions
@@ -90,6 +91,9 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
 
 	def editReader(self):
 		self.changePanel(EditReader(False, self))
+
+	def GenerateCard(self):
+		self.changePanel(ExportCards(self))
 
 	def LoanItem(self):
 		self.changePanel(LoanItem(self))
