@@ -17,6 +17,7 @@ class ItemMaster(QtGui.QWidget, Ui_NewItem):
 	def __init__(self, parent=None):
 		super(ItemMaster, self).__init__()
 		self.setupUi(self)
+		self.needsISBN = False
 		self.frameEditItem.hide()
 		self.newItem = True  # to identify the module
 		# The idea is to validate the format of each field. Then, when a
@@ -91,8 +92,9 @@ class ItemMaster(QtGui.QWidget, Ui_NewItem):
 		itemFromDb = item = False
 		copies = 0
 		cleanISBN = ISBN.clean(self.getISBN())
-		itemFromDb = DataBase.searchByCodeBar(cleanISBN)
-		self.field_ISBN.setText(ISBN.formated(cleanISBN))
+		if self.getISBN():
+			itemFromDb = DataBase.searchByCodeBar(cleanISBN)
+			self.field_ISBN.setText(ISBN.formated(cleanISBN))
 		if itemFromDb:
 			item = Item(itemFromDb['itemID'])
 			copies = int(itemFromDb['copies'])
@@ -135,10 +137,10 @@ class ItemMaster(QtGui.QWidget, Ui_NewItem):
 	'''
 
 	def reset(self):
-		# self.field_ISBN.setText(Constants.EMPTY)
+		self.field_ISBN.setText(Constants.EMPTY)
 		self.needsISBN = False
 		self.cleanall()
-		self.field_format.setCurrentIndex(0)
+		# self.field_format.setCurrentIndex(0)
 		self.field_year.setValue(1400)
 		self.field_copy.setValue(1)
 
@@ -286,6 +288,7 @@ class NewItem(ItemMaster):
 		super(NewItem, self).__init__()
 
 	def handleButton(self):
+
 		self.cheackall()
 		itemData = self.getData2sql()
 
@@ -297,6 +300,7 @@ class NewItem(ItemMaster):
 				QtGui.QMessageBox.information(self, 'Sucess', 'Item Saved.', QtGui.QMessageBox.Ok)
 				self.reset()
 				self.cleanall()
+				self.cheackall()
 			else:
 				QtGui.QMessageBox.critical(self, 'Error', 'Error while saving.', QtGui.QMessageBox.Ok)
 
@@ -335,13 +339,13 @@ class EditItem(ItemMaster, QtGui.QDialog):
 		if type_ == Constants.TYPE_USER:
 			if ID:
 				self.field_readerID.setText(ID)
-				self.loadElement(Constants.TYPE_USER)
+				self.loadElement()
 			else:
 				self.cleanReader()
 		elif type_ == Constants.TYPE_ITEM:
 			if ID:
 				self.field_itemID.setText(ID)
-				self.loadElement(Constants.TYPE_ITEM)
+				self.loadElement()
 			else:
 				self.cleanall()
 
