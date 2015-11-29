@@ -23,27 +23,43 @@ class Reader(BaseElement):
 	Clase Reader
 	@id_: id of the user to search
 	'''
-	def __init__(self, id_):
+	def __init__(self, id_, minimum=True):
 		self.Data = False
 
 		if id_:
 			self.Data = DataBase.load_users(id_)
 			if self.Data:
-				self.Data['delays'] = DataBase.userDelays(self.ID())
-				self.activeLoans = DataBase.userLoans(self.ID())
+				if minimum:
+					self.Data['delays'] = False
+				else:
+					self.Data['delays'] = DataBase.userDelays(self.ID())
+
+				if minimum:
+					self.activeLoans = False
+				else:
+					self.activeLoans = DataBase.userLoans(self.ID())
+
 				# includes as a field the Id of the item
-				if self.activeLoans:
+				if self.activeLoans :
 					for i in range(0, len(self.activeLoans)):
 						loan = self.activeLoans[i]
 						self.activeLoans[i]['itemIdStr'] = formatID(loan['formatID'], loan['itemID'])
 
-				self.duedItems = DataBase.userDuedItems(self.ID())
+				if minimum:
+					self.duedItems = False
+				else:
+					self.duedItems = DataBase.userDuedItems(self.ID())
+
 				if self.duedItems:
 					for i in range(0, len(self.duedItems)):
 						loan = self.duedItems[i]
 						self.duedItems[i]['itemIdStr'] = formatID(loan['formatID'], loan['itemID'])
 
-				self.history = DataBase.userHystory(self.ID())
+				if minimum:
+					self.history = False
+				else:
+					self.history = DataBase.userHystory(self.ID())
+
 				if self.history:
 					for i in range(0, len(self.history)):
 						loan = self.history[i]

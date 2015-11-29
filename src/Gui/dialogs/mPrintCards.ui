@@ -64,6 +64,16 @@
         <item row="0" column="1">
          <layout class="QHBoxLayout" name="horizontalLayout_2">
           <item>
+           <widget class="QLabel" name="check_userID">
+            <property name="text">
+             <string/>
+            </property>
+            <property name="pixmap">
+             <pixmap resource="../myicons.qrc">:/status/resources/pixmap/icons/status/status-no.png</pixmap>
+            </property>
+           </widget>
+          </item>
+          <item>
            <widget class="QLineEdit" name="field_readerID"/>
           </item>
           <item>
@@ -77,6 +87,16 @@
         </item>
         <item row="2" column="1">
          <layout class="QHBoxLayout" name="horizontalLayout_3">
+          <item>
+           <widget class="QLabel" name="checkGrade">
+            <property name="text">
+             <string/>
+            </property>
+            <property name="pixmap">
+             <pixmap resource="../myicons.qrc">:/status/resources/pixmap/icons/status/status-no.png</pixmap>
+            </property>
+           </widget>
+          </item>
           <item>
            <widget class="QComboBox" name="combo_grades"/>
           </item>
@@ -138,6 +158,16 @@
      </property>
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
+       <widget class="QLabel" name="pathCheck">
+        <property name="text">
+         <string/>
+        </property>
+        <property name="pixmap">
+         <pixmap resource="../myicons.qrc">:/status/resources/pixmap/icons/status/status-no.png</pixmap>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QLineEdit" name="field_path"/>
       </item>
       <item>
@@ -174,7 +204,9 @@
   <tabstop>buttonSearchReader</tabstop>
   <tabstop>btnCancel</tabstop>
  </tabstops>
- <resources/>
+ <resources>
+  <include location="../myicons.qrc"/>
+ </resources>
  <connections>
   <connection>
    <sender>btnCancel</sender>
@@ -183,12 +215,60 @@
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>541</x>
-     <y>201</y>
+     <x>289</x>
+     <y>219</y>
     </hint>
     <hint type="destinationlabel">
-     <x>570</x>
+     <x>399</x>
      <y>209</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>field_readerID</sender>
+   <signal>textChanged(QString)</signal>
+   <receiver>radio_reader</receiver>
+   <slot>toggle()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>152</x>
+     <y>145</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>99</x>
+     <y>141</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>combo_grades</sender>
+   <signal>currentIndexChanged(QString)</signal>
+   <receiver>radio_grade</receiver>
+   <slot>toggle()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>165</x>
+     <y>162</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>90</x>
+     <y>174</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>field_readerID</sender>
+   <signal>cursorPositionChanged(int,int)</signal>
+   <receiver>radio_reader</receiver>
+   <slot>click()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>170</x>
+     <y>129</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>111</x>
+     <y>134</y>
     </hint>
    </hints>
   </connection>

@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>529</width>
-    <height>352</height>
+    <height>373</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -30,6 +30,16 @@
       <string>Destination File</string>
      </property>
      <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
+       <widget class="QLabel" name="pathCheck">
+        <property name="text">
+         <string/>
+        </property>
+        <property name="pixmap">
+         <pixmap resource="../myicons.qrc">:/status/resources/pixmap/icons/status/status-no.png</pixmap>
+        </property>
+       </widget>
+      </item>
       <item>
        <widget class="QLineEdit" name="field_path"/>
       </item>
@@ -227,6 +237,8 @@
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="../myicons.qrc"/>
+ </resources>
  <connections/>
 </ui>

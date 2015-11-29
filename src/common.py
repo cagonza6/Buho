@@ -28,6 +28,8 @@ def statusIcon(status, type_):
 			return _fromUtf8(Constants.ICON_VALID)
 		elif status == Constants.BANED_USER:
 			return _fromUtf8(Constants.ICON_WARNING)
+		if status == Constants.BLOCKED_USERS:
+			return _fromUtf8(Constants.ICON_UNAVAILABLE)
 
 	elif type_ == Constants.TYPE_USER:
 		if status == Constants.BLOCKED_USERS:

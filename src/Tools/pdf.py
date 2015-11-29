@@ -8,7 +8,7 @@ from reportlab.pdfgen import canvas
 from reportlab.platypus import Paragraph, Table, SimpleDocTemplate, Spacer, TableStyle, Image
 from reportlab.pdfbase.pdfmetrics import stringWidth
 
-from Tools.timeFunctions import todaysDate, int2date
+from Tools.timeFunctions import todaysDate, int2date,endOfYear
 import config.GlobalConstants as Constants
 
 import config.SchoolData as SchoolData
@@ -190,19 +190,23 @@ class CreateIDCard(PDFmethods):
 		self.filePDF = canvas.Canvas(output, pagesize=letter)
 		self.H = 54 * mm
 		self.W = 86 * mm
-		self.vdelay = 20
-		self.writeCardBatch(users)
+		self.vdelay = 0
+		self.writeCardBatch(users, self.filePDF)
 		self.filePDF.save()
 
-	def writeCardBatch(self, users):
-		x0, y0 = 5, 3
+	def writeCardBatch(self, users, filePDF):
+		x0, y0 = 5, 2
+		ROWS = 5
 		for i in range(0, len(users)):
 			user = users[i]
-			y = y0 + i * self.H / mm
+			if i and i%ROWS ==0:
+				filePDF.showPage()
+			y = y0 + (i%ROWS) * self.H / mm
+
 			if i:
-				y += i
-			self.writeIDcard(x0, y, user, self.filePDF)
-		self.filePDF.save()
+				y += i%ROWS
+
+			self.writeIDcard(x0, y, user, filePDF)
 
 	def writeIDcard(self, x, y, user, filePDF):  # user data, school data
 		id_ = user.id2str()
@@ -250,10 +254,10 @@ class CreateIDCard(PDFmethods):
 
 		# user barcode
 		# Id card Data
-		self.writetext(filePDF, font, font_tiny, x0t + 00 * mm, y0t + 48 * l, 'Date of issue:')
-		# self.writetext(filePDF, font, font_tiny, x0t + 25 * mm, y0t + 48 * l, 'Due Date')
-		self.writetext(filePDF, font, font_small, x0t + 00 * mm, y0t + 52 * l, str(int2date(todaysDate())))
-		# self.writetext(filePDF, font, font_small, x0t + 25 * mm, y0t + 52 * l, '12/12/2015')
+		self.writetext(filePDF, font, font_tiny, x0t + 00 * mm, y0t + 46 * l, 'Date of issue:')
+		self.writetext(filePDF, font, font_tiny, x0t + 25 * mm, y0t + 46 * l, 'Due Date:')
+		self.writetext(filePDF, font, font_small, x0t + 00 * mm, y0t + 50 * l, str(int2date(todaysDate())))
+		self.writetext(filePDF, font, font_small, x0t + 25 * mm, y0t + 50 * l, str(int2date(endOfYear())))
 
 		xbc = x0 + W  # -5*mm
 		ybc = y0 - 16 * l

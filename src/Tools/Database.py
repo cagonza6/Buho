@@ -182,11 +182,13 @@ class DatabaseManager(object):
 		elif column_type == Constants.IDS:
 			column = 'userID'
 
-		if column_type == Constants.IDS:
+		if column_type == Constants.IDS and keys:
 			if len(keys):
 				query += 'AND users.userID = ? '
 				querrydata.append(keys[0])
-		if len(keys):
+		if not keys:
+			pass
+		elif len(keys):
 			key = keys[0].lower()
 			if column_type == Constants.NAME:
 				query += "AND (instr(lower(users.name), ? ) OR instr(lower(users.familyname), ? ) ) "

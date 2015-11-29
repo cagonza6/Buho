@@ -8,7 +8,8 @@ sip.setapi('QVariant', 2)
 
 from PyQt4 import QtGui
 from Gui.Main_window import Ui_MainWindow
-from Dialogs import AboutApplication, ExportCards
+from Dialogs import AboutApplication
+from ExportCard import ExportCards
 from Items import NewItem, EditItem
 from HomePage import Home
 from Readers import NewReader, EditReader

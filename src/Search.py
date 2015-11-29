@@ -3,7 +3,7 @@
 from PyQt4 import QtCore, QtGui
 
 from Gui.mSearch import Ui_SearchItemWindow
-from Dialogs import PdfExport
+from Dialogs_export import PdfExport
 from Tools.ItemTools import formatID
 from Tools.Database import DBManager as DataBase
 from Tools.regexe import cleanKeywords

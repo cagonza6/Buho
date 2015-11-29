@@ -45,6 +45,8 @@ def searchNoWeekend(duedate):
 		duedate += addDays(1)
 	return duedate
 
+def endOfYear():
+	return int(str(datetime.datetime.now().year)+'1231')
 
 if __name__ == '__main__':
 	pass

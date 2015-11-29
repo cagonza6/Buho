@@ -93,7 +93,7 @@ TABLE_HISTORY = 'history'
 
 # #################################
 '''
-Actinos to take to transit fro window to window sometimes.
+Actions to take to transit from window to window sometimes.
 At the moment just used in HomePage to call other windows in MainWindow.
 '''
 
