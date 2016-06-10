@@ -1,4 +1,4 @@
-# Buho
+# Buho (see "dev" branch)
 
 Buho is a basic library manager for schools. It allowed to control a small size library and meant to be the replacement of the old card records system. It is tested just under Linux.
 
